@@ -98,7 +98,7 @@ tasks.register('generateAccessWidener') {
 
 		visitMethods(classes["net/minecraft/data/client/BlockStateModelGenerator"]) { name, desc, owner ->
 			if (desc == "()V")
-			// Skip over methods that dont take any arguments, as they are specific to minecraft.
+				// Skip over methods that dont take any arguments, as they are specific to minecraft.
 				return
 
 			accessWidener += "transitive-accessible\tmethod\t${owner}\t${name}\t${desc}\n"
