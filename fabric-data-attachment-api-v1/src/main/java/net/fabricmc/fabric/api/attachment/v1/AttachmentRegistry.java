@@ -23,6 +23,7 @@ import com.mojang.serialization.Codec;
 import org.jetbrains.annotations.ApiStatus;
 
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.util.Identifier;
 
@@ -151,13 +152,21 @@ public final class AttachmentRegistry {
 		Builder<A> initializer(Supplier<A> initializer);
 
 		/**
+		 * @deprecated use {@link #syncedWith(PacketCodec, AttachmentSyncPredicate)} instead
+		 */
+		@Deprecated
+		default AttachmentRegistry.Builder<A> syncWith(PacketCodec<PacketByteBuf, A> packetCodec, AttachmentSyncPredicate syncPredicate) {
+			return syncedWith(packetCodec.cast(), syncPredicate);
+		}
+
+		/**
 		 * Declares that this attachment type may be automatically synchronized with some clients, as determined by {@code syncPredicate}.
 		 *
 		 * @param packetCodec the codec used to serialize the attachment data over the network
 		 * @param syncPredicate an {@link AttachmentSyncPredicate} determining with which clients to synchronize data
 		 * @return the builder
 		 */
-		AttachmentRegistry.Builder<A> syncWith(PacketCodec<PacketByteBuf, A> packetCodec, AttachmentSyncPredicate syncPredicate);
+		AttachmentRegistry.Builder<A> syncedWith(PacketCodec<RegistryByteBuf, A> packetCodec, AttachmentSyncPredicate syncPredicate);
 
 		/**
 		 * Builds and registers the {@link AttachmentType}.
