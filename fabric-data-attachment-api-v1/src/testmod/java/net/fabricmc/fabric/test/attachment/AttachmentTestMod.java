@@ -80,28 +80,28 @@ public class AttachmentTestMod implements ModInitializer {
 			builder -> builder
 					.initializer(() -> false)
 					.persistent(Codec.BOOL)
-					.syncedWith(PacketCodecs.BOOLEAN.cast(), AttachmentSyncPredicate.all())
+					.syncWith(PacketCodecs.BOOLEAN.cast(), AttachmentSyncPredicate.all())
 	);
 	public static final AttachmentType<Boolean> SYNCED_WITH_TARGET = AttachmentRegistry.create(
 			Identifier.of(MOD_ID, "synced_target"),
 			builder -> builder
 					.initializer(() -> false)
 					.persistent(Codec.BOOL)
-					.syncedWith(PacketCodecs.BOOLEAN.cast(), AttachmentSyncPredicate.targetOnly())
+					.syncWith(PacketCodecs.BOOLEAN.cast(), AttachmentSyncPredicate.targetOnly())
 	);
 	public static final AttachmentType<Boolean> SYNCED_EXCEPT_TARGET = AttachmentRegistry.create(
 			Identifier.of(MOD_ID, "synced_except_target"),
 			builder -> builder
 					.initializer(() -> false)
 					.persistent(Codec.BOOL)
-					.syncedWith(PacketCodecs.BOOLEAN.cast(), AttachmentSyncPredicate.allButTarget())
+					.syncWith(PacketCodecs.BOOLEAN.cast(), AttachmentSyncPredicate.allButTarget())
 	);
 	public static final AttachmentType<Boolean> SYNCED_CREATIVE_ONLY = AttachmentRegistry.create(
 			Identifier.of(MOD_ID, "synced_custom"),
 			builder -> builder
 					.initializer(() -> false)
 					.persistent(Codec.BOOL)
-					.syncedWith(PacketCodecs.BOOLEAN.cast(), (target, player) -> player.isCreative())
+					.syncWith(PacketCodecs.BOOLEAN.cast(), (target, player) -> player.isCreative())
 	);
 	public static final SimpleCommandExceptionType TARGET_NOT_FOUND = new SimpleCommandExceptionType(Text.literal("Target not found"));
 

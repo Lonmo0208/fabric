@@ -80,7 +80,7 @@ public final class AttachmentRegistryImpl {
 		@Nullable
 		private Codec<A> persistenceCodec = null;
 		@Nullable
-		private PacketCodec<RegistryByteBuf, A> packetCodec = null;
+		private PacketCodec<? super RegistryByteBuf, A> packetCodec = null;
 		@Nullable
 		private AttachmentSyncPredicate syncPredicate = null;
 		private boolean copyOnDeath = false;
@@ -108,7 +108,7 @@ public final class AttachmentRegistryImpl {
 		}
 
 		@Deprecated
-		public AttachmentRegistry.Builder<A> syncedWith(PacketCodec<RegistryByteBuf, A> packetCodec, AttachmentSyncPredicate syncPredicate) {
+		public AttachmentRegistry.Builder<A> syncWith(PacketCodec<? super RegistryByteBuf, A> packetCodec, AttachmentSyncPredicate syncPredicate) {
 			Objects.requireNonNull(packetCodec, "packet codec cannot be null");
 			Objects.requireNonNull(syncPredicate, "sync predicate cannot be null");
 
