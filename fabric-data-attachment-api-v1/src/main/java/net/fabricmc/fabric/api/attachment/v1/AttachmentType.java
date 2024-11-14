@@ -56,7 +56,7 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
  * @param <A> type of the attached data. It is encouraged for this to be an immutable type.
  * @see AttachmentRegistry
  * @see AttachmentRegistry.Builder#persistent(Codec)
- * @see AttachmentRegistry.Builder#syncedWith(PacketCodec, AttachmentSyncPredicate)
+ * @see AttachmentRegistry.Builder#syncWith(PacketCodec, AttachmentSyncPredicate) 
  */
 @ApiStatus.NonExtendable
 @ApiStatus.Experimental
