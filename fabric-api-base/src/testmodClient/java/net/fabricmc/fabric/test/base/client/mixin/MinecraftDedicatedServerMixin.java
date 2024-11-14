@@ -38,8 +38,6 @@ public abstract class MinecraftDedicatedServerMixin {
 	// Don't call shutdownExecutors as we are running the dedi server within the client process.
 	@WrapOperation(method = "shutdown", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Util;shutdownExecutors()V"))
 	private void dontStopExecutors(Operation<Void> original) {
-		if (System.getProperty("fabric.autoTest") == null) {
-			original.call();
-		}
+		// Never needed, as this is a client mixin.
 	}
 }
