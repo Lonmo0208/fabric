@@ -95,12 +95,12 @@ public class TestDedicatedServer implements Closeable {
 		}
 
 		server = DEDICATED_SERVER_REF.get();
-		DEDICATED_SERVER_REF.set(null);
 	}
 
 	@Override
 	public void close() {
 		server.stop(true);
+		DEDICATED_SERVER_REF.set(null);
 		executor.close();
 	}
 }
