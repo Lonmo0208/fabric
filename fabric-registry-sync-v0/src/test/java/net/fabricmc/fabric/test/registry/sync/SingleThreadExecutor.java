@@ -14,21 +14,27 @@
  * limitations under the License.
  */
 
-package net.fabricmc.fabric.api.event.registry;
+package net.fabricmc.fabric.test.registry.sync;
 
-public enum RegistryAttribute {
-	/**
-	 * Registry will be synced to the client when modded.
-	 */
-	SYNCED,
+import net.minecraft.util.thread.ThreadExecutor;
 
-	/**
-	 * Registry has been modded.
-	 */
-	MODDED,
+public class SingleThreadExecutor extends ThreadExecutor<Runnable> {
+	protected SingleThreadExecutor(String name) {
+		super(name);
+	}
 
-	/**
-	 * Registry is optional, any connecting client will not be disconnected if the registry is not present.
-	 */
-	OPTIONAL
+	@Override
+	protected boolean canExecute(Runnable task) {
+		return false;
+	}
+
+	@Override
+	protected Thread getThread() {
+		return null;
+	}
+
+	@Override
+	public Runnable createTask(Runnable runnable) {
+		return runnable;
+	}
 }

@@ -48,7 +48,7 @@ public class DirectRegistryPacketHandlerTest {
 			handler.receivePayload(payload);
 		}
 
-		assertMatchesDeep(registry, handler.getSyncedRegistryMap());
+		assertMatchesDeep(registry, handler.getSyncedPacketData().idMap());
 	}
 
 	@Test
@@ -69,7 +69,7 @@ public class DirectRegistryPacketHandlerTest {
 			handler.receivePayload(payload);
 		}
 
-		assertMatchesDeep(registry, handler.getSyncedRegistryMap());
+		assertMatchesDeep(registry, handler.getSyncedPacketData().idMap());
 	}
 
 	@Test
@@ -93,7 +93,7 @@ public class DirectRegistryPacketHandlerTest {
 			handler.receivePayload(payload);
 		}
 
-		assertMatchesDeep(registry, handler.getSyncedRegistryMap());
+		assertMatchesDeep(registry, handler.getSyncedPacketData().idMap());
 	}
 
 	private static Object2IntMap<Identifier> createRegistry(int size) {
