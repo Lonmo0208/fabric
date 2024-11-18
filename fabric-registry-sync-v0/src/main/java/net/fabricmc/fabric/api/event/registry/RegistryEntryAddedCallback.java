@@ -54,6 +54,8 @@ public interface RegistryEntryAddedCallback<T> {
 	/**
 	 * Register a callback for all present and future entries in the registry.
 	 *
+	 * <p>Note: The callback is recursive and will be invoked for anything registered within the callback itself.
+	 *
 	 * @param registry the registry to listen to
 	 * @param consumer the callback that accepts a {@link RegistryEntry.Reference}
 	 */
