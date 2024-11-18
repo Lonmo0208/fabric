@@ -85,6 +85,8 @@ public class ResourceReloadListenerTestMod implements ModInitializer {
 			@Override
 			public void reload(ResourceManager manager) {
 				clientResources = true;
+
+				throw new RuntimeException("asd");
 			}
 		});
 	}
