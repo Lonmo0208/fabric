@@ -37,6 +37,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
@@ -44,10 +45,10 @@ import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 
 public class RegistryEntryAddedCallbackTest {
 	@Mock
-	private Consumer<String> mockConsumer;
+	private Consumer<RegistryEntry.Reference<String>> mockConsumer;
 
 	@Captor
-	private ArgumentCaptor<String> captor;
+	private ArgumentCaptor<RegistryEntry.Reference<String>> captor;
 
 	@BeforeAll
 	static void beforeAll() {
@@ -71,7 +72,7 @@ public class RegistryEntryAddedCallbackTest {
 
 		// Test that the callback can register new entries.
 		RegistryEntryAddedCallback.allEntries(testRegistry, s -> {
-			if (s.equals("before")) {
+			if (s.value().equals("before")) {
 				Registry.register(testRegistry, id("during"), "during");
 			}
 		});
@@ -80,7 +81,11 @@ public class RegistryEntryAddedCallbackTest {
 
 		verify(mockConsumer, times(3)).accept(captor.capture());
 
-		List<String> values = captor.getAllValues();
+		List<String> values = captor.getAllValues()
+				.stream()
+				.map(RegistryEntry.Reference::value)
+				.toList();
+
 		assertEquals(3, values.size());
 		assertEquals("before", values.getFirst());
 		assertEquals("during", values.get(1));

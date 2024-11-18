@@ -19,6 +19,7 @@ package net.fabricmc.fabric.api.event.registry;
 import java.util.function.Consumer;
 
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 
 import net.fabricmc.fabric.api.event.Event;
@@ -54,13 +55,13 @@ public interface RegistryEntryAddedCallback<T> {
 	 * Register a callback for all present and future entries in the registry.
 	 *
 	 * @param registry the registry to listen to
-	 * @param consumer the callback to run
+	 * @param consumer the callback that accepts a {@link RegistryEntry.Reference}
 	 */
-	static <T> void allEntries(Registry<T> registry, Consumer<T> consumer) {
-		event(registry).register((rawId, id, object) -> consumer.accept(object));
+	static <T> void allEntries(Registry<T> registry, Consumer<RegistryEntry.Reference<T>> consumer) {
+		event(registry).register((rawId, id, object) -> consumer.accept(registry.getEntry(id).orElseThrow()));
 		// Call the consumer for all existing entries, after registering the callback.
 		// This way if the callback registers a new entry, it will also be called for that entry.
 		// It is also important to take a copy of the registry with .toList() to avoid concurrent modification exceptions if the callback modifies the registry.
-		registry.stream().toList().forEach(consumer);
+		registry.streamEntries().toList().forEach(consumer);
 	}
 }
