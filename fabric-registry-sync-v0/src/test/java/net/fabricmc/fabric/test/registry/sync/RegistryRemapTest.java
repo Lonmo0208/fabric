@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
@@ -32,6 +33,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import net.minecraft.Bootstrap;
@@ -53,17 +55,18 @@ import net.fabricmc.fabric.impl.registry.sync.RemappableRegistry;
 import net.fabricmc.fabric.impl.registry.sync.packet.DirectRegistryPacketHandler;
 
 public class RegistryRemapTest {
-	private static final RegistryKey<Registry<String>> testRegistryKey = RegistryKey.ofRegistry(id("test"));
-	private static SimpleRegistry<String> testRegistry;
+	private RegistryKey<Registry<String>> testRegistryKey;
+	private SimpleRegistry<String> testRegistry;
 
 	@BeforeAll
 	static void beforeAll() {
-		long time = System.currentTimeMillis();
 		SharedConstants.createGameVersion();
 		Bootstrap.initialize();
+	}
 
-		System.out.println("Bootstrap took " + (System.currentTimeMillis() - time) + "ms");
-
+	@BeforeEach
+	void beforeEach() {
+		testRegistryKey = RegistryKey.ofRegistry(id(UUID.randomUUID().toString()));
 		testRegistry = FabricRegistryBuilder.createSimple(testRegistryKey)
 				.attribute(RegistryAttribute.SYNCED)
 				.buildAndRegister();

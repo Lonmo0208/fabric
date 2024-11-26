@@ -100,8 +100,6 @@ public final class ClientRegistrySyncHandler {
 				if (isRegistryOptional(registryId, data)) {
 					LOGGER.info("Received registry data for unknown optional registry: {}", registryId);
 					continue;
-				} else {
-					throw new RemapException("Received registry data for unknown registry: " + registryId);
 				}
 			}
 
@@ -136,7 +134,7 @@ public final class ClientRegistrySyncHandler {
 
 			for (Identifier remoteId : remoteRegistry.keySet()) {
 				if (!registry.containsId(remoteId)) {
-					// Found a registry entry from the server that is
+					// Found a registry entry from the server that is missing on the client
 					missingEntries.computeIfAbsent(registryId, i -> new ArrayList<>()).add(remoteId);
 				}
 			}
