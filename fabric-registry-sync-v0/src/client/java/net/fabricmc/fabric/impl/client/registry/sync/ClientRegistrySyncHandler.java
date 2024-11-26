@@ -115,6 +115,7 @@ public final class ClientRegistrySyncHandler {
 	@VisibleForTesting
 	public static void checkRemoteRemap(RegistryPacketHandler.SyncedPacketData data) throws RemapException {
 		Map<Identifier, Object2IntMap<Identifier>> map = data.idMap();
+		ArrayList<Identifier> missingRegistries = new ArrayList<>();
 		Map<Identifier, List<Identifier>> missingEntries = new HashMap<>();
 
 		for (Identifier registryId : map.keySet()) {
@@ -123,10 +124,8 @@ public final class ClientRegistrySyncHandler {
 
 			if (registry == null) {
 				if (!isRegistryOptional(registryId, data)) {
-					LOGGER.error("Received unknown remote registry ({}) from server", registryId);
-
 					// Registry was not found on the client, and is not optional.
-					missingEntries.put(registryId, new ArrayList<>(remoteRegistry.keySet()));
+					missingRegistries.add(registryId);
 				}
 
 				continue;
@@ -140,21 +139,66 @@ public final class ClientRegistrySyncHandler {
 			}
 		}
 
-		if (missingEntries.isEmpty()) {
+		if (missingRegistries.isEmpty() && missingEntries.isEmpty()) {
 			// All good :)
 			return;
 		}
 
 		// Print out details to the log
-		LOGGER.error("Received unknown remote registry entries from server");
+		if (!missingRegistries.isEmpty()) {
+			LOGGER.error("Received unknown remote registries from server");
 
-		for (Map.Entry<Identifier, List<Identifier>> entry : missingEntries.entrySet()) {
-			for (Identifier identifier : entry.getValue()) {
-				LOGGER.error("Registry entry ({}) is missing from local registry ({})", identifier, entry.getKey());
+			for (Identifier registryId : missingRegistries) {
+				LOGGER.error("Received unknown remote registry ({}) from server", registryId);
 			}
 		}
 
-		// Create a nice user friendly error message.
+		if (!missingEntries.isEmpty()) {
+			LOGGER.error("Received unknown remote registry entries from server");
+
+			for (Map.Entry<Identifier, List<Identifier>> entry : missingEntries.entrySet()) {
+				for (Identifier identifier : entry.getValue()) {
+					LOGGER.error("Registry entry ({}) is missing from local registry ({})", identifier, entry.getKey());
+				}
+			}
+		}
+
+		if (!missingRegistries.isEmpty()) {
+			throw new RemapException(missingRegistriesError(missingRegistries));
+		}
+
+		throw new RemapException(missingEntriesError(missingEntries));
+	}
+
+	private static Text missingRegistriesError(List<Identifier> missingRegistries) {
+		MutableText text = Text.empty();
+
+		final int count = missingRegistries.size();
+
+		if (count == 1) {
+			text = text.append(Text.translatable("fabric-registry-sync-v0.unknown-registry.title.singular"));
+		} else {
+			text = text.append(Text.translatable("fabric-registry-sync-v0.unknown-registry.title.plural", count));
+		}
+
+		text = text.append(Text.translatable("fabric-registry-sync-v0.unknown-registry.subtitle.1").formatted(Formatting.GREEN));
+		text = text.append(Text.translatable("fabric-registry-sync-v0.unknown-registry.subtitle.2"));
+
+		final int toDisplay = 4;
+
+		for (int i = 0; i < Math.min(missingRegistries.size(), toDisplay); i++) {
+			text = text.append(Text.literal(missingRegistries.get(i).toString()).formatted(Formatting.YELLOW));
+			text = text.append(ScreenTexts.LINE_BREAK);
+		}
+
+		if (missingRegistries.size() > toDisplay) {
+			text = text.append(Text.translatable("fabric-registry-sync-v0.unknown-registry.footer", missingRegistries.size() - toDisplay));
+		}
+
+		return text;
+	}
+
+	private static Text missingEntriesError(Map<Identifier, List<Identifier>> missingEntries) {
 		MutableText text = Text.empty();
 
 		final int count = missingEntries.values().stream().mapToInt(List::size).sum();
@@ -186,7 +230,7 @@ public final class ClientRegistrySyncHandler {
 			text = text.append(Text.translatable("fabric-registry-sync-v0.unknown-remote.footer", namespaces.size() - toDisplay));
 		}
 
-		throw new RemapException(text);
+		return text;
 	}
 
 	private static boolean isRegistryOptional(Identifier registryId, RegistryPacketHandler.SyncedPacketData data) {
