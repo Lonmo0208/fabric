@@ -184,7 +184,7 @@ public class RegistryRemapTest {
 		);
 
 		RemapException remapException = assertThrows(RemapException.class, () -> receivePayloads(payloads));
-		assertTrue(remapException.getMessage().contains("unknown-remote"));
+		assertTrue(remapException.getMessage().contains("unknown-registry"));
 	}
 
 	@Test
