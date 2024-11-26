@@ -72,11 +72,6 @@ public final class RegistrySyncManager {
 			return;
 		}
 
-		if (!ServerConfigurationNetworking.canSend(handler, DIRECT_PACKET_HANDLER.getPacketId())) {
-			// Don't send if the client cannot receive
-			return;
-		}
-
 		final Map<Identifier, Object2IntMap<Identifier>> map = RegistrySyncManager.createAndPopulateRegistryMap();
 
 		if (map == null) {
