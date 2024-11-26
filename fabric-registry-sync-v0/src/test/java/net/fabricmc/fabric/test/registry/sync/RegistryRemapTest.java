@@ -16,7 +16,10 @@
 
 package net.fabricmc.fabric.test.registry.sync;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,10 +88,10 @@ public class RegistryRemapTest {
 		assertEquals(1, testRegistry.getRawId("one"));
 		assertEquals(2, testRegistry.getRawId("two"));
 
-		var idMap = Map.of(
-			id("zero"), 2,
-			id("one"), 1,
-			id("two"), 0
+		Map<Identifier, Integer> idMap = Map.of(
+				id("zero"), 2,
+				id("one"), 1,
+				id("two"), 0
 		);
 		remappableRegistry.remap(asFastMap(idMap), RemappableRegistry.RemapMode.AUTHORITATIVE);
 
@@ -111,7 +114,7 @@ public class RegistryRemapTest {
 		assertEquals(1, testRegistry.getRawId("one"));
 		assertEquals(2, testRegistry.getRawId("two"));
 
-		var idMap = Map.of(
+		Map<Identifier, Integer> idMap = Map.of(
 				id("two"), 0,
 				id("one"), 1,
 				id("zero"), 2
@@ -143,8 +146,8 @@ public class RegistryRemapTest {
 	}
 
 	@Test
-	void unknownEntry(){
-		var idMap = Map.of(
+	void unknownEntry() {
+		Map<Identifier, Integer> idMap = Map.of(
 				id("two"), 0,
 				id("one"), 1,
 				id("zero"), 2,
@@ -163,8 +166,8 @@ public class RegistryRemapTest {
 	}
 
 	@Test
-	void unknownRegistry(){
-		var idMap = Map.of(
+	void unknownRegistry() {
+		Map<Identifier, Integer> idMap = Map.of(
 				id("two"), 0,
 				id("one"), 1,
 				id("zero"), 2
@@ -183,7 +186,7 @@ public class RegistryRemapTest {
 
 	@Test
 	void unknownOptionalRegistry() throws RemapException {
-		var idMap = Map.of(
+		Map<Identifier, Integer> idMap = Map.of(
 				id("two"), 0,
 				id("one"), 1,
 				id("zero"), 2
@@ -216,7 +219,7 @@ public class RegistryRemapTest {
 		assertEquals(1, testRegistry.getRawId("one"));
 		assertEquals(2, testRegistry.getRawId("two"));
 
-		var idMap = Map.of(
+		Map<Identifier, Integer> idMap = Map.of(
 				id("two"), 0,
 				id("zero"), 1
 		);
@@ -264,6 +267,7 @@ public class RegistryRemapTest {
 		} catch (ExecutionException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
+
 		return results;
 	}
 
