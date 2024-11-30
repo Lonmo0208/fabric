@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import net.minecraft.data.DataCache;
 
 @Mixin(DataCache.class)
-public class DataCacheMixin {
+public abstract class DataCacheMixin {
 	// Lambda in write()V
 	@Redirect(method = "method_46571", at = @At(value = "INVOKE", target = "Ljava/time/LocalDateTime;now()Ljava/time/LocalDateTime;"))
 	private LocalDateTime constantTime() {
