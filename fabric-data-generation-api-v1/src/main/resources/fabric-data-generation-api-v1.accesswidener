@@ -47,6 +47,7 @@ transitive-accessible method net/minecraft/client/data/TexturedModel makeFactory
 
 transitive-accessible class net/minecraft/client/data/BlockStateModelGenerator$BlockTexturePool
 transitive-accessible class net/minecraft/client/data/BlockStateModelGenerator$LogTexturePool
+transitive-accessible class net/minecraft/client/data/BlockStateModelGenerator$CrossType
 
 accessible class net/minecraft/client/data/ModelProvider$ItemAssets
 accessible class net/minecraft/client/data/ModelProvider$BlockStateSuppliers
