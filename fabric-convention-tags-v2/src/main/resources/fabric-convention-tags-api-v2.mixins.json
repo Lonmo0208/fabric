@@ -3,7 +3,7 @@
   "package": "net.fabricmc.fabric.mixin.tag",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "TagKeyMixin"
+    "convention.TagKeyMixin"
   ],
   "injectors": {
     "defaultRequire": 1
