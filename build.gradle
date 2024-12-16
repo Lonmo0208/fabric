@@ -778,7 +778,7 @@ tasks.register("checkNoDuplicateFiles", Zip) {
 	exclude 'fabric.mod.json'
 }
 
-test.dependsOn "checkNoDuplicateFiles"
+check.dependsOn "checkNoDuplicateFiles"
 
 publishMods {
 	file = signRemapJar.output
