@@ -61,8 +61,8 @@ public class TracyCapture {
 					}
 
 					process.waitFor();
-					LOGGER.info("tracy-capture finished with exit code {}", process.exitValue());
-					LOGGER.info(new String(process.getInputStream().readAllBytes()));
+					System.out.println("tracy-capture finished with exit code %s".formatted(process.exitValue()));
+					System.out.println(new String(process.getInputStream().readAllBytes()));
 				} catch (InterruptedException e) {
 					LOGGER.error("tracy-capture was interrupted", e);
 				} catch (IOException e) {
