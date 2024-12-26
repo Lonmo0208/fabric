@@ -51,10 +51,14 @@ public class TracyCapture {
 				LOGGER.info("Stopping tracy-capture");
 
 				try {
-					// Send ctrl+c
-					long pid = process.pid(); // Requires Java 9+
-					ProcessBuilder killProcess = new ProcessBuilder("kill", "-SIGINT", String.valueOf(pid));
-					killProcess.inheritIO().start();
+					try {
+						// Send ctrl+c
+						long pid = process.pid(); // Requires Java 9+
+						ProcessBuilder killProcess = new ProcessBuilder("kill", "-SIGINT", String.valueOf(pid));
+						killProcess.inheritIO().start();
+					} catch (Exception e) {
+						LOGGER.error("Failed to send SIGINT to tracy-capture", e);
+					}
 
 					process.waitFor();
 					LOGGER.info("tracy-capture finished with exit code {}", process.exitValue());
