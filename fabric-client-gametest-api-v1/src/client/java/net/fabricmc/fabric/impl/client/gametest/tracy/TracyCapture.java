@@ -71,7 +71,7 @@ public class TracyCapture {
 	private ProcessBuilder createProcess() {
 		return new ProcessBuilder()
 		.command(
-			"/home/linuxbrew/.linuxbrew/Cellar/tracy/0.11.1/tracy-capture",
+			"tracy-capture",
 			"-o", output.toAbsolutePath().toString(),
 			"-a", "127.0.0.1",
 			"-f"
