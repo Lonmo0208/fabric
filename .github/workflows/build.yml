@@ -35,9 +35,6 @@ jobs:
 
   client_test:
     runs-on: ubuntu-24.04
-    container:
-      image: ubuntu:24.10
-      options: --user root
     steps:
       - uses: actions/checkout@v4
         with:
@@ -47,10 +44,10 @@ jobs:
           distribution: 'microsoft'
           java-version: '21'
       - run: |
-          apt update
-          DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends tracy-capture sudo xvfb
+          wget -O tracy-capture https://github.com/modmuss50/tracy-utils/releases/download/0.0.1/linux-x86_64-tracy-capture
+          chmod +x tracy-capture
           mkdir run && echo "eula=true" >> run/eula.txt
-          tracy-capture -o profile.tracy -a 127.0.0.1 > profile.log 2>&1 &
+          ./tracy-capture -o profile.tracy -a 127.0.0.1 > profile.log 2>&1 &
       - name: Run Client Gametests
         uses: modmuss50/xvfb-action@v1
         with:
