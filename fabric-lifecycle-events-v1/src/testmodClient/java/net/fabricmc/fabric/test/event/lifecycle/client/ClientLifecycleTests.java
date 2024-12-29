@@ -48,6 +48,7 @@ public final class ClientLifecycleTests implements ClientModInitializer {
 
 			stopCalled = true;
 			System.out.println("Client has started stopping!");
+			System.exit(0);
 		});
 
 		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((client, world) -> {
