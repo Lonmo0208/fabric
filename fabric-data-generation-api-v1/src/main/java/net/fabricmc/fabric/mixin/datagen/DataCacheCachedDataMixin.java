@@ -27,9 +27,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(targets = "net.minecraft.data.DataCache$CachedData")
+import net.minecraft.data.DataCache;
+
+@Mixin(DataCache.CachedData.class)
 public abstract class DataCacheCachedDataMixin {
-	@ModifyExpressionValue(method = "write", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap;entrySet()Lcom/google/common/collect/ImmutableSet;"))
+	@ModifyExpressionValue(method = "write", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap;entrySet()Lcom/google/common/collect/ImmutableSet;", remap = false))
 	private ImmutableSet<Map.Entry<Path, HashCode>> sortPaths(ImmutableSet<Map.Entry<Path, HashCode>> original) {
 		return original.stream()
 				.sorted(Map.Entry.comparingByKey(Comparator.comparing(k -> normalizePath(k.toString()))))

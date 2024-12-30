@@ -31,7 +31,7 @@ import net.fabricmc.fabric.impl.datagen.FabricDataGeneratorImpl;
 public class DataGeneratorPackMixin {
 	@WrapOperation(method = "addProvider", at = @At(value = "FIELD", target = "Lnet/minecraft/data/DataGenerator;providerNames:Ljava/util/Set;"))
 	private Set<String> addProvider(DataGenerator instance, Operation<Set<String>> original) {
-		if ((Object)(instance) instanceof FabricDataGeneratorImpl fabricDataGenerator) {
+		if ((Object) (instance) instanceof FabricDataGeneratorImpl fabricDataGenerator) {
 			return fabricDataGenerator.getProviderNames();
 		}
 

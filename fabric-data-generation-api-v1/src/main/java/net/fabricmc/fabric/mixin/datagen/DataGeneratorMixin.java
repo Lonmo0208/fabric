@@ -34,7 +34,7 @@ import net.fabricmc.fabric.impl.datagen.FabricDataGeneratorImpl;
 public class DataGeneratorMixin {
 	@WrapOperation(method = "run", at = @At(value = "NEW", target = "(Ljava/nio/file/Path;Ljava/util/Collection;Lnet/minecraft/GameVersion;)Lnet/minecraft/data/DataCache;"))
 	private DataCache newDataCache(Path root, Collection<String> providerNames, GameVersion gameVersion, Operation<DataCache> original) {
-		if ((Object)(this) instanceof FabricDataGeneratorImpl fabricDataGenerator) {
+		if ((Object) (this) instanceof FabricDataGeneratorImpl fabricDataGenerator) {
 			return fabricDataGenerator.getDataCache();
 		}
 
@@ -43,7 +43,7 @@ public class DataGeneratorMixin {
 
 	@WrapOperation(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/data/DataCache;write()V"))
 	private void dataCacheWrite(DataCache instance, Operation<Void> original) {
-		if ((Object)(this) instanceof FabricDataGeneratorImpl) {
+		if ((Object) (this) instanceof FabricDataGeneratorImpl) {
 			// Skip this for now, we will run it for all data generators in FabricDataGenHelper
 			return;
 		}

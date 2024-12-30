@@ -16,16 +16,15 @@
 
 package net.fabricmc.fabric.impl.datagen;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-
-import net.fabricmc.loader.api.ModContainer;
+import java.nio.file.Path;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import net.minecraft.data.DataCache;
 import net.minecraft.registry.RegistryWrapper;
 
-import java.nio.file.Path;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.loader.api.ModContainer;
 
 public class FabricDataGeneratorImpl extends FabricDataGenerator {
 	private final DataCache dataCache;
