@@ -5,6 +5,8 @@
   "mixins": [
     "DataCacheCachedDataMixin",
     "DataCacheMixin",
+    "DataGeneratorMixin",
+    "DataGeneratorPackMixin",
     "DataProviderMixin",
     "TagBuilderMixin",
     "TagProviderMixin",

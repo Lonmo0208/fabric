@@ -36,7 +36,8 @@ import net.fabricmc.loader.api.ModContainer;
 /**
  * An extension to vanilla's {@link DataGenerator} providing mod specific data, and helper functions.
  */
-public final class FabricDataGenerator extends DataGenerator {
+@ApiStatus.NonExtendable
+public abstract class FabricDataGenerator extends DataGenerator {
 	private final ModContainer modContainer;
 	private final boolean strictValidation;
 	private final FabricDataOutput fabricOutput;

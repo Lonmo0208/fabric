@@ -51,4 +51,6 @@ transitive-accessible class net/minecraft/client/data/BlockStateModelGenerator$C
 accessible class net/minecraft/client/data/ModelProvider$ItemAssets
 accessible class net/minecraft/client/data/ModelProvider$BlockStateSuppliers
 
+accessible class net/minecraft/data/DataCache$CachedData
+
 ### Generated access wideners below

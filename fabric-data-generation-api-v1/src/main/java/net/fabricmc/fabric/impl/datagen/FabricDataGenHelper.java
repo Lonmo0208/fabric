@@ -16,6 +16,7 @@
 
 package net.fabricmc.fabric.impl.datagen;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import com.google.gson.JsonObject;
@@ -33,6 +35,10 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.Lifecycle;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+
+import net.minecraft.SharedConstants;
+import net.minecraft.data.DataCache;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -101,7 +107,7 @@ public final class FabricDataGenHelper {
 		}
 	}
 
-	private static void runInternal() {
+	private static void runInternal() throws IOException {
 		Path outputDir = Paths.get(Objects.requireNonNull(OUTPUT_DIR, "No output dir provided with the 'fabric-api.datagen.output-dir' property"));
 
 		List<EntrypointContainer<DataGeneratorEntrypoint>> dataGeneratorInitializers = FabricLoader.getInstance()
@@ -118,6 +124,9 @@ public final class FabricDataGenHelper {
 
 		Object2IntOpenHashMap<String> jsonKeySortOrders = (Object2IntOpenHashMap<String>) DataProvider.JSON_KEY_SORT_ORDER;
 		Object2IntOpenHashMap<String> defaultJsonKeySortOrders = new Object2IntOpenHashMap<>(jsonKeySortOrders);
+
+		final Set<String> providerNames = new HashSet<>();
+		var dataCache = new DataCache(outputDir, providerNames, SharedConstants.getGameVersion());
 
 		for (EntrypointContainer<DataGeneratorEntrypoint> entrypointContainer : dataGeneratorInitializers) {
 			final String id = entrypointContainer.getProvider().getMetadata().getId();
@@ -146,8 +155,9 @@ public final class FabricDataGenHelper {
 					modContainer = FabricLoader.getInstance().getModContainer(effectiveModId).orElseThrow(() -> new RuntimeException("Failed to find effective mod container for mod id (%s)".formatted(effectiveModId)));
 				}
 
-				FabricDataGenerator dataGenerator = new FabricDataGenerator(outputDir, modContainer, STRICT_VALIDATION, registriesFuture);
+				var dataGenerator = new FabricDataGeneratorImpl(outputDir, modContainer, STRICT_VALIDATION, registriesFuture, dataCache, providerNames);
 				entrypoint.onInitializeDataGenerator(dataGenerator);
+				((FabricDataCache) (dataCache)).fabric_prepare(dataGenerator);
 				dataGenerator.run();
 
 				jsonKeySortOrders.keySet().removeAll(keys);
@@ -156,6 +166,8 @@ public final class FabricDataGenHelper {
 				throw new RuntimeException("Failed to run data generator from mod (%s)".formatted(id), t);
 			}
 		}
+
+		dataCache.write();
 	}
 
 	private static RegistryWrapper.WrapperLookup createRegistryWrapper(List<DataGeneratorEntrypoint> dataGeneratorInitializers) {
