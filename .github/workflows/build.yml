@@ -78,4 +78,7 @@ jobs:
           distribution: 'microsoft'
           java-version: '21'
       - run: ./gradlew generateResources --stacktrace --warning-mode=fail
-      - run: if [ -n "$(git status --porcelain)" ]; then exit 1; fi
+      - run: |
+          git add -A
+          git status
+          if [ -n "$(git status --porcelain)" ]; then exit 1; fi
