@@ -4,7 +4,7 @@ plugins {
 	id "idea"
 	id "maven-publish"
 	id 'jacoco'
-	id "fabric-loom" version "1.9.2" apply false
+	id "fabric-loom" version "1.10.0-alpha.11" apply false
 	id "com.diffplug.spotless" version "6.20.0"
 	id "org.ajoberstar.grgit" version "5.2.2"
 	id "me.modmuss50.remotesign" version "0.5.0" apply false
@@ -486,94 +486,35 @@ tasks.register('coverage', JacocoReport) {
 }
 
 configurations {
-	productionRuntime {
-		extendsFrom configurations.minecraftLibraries
-		extendsFrom configurations.loaderLibraries
-		extendsFrom configurations.minecraftRuntimeLibraries
-	}
-	productionRuntimeServer
 	productionMods {
 		transitive = false
 	}
 }
 
 dependencies {
-	productionRuntime "net.fabricmc:fabric-loader:${project.loader_version}"
-	productionRuntime "net.fabricmc:intermediary:${project.minecraft_version}"
-
-	productionRuntimeServer "net.fabricmc:fabric-installer:${project.installer_version}:server"
 	productionMods project(':fabric-client-gametest-api-v1')
 }
 
-import net.fabricmc.loom.util.Platform
-
 def productionMods = project.files(configurations.productionMods, remapJar.archiveFile, remapTestmodJar.archiveFile)
 
-// This is very far beyond loom's API if you copy this, you're on your own.
-tasks.register('runProductionClientGametest', JavaExec) {
-	dependsOn productionMods, downloadAssets
-	classpath.from configurations.productionRuntime
-	mainClass = "net.fabricmc.loader.impl.launch.knot.KnotClient"
-	workingDir = file("run")
+tasks.register('runProductionClientGametest', net.fabricmc.loom.task.prod.ClientProductionRunTask) {
+	mods.setFrom productionMods
+	jvmArgs.addAll(["-Dfabric.client.gametest", "-Dfabric-tag-conventions-v2.missingTagTranslationWarning=fail", "-Dfabric-tag-conventions-v1.legacyTagWarning=fail"])
+	jvmArgs.addAll(debugArgs)
 
-	doFirst {
-		classpath.from loom.minecraftProvider.minecraftClientJar
-		workingDir.mkdirs()
-
-		args(
-				"--assetIndex", loom.minecraftProvider.versionInfo.assetIndex().fabricId(loom.minecraftProvider.minecraftVersion()),
-				"--assetsDir", new File(loom.files.userCache, "assets").absolutePath,
-				"--gameDir", workingDir.absolutePath
-				)
-
-		if (Platform.CURRENT.operatingSystem.isMacOS()) {
-			jvmArgs(
-					"-XstartOnFirstThread"
-					)
+	if (ENV.CI) {
+		tracy {
+			tracyCapture = file("tracy-capture")
+			output = file("profile.tracy")
 		}
-
-		jvmArgs(
-				"-Dfabric.addMods=${productionMods.collect { it.absolutePath }.join(File.pathSeparator)}",
-				"-Dfabric.client.gametest",
-				"-Dfabric-tag-conventions-v2.missingTagTranslationWarning=fail",
-				"-Dfabric-tag-conventions-v1.legacyTagWarning=fail"
-				)
-		jvmArgs(debugArgs)
 	}
 }
 
-tasks.register('serverPropertiesJar', Jar) {
-	def propsFile = file("build/tmp/install.properties")
-
-	doFirst {
-		propsFile.text = """\
-						fabric-loader-version=${project.loader_version}
-						game-version=${project.minecraft_version}
-						""".stripMargin().stripIndent()
-	}
-
-	archiveFileName = "test-server-properties.jar"
-	destinationDirectory = file("build/tmp")
-	from(propsFile)
-}
-
-tasks.register('runProductionAutoTestServer', JavaExec) {
-	dependsOn productionMods, serverPropertiesJar
-	classpath.from configurations.productionRuntimeServer, serverPropertiesJar
-	mainClass = "net.fabricmc.installer.ServerLauncher"
-	workingDir = file("run")
-
-	doFirst {
-		workingDir.mkdirs()
-
-		jvmArgs(
-				"-Dfabric.addMods=${productionMods.collect { it.absolutePath }.join(File.pathSeparator)}",
-				"-Dfabric.autoTest",
-				)
-		jvmArgs(debugArgs)
-
-		args("nogui")
-	}
+tasks.register('runProductionAutoTestServer', net.fabricmc.loom.task.prod.ServerProductionRunTask) {
+	mods.setFrom productionMods
+	jvmArgs.add("-Dfabric.autoTest")
+	jvmArgs.addAll(debugArgs)
+	programArgs.add("nogui")
 }
 
 // Format all the gradle files
