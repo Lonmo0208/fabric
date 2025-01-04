@@ -249,11 +249,12 @@ allprojects {
 		useJUnitPlatform()
 	}
 
+	def resourceVersion = project.version
 	tasks.withType(ProcessResources).configureEach {
-		inputs.property "version", project.version
+		inputs.property "version", resourceVersion
 
 		filesMatching("fabric.mod.json") {
-			expand "version": project.version
+			expand "version": resourceVersion
 		}
 	}
 
@@ -499,7 +500,11 @@ def productionMods = project.files(configurations.productionMods, remapJar.archi
 
 tasks.register('runProductionClientGametest', net.fabricmc.loom.task.prod.ClientProductionRunTask) {
 	mods.setFrom productionMods
-	jvmArgs.addAll(["-Dfabric.client.gametest", "-Dfabric-tag-conventions-v2.missingTagTranslationWarning=fail", "-Dfabric-tag-conventions-v1.legacyTagWarning=fail"])
+	jvmArgs.addAll([
+		"-Dfabric.client.gametest",
+		"-Dfabric-tag-conventions-v2.missingTagTranslationWarning=fail",
+		"-Dfabric-tag-conventions-v1.legacyTagWarning=fail"
+	])
 	jvmArgs.addAll(debugArgs)
 
 	if (ENV.CI) {
