@@ -56,6 +56,7 @@ public class Focus {
 
 		// All modules depend on fabric-gametest-api-v1 and fabric-registry-sync-v0
 		readDependencies("fabric-gametest-api-v1", dependencies);
+		readDependencies("fabric-client-gametest-api-v1", dependencies);
 		readDependencies("fabric-registry-sync-v0", dependencies);
 
 		System.out.println("Focusing on:\n" + String.join("\n", dependencies));
