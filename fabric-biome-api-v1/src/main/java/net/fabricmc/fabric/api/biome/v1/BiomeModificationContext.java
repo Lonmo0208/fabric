@@ -30,7 +30,7 @@ import net.minecraft.sound.BiomeAdditionsSound;
 import net.minecraft.sound.BiomeMoodSound;
 import net.minecraft.sound.MusicSound;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.collection.DataPool;
+import net.minecraft.util.collection.Pool;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.biome.BiomeParticleConfig;
@@ -271,13 +271,13 @@ public interface BiomeModificationContext {
 		 * @see BiomeEffects#getMusic()
 		 * @see BiomeEffects.Builder#music(MusicSound)
 		 */
-		void setMusic(Optional<DataPool<MusicSound>> sound);
+		void setMusic(Optional<Pool<MusicSound>> sound);
 
 		/**
 		 * @see BiomeEffects#getMusic()
 		 * @see BiomeEffects.Builder#music(MusicSound)
 		 */
-		default void setMusic(@NotNull DataPool<MusicSound> sound) {
+		default void setMusic(@NotNull Pool<MusicSound> sound) {
 			setMusic(Optional.of(sound));
 		}
 
@@ -286,7 +286,7 @@ public interface BiomeModificationContext {
 		 * @see BiomeEffects.Builder#music(MusicSound)
 		 */
 		default void setMusic(@NotNull MusicSound sound) {
-			setMusic(DataPool.of(sound));
+			setMusic(Pool.method_66214(sound));
 		}
 
 		/**
@@ -358,7 +358,7 @@ public interface BiomeModificationContext {
 		 * @see SpawnSettings#getSpawnEntries(SpawnGroup)
 		 * @see SpawnSettings.Builder#spawn(SpawnGroup, SpawnSettings.SpawnEntry)
 		 */
-		void addSpawn(SpawnGroup spawnGroup, SpawnSettings.SpawnEntry spawnEntry);
+		void addSpawn(SpawnGroup spawnGroup, SpawnSettings.SpawnEntry spawnEntry, int weight);
 
 		/**
 		 * Removes any spawns matching the given predicate from this biome, and returns true if any matched.
@@ -375,7 +375,7 @@ public interface BiomeModificationContext {
 		 * @return True if any spawns were removed.
 		 */
 		default boolean removeSpawnsOfEntityType(EntityType<?> entityType) {
-			return removeSpawns((spawnGroup, spawnEntry) -> spawnEntry.type == entityType);
+			return removeSpawns((spawnGroup, spawnEntry) -> spawnEntry.type() == entityType);
 		}
 
 		/**

@@ -30,7 +30,7 @@ import net.minecraft.client.render.model.MultipartBakedModel;
 import net.minecraft.client.render.model.WeightedBakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.collection.DataPool;
+import net.minecraft.util.collection.Pool;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
@@ -72,7 +72,7 @@ public class RandomSupplierTest implements ClientModInitializer {
 	private static WeightedBakedModel createWeightedBakedModel() {
 		var checkingModel = new RandomCheckingBakedModel();
 
-		DataPool.Builder<BakedModel> weightedBuilder = DataPool.builder();
+		Pool.Builder<BakedModel> weightedBuilder = Pool.method_66215();
 		weightedBuilder.add(checkingModel, 1);
 		weightedBuilder.add(checkingModel, 2);
 
@@ -81,7 +81,7 @@ public class RandomSupplierTest implements ClientModInitializer {
 				new MultipartBakedModel.Selector(state -> true, weighted),
 				new MultipartBakedModel.Selector(state -> true, weighted)));
 
-		DataPool.Builder<BakedModel> weightedAgainBuilder = DataPool.builder();
+		Pool.Builder<BakedModel> weightedAgainBuilder = Pool.method_66215();
 		weightedAgainBuilder.add(multipart, 1);
 		weightedAgainBuilder.add(multipart, 2);
 

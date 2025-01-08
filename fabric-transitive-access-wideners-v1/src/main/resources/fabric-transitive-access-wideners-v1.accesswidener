@@ -181,7 +181,6 @@ transitive-accessible method net/minecraft/block/EndRodBlock <init> (Lnet/minecr
 transitive-accessible method net/minecraft/block/EnderChestBlock <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
 transitive-accessible method net/minecraft/block/FarmlandBlock <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
 transitive-accessible method net/minecraft/block/FletchingTableBlock <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
-transitive-accessible method net/minecraft/block/FlowerbedBlock <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
 transitive-accessible method net/minecraft/block/FluidBlock <init> (Lnet/minecraft/fluid/FlowableFluid;Lnet/minecraft/block/AbstractBlock$Settings;)V
 transitive-accessible method net/minecraft/block/FungusBlock <init> (Lnet/minecraft/registry/RegistryKey;Lnet/minecraft/block/Block;Lnet/minecraft/block/AbstractBlock$Settings;)V
 transitive-accessible method net/minecraft/block/FurnaceBlock <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
@@ -243,7 +242,6 @@ transitive-accessible method net/minecraft/block/WetSpongeBlock <init> (Lnet/min
 transitive-accessible method net/minecraft/block/WitherSkullBlock <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
 
 # Constructors of non-abstract item classes
-transitive-accessible method net/minecraft/item/MiningToolItem <init> (Lnet/minecraft/item/ToolMaterial;Lnet/minecraft/registry/tag/TagKey;FFLnet/minecraft/item/Item$Settings;)V
 
 # Private tracked data related methods of DisplayEntity (plus its subclasses) and InteractionEntity
 transitive-accessible method net/minecraft/entity/decoration/DisplayEntity getTransformation (Lnet/minecraft/entity/data/DataTracker;)Lnet/minecraft/util/math/AffineTransformation;

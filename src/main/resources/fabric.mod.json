@@ -19,9 +19,9 @@
     "FabricMC"
   ],
   "depends": {
-    "fabricloader": ">=0.16.9",
+    "fabricloader": ">=0.16.10",
     "java": ">=21",
-    "minecraft": ">=1.21.4- <1.21.5-"
+    "minecraft": ">=1.21.5- <1.21.6-"
   },
   "description": "Core API module providing key hooks and intercompatibility features."
 }

@@ -89,8 +89,8 @@ public abstract class WindowMixin implements WindowHooks {
 
 	@Inject(method = "<init>", at = @At("RETURN"))
 	private void onInit(WindowEventHandler eventHandler, MonitorTracker monitorTracker, WindowSettings settings, @Nullable String fullscreenVideoMode, String title, CallbackInfo ci) {
-		this.defaultWidth = settings.width;
-		this.defaultHeight = settings.height;
+		this.defaultWidth = settings.width();
+		this.defaultHeight = settings.height();
 		this.realWidth = this.width;
 		this.realHeight = this.height;
 		this.realFramebufferWidth = this.framebufferWidth;

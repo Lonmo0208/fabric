@@ -151,7 +151,7 @@ public class SingleVariantItemStorageTests extends AbstractTransferApiTest {
 
 		NbtCompound nbt = new NbtCompound();
 		storage.writeNbt(nbt, staticDrm());
-		assertEquals("{amount:1L,variant:{components:{\"minecraft:custom_name\":'\"test name\"'},item:\"minecraft:diamond\"}}", nbt.toString());
+		assertEquals("{amount:1L,variant:{components:{\"minecraft:custom_name\":\"test name\"},item:\"minecraft:diamond\"}}", nbt.toString());
 	}
 
 	@Test

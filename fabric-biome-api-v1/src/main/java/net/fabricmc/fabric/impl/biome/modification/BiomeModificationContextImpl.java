@@ -45,8 +45,8 @@ import net.minecraft.sound.BiomeAdditionsSound;
 import net.minecraft.sound.BiomeMoodSound;
 import net.minecraft.sound.MusicSound;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.collection.DataPool;
 import net.minecraft.util.collection.Pool;
+import net.minecraft.util.collection.Present;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.biome.BiomeParticleConfig;
@@ -189,7 +189,7 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 		}
 
 		@Override
-		public void setMusic(Optional<DataPool<MusicSound>> sound) {
+		public void setMusic(Optional<Pool<MusicSound>> sound) {
 			effects.music = Objects.requireNonNull(sound);
 		}
 
@@ -341,7 +341,7 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 
 	private class SpawnSettingsContextImpl implements SpawnSettingsContext {
 		private final SpawnSettings spawnSettings = biome.getSpawnSettings();
-		private final EnumMap<SpawnGroup, List<SpawnSettings.SpawnEntry>> fabricSpawners = new EnumMap<>(SpawnGroup.class);
+		private final EnumMap<SpawnGroup, List<Present<SpawnSettings.SpawnEntry>>> fabricSpawners = new EnumMap<>(SpawnGroup.class);
 
 		SpawnSettingsContextImpl() {
 			unfreezeSpawners();
@@ -374,7 +374,7 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 		private void freezeSpawners() {
 			Map<SpawnGroup, Pool<SpawnSettings.SpawnEntry>> spawners = new HashMap<>(spawnSettings.spawners);
 
-			for (Map.Entry<SpawnGroup, List<SpawnSettings.SpawnEntry>> entry : fabricSpawners.entrySet()) {
+			for (Map.Entry<SpawnGroup, List<Present<SpawnSettings.SpawnEntry>>> entry : fabricSpawners.entrySet()) {
 				if (entry.getValue().isEmpty()) {
 					spawners.put(entry.getKey(), Pool.empty());
 				} else {
@@ -395,11 +395,11 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 		}
 
 		@Override
-		public void addSpawn(SpawnGroup spawnGroup, SpawnSettings.SpawnEntry spawnEntry) {
+		public void addSpawn(SpawnGroup spawnGroup, SpawnSettings.SpawnEntry spawnEntry, int weight) {
 			Objects.requireNonNull(spawnGroup);
 			Objects.requireNonNull(spawnEntry);
 
-			fabricSpawners.get(spawnGroup).add(spawnEntry);
+			fabricSpawners.get(spawnGroup).add(new Present<>(spawnEntry, weight));
 		}
 
 		@Override
@@ -407,7 +407,7 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 			boolean anyRemoved = false;
 
 			for (SpawnGroup group : SpawnGroup.values()) {
-				if (fabricSpawners.get(group).removeIf(entry -> predicate.test(group, entry))) {
+				if (fabricSpawners.get(group).removeIf(entry -> predicate.test(group, entry.value()))) {
 					anyRemoved = true;
 				}
 			}

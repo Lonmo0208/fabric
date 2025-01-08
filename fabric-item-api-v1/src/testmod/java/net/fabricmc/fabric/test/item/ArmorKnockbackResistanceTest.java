@@ -18,7 +18,6 @@ package net.fabricmc.fabric.test.item;
 
 import java.util.Map;
 
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.equipment.ArmorMaterial;
 import net.minecraft.item.equipment.EquipmentAssetKeys;
@@ -39,7 +38,7 @@ public class ArmorKnockbackResistanceTest implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		RegistryKey<Item> registryKey = RegistryKey.of(RegistryKeys.ITEM, Identifier.of("fabric-item-api-v1-testmod", "wooden_boots"));
-		Registry.register(Registries.ITEM, registryKey, new ArmorItem(WOOD_ARMOR, EquipmentType.BOOTS, new Item.Settings().registryKey(registryKey)));
+		Registry.register(Registries.ITEM, registryKey, new Item(new Item.Settings().method_66332(WOOD_ARMOR, EquipmentType.BOOTS).registryKey(registryKey)));
 	}
 
 	private static ArmorMaterial createTestArmorMaterial() {

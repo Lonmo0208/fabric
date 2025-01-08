@@ -23,7 +23,6 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.PickaxeItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.potion.Potions;
@@ -75,9 +74,9 @@ public class CustomDamageTest implements ModInitializer {
 		}));
 	}
 
-	public static class WeirdPick extends PickaxeItem {
+	public static class WeirdPick extends Item {
 		protected WeirdPick(RegistryKey<Item> registryKey) {
-			super(ToolMaterial.GOLD, 3f, 5f, new Item.Settings().customDamage(WEIRD_DAMAGE_HANDLER).registryKey(registryKey));
+			super(new Item.Settings().method_66330(ToolMaterial.GOLD, 3f, 5f).customDamage(WEIRD_DAMAGE_HANDLER).registryKey(registryKey));
 		}
 
 		@Override

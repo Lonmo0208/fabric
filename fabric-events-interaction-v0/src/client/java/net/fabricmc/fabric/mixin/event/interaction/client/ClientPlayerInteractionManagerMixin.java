@@ -44,7 +44,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 
 import net.fabricmc.fabric.api.event.client.player.ClientPlayerBlockBreakEvents;
@@ -61,17 +60,15 @@ public abstract class ClientPlayerInteractionManagerMixin {
 	@Shadow
 	@Final
 	private ClientPlayNetworkHandler networkHandler;
-	@Shadow
-	private GameMode gameMode;
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameMode;isCreative()Z", ordinal = 0), method = "attackBlock", cancellable = true)
+	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getAbilities()Lnet/minecraft/entity/player/PlayerAbilities;", ordinal = 0), method = "attackBlock", cancellable = true)
 	public void attackBlock(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> info) {
 		fabric_fireAttackBlockCallback(pos, direction, info);
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameMode;isCreative()Z", ordinal = 0), method = "updateBlockBreakingProgress", cancellable = true)
+	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getAbilities()Lnet/minecraft/entity/player/PlayerAbilities;", ordinal = 0), method = "updateBlockBreakingProgress", cancellable = true)
 	public void method_2902(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> info) {
-		if (gameMode.isCreative()) {
+		if (this.client.player.getAbilities().creativeMode) {
 			fabric_fireAttackBlockCallback(pos, direction, info);
 		}
 	}

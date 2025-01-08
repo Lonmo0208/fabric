@@ -31,8 +31,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.WeightedBakedModel;
-import net.minecraft.util.collection.DataPool;
-import net.minecraft.util.collection.Weighted;
+import net.minecraft.util.collection.Pool;
+import net.minecraft.util.collection.Present;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
@@ -45,15 +45,15 @@ import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 abstract class WeightedBakedModelMixin implements FabricBakedModel {
 	@Shadow
 	@Final
-	private DataPool<BakedModel> models;
+	private Pool<BakedModel> models;
 
 	@Unique
 	private boolean isVanilla = true;
 
 	@Inject(at = @At("RETURN"), method = "<init>")
-	private void onInit(DataPool<BakedModel> dataPool, CallbackInfo ci) {
-		for (Weighted.Present<BakedModel> model : models.getEntries()) {
-			if (!model.data().isVanillaAdapter()) {
+	private void onInit(Pool<BakedModel> dataPool, CallbackInfo ci) {
+		for (Present<BakedModel> model : models.getEntries()) {
+			if (!model.value().isVanillaAdapter()) {
 				isVanilla = false;
 				break;
 			}
@@ -67,7 +67,7 @@ abstract class WeightedBakedModelMixin implements FabricBakedModel {
 
 	@Override
 	public void emitBlockQuads(QuadEmitter emitter, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, Predicate<@Nullable Direction> cullTest) {
-		BakedModel selected = this.models.getDataOrEmpty(randomSupplier.get()).orElse(null);
+		BakedModel selected = this.models.getOrEmpty(randomSupplier.get()).orElse(null);
 
 		if (selected != null) {
 			selected.emitBlockQuads(emitter, blockView, state, pos, () -> {
@@ -80,7 +80,7 @@ abstract class WeightedBakedModelMixin implements FabricBakedModel {
 
 	@Override
 	public void emitItemQuads(QuadEmitter emitter, Supplier<Random> randomSupplier) {
-		BakedModel selected = this.models.getDataOrEmpty(randomSupplier.get()).orElse(null);
+		BakedModel selected = this.models.getOrEmpty(randomSupplier.get()).orElse(null);
 
 		if (selected != null) {
 			selected.emitItemQuads(emitter, () -> {

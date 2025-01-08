@@ -26,6 +26,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
@@ -66,17 +67,15 @@ public class BoxBlock extends BlockWithEntity {
 	}
 
 	@Override
-	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-		if (state.getBlock() != newState.getBlock()) {
-			BlockEntity be = world.getBlockEntity(pos);
+	public void method_66388(BlockState state, ServerWorld world, BlockPos pos, boolean moved) {
+		BlockEntity be = world.getBlockEntity(pos);
 
-			if (be instanceof Inventory) {
-				ItemScatterer.spawn(world, pos, (Inventory) be);
-				world.updateComparators(pos, this);
-			}
-
-			super.onStateReplaced(state, world, pos, newState, moved);
+		if (be instanceof Inventory) {
+			ItemScatterer.spawn(world, pos, (Inventory) be);
+			world.updateComparators(pos, this);
 		}
+
+		super.method_66388(state, world, pos, moved);
 	}
 
 	@Override
