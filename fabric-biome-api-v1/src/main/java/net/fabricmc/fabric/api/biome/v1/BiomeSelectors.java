@@ -26,7 +26,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.collection.Present;
+import net.minecraft.util.collection.Weighted;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.dimension.DimensionOptions;
@@ -148,7 +148,7 @@ public final class BiomeSelectors {
 			SpawnSettings spawnSettings = context.getBiome().getSpawnSettings();
 
 			for (SpawnGroup spawnGroup : SpawnGroup.values()) {
-				for (Present<SpawnSettings.SpawnEntry> spawnEntry : spawnSettings.getSpawnEntries(spawnGroup).getEntries()) {
+				for (Weighted<SpawnSettings.SpawnEntry> spawnEntry : spawnSettings.getSpawnEntries(spawnGroup).getEntries()) {
 					if (entityTypes.contains(spawnEntry.value().type())) {
 						return true;
 					}

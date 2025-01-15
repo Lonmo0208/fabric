@@ -41,7 +41,7 @@ public class TooltipComponentTestInit implements ModInitializer {
 
 	public static final ArmorMaterial TEST_ARMOR_MATERIAL = createTestArmorMaterial();
 	public static final RegistryKey<Item> CUSTOM_ARMOR_ITEM_KEY = RegistryKey.of(RegistryKeys.ITEM, Identifier.of("fabric-rendering-v1-testmod", "test_chest"));
-	public static final Item CUSTOM_ARMOR_ITEM = new Item(new Item.Settings().method_66332(TEST_ARMOR_MATERIAL, EquipmentType.CHESTPLATE).registryKey(CUSTOM_ARMOR_ITEM_KEY));
+	public static final Item CUSTOM_ARMOR_ITEM = new Item(new Item.Settings().armor(TEST_ARMOR_MATERIAL, EquipmentType.CHESTPLATE).registryKey(CUSTOM_ARMOR_ITEM_KEY));
 
 	@Override
 	public void onInitialize() {

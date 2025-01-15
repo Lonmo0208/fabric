@@ -35,8 +35,8 @@ import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 public final class EnumRuleType<E extends Enum<E>> extends GameRules.Type<EnumRule<E>> {
 	private final E[] supportedValues;
 
-	public EnumRuleType(Function<GameRules.Type<EnumRule<E>>, EnumRule<E>> ruleFactory, BiConsumer<MinecraftServer, EnumRule<E>> changeCallback, E[] supportedValues, GameRules.Acceptor<EnumRule<E>> acceptor) {
-		super(null, ruleFactory, changeCallback, acceptor, FeatureSet.empty());
+	public EnumRuleType(Function<GameRules.Type<EnumRule<E>>, EnumRule<E>> ruleFactory, BiConsumer<MinecraftServer, EnumRule<E>> changeCallback, E[] supportedValues, GameRules.Acceptor<EnumRule<E>> acceptor, Class<EnumRule<E>> enumRuleClass) {
+		super(null, ruleFactory, changeCallback, acceptor, enumRuleClass, FeatureSet.empty());
 		this.supportedValues = supportedValues;
 	}
 

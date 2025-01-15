@@ -72,7 +72,7 @@ public class RandomSupplierTest implements ClientModInitializer {
 	private static WeightedBakedModel createWeightedBakedModel() {
 		var checkingModel = new RandomCheckingBakedModel();
 
-		Pool.Builder<BakedModel> weightedBuilder = Pool.method_66215();
+		Pool.Builder<BakedModel> weightedBuilder = Pool.builder();
 		weightedBuilder.add(checkingModel, 1);
 		weightedBuilder.add(checkingModel, 2);
 
@@ -81,7 +81,7 @@ public class RandomSupplierTest implements ClientModInitializer {
 				new MultipartBakedModel.Selector(state -> true, weighted),
 				new MultipartBakedModel.Selector(state -> true, weighted)));
 
-		Pool.Builder<BakedModel> weightedAgainBuilder = Pool.method_66215();
+		Pool.Builder<BakedModel> weightedAgainBuilder = Pool.builder();
 		weightedAgainBuilder.add(multipart, 1);
 		weightedAgainBuilder.add(multipart, 2);
 

@@ -41,7 +41,7 @@ public class UseBlockTests implements ModInitializer {
 		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
 			BlockPos pos = hitResult.getBlockPos();
 
-			if (!player.isSpectator() && world.canPlayerModifyAt(player, pos)) {
+			if (!player.isSpectator() && world.canEntityModifyAt(player, pos)) {
 				if (world.getBlockState(pos).isOf(Blocks.CHEST)) {
 					if (player.getStackInHand(hand).isOf(Items.WATER_BUCKET)) {
 						world.setBlockState(pos, Blocks.AIR.getDefaultState());

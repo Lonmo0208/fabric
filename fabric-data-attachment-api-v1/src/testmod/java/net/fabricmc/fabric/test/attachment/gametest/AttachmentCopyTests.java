@@ -16,32 +16,15 @@
 
 package net.fabricmc.fabric.test.attachment.gametest;
 
-import java.util.List;
-import java.util.Objects;
 import java.util.function.IntSupplier;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.mob.DrownedEntity;
-import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.test.GameTest;
-import net.minecraft.test.GameTestException;
-import net.minecraft.test.TestContext;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.TeleportTarget;
-import net.minecraft.world.World;
 
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.test.attachment.AttachmentTestMod;
-import net.fabricmc.fabric.test.attachment.mixin.ZombieEntityAccessor;
 
-public class AttachmentCopyTests implements FabricGameTest {
+public class AttachmentCopyTests {
 	// using a lambda type because serialization shouldn't play a role in this
 	public static AttachmentType<IntSupplier> DUMMY = AttachmentRegistry.create(
 			Identifier.of(AttachmentTestMod.MOD_ID, "dummy")
@@ -51,6 +34,7 @@ public class AttachmentCopyTests implements FabricGameTest {
 			AttachmentRegistry.Builder::copyOnDeath
 	);
 
+	/* TODO 1.21.5 tests
 	@GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
 	public void testCrossWorldTeleport(TestContext context) {
 		MinecraftServer server = context.getWorld().getServer();
@@ -107,4 +91,6 @@ public class AttachmentCopyTests implements FabricGameTest {
 		converted.discard();
 		context.complete();
 	}
+
+	*/
 }

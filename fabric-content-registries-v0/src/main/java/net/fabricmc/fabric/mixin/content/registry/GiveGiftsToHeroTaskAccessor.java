@@ -29,7 +29,7 @@ import net.minecraft.village.VillagerProfession;
 @Mixin(GiveGiftsToHeroTask.class)
 public interface GiveGiftsToHeroTaskAccessor {
 	@Accessor("GIFTS")
-	static Map<VillagerProfession, RegistryKey<LootTable>> fabric_getGifts() {
+	static Map<RegistryKey<VillagerProfession>, RegistryKey<LootTable>> fabric_getGifts() {
 		throw new AssertionError("Untransformed @Accessor");
 	}
 }

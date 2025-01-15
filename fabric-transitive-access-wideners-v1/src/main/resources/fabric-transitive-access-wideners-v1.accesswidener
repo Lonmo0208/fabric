@@ -90,7 +90,6 @@ transitive-accessible method net/minecraft/text/TranslatableTextContent getArg (
 
 # Villagers
 transitive-accessible field net/minecraft/village/VillagerType BIOME_TO_TYPE Ljava/util/Map;
-transitive-accessible method net/minecraft/village/VillagerType <init> (Ljava/lang/String;)V
 
 # Access stack list in SimpleInventory
 transitive-accessible field net/minecraft/inventory/SimpleInventory heldStacks Lnet/minecraft/util/collection/DefaultedList;
@@ -181,6 +180,7 @@ transitive-accessible method net/minecraft/block/EndRodBlock <init> (Lnet/minecr
 transitive-accessible method net/minecraft/block/EnderChestBlock <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
 transitive-accessible method net/minecraft/block/FarmlandBlock <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
 transitive-accessible method net/minecraft/block/FletchingTableBlock <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
+transitive-accessible method net/minecraft/block/FlowerbedBlock <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
 transitive-accessible method net/minecraft/block/FluidBlock <init> (Lnet/minecraft/fluid/FlowableFluid;Lnet/minecraft/block/AbstractBlock$Settings;)V
 transitive-accessible method net/minecraft/block/FungusBlock <init> (Lnet/minecraft/registry/RegistryKey;Lnet/minecraft/block/Block;Lnet/minecraft/block/AbstractBlock$Settings;)V
 transitive-accessible method net/minecraft/block/FurnaceBlock <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V

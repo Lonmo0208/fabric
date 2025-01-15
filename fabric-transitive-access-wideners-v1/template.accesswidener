@@ -85,7 +85,6 @@ transitive-accessible method net/minecraft/text/TranslatableTextContent getArg (
 
 # Villagers
 transitive-accessible field net/minecraft/village/VillagerType BIOME_TO_TYPE Ljava/util/Map;
-transitive-accessible method net/minecraft/village/VillagerType <init> (Ljava/lang/String;)V
 
 # Access stack list in SimpleInventory
 transitive-accessible field net/minecraft/inventory/SimpleInventory heldStacks Lnet/minecraft/util/collection/DefaultedList;

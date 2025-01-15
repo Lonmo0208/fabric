@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 
 import org.jetbrains.annotations.ApiStatus;
 
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.village.TradeOffers;
 import net.minecraft.village.VillagerProfession;
@@ -49,7 +50,7 @@ public final class TradeOfferHelper {
 	 * @param level the profession level the villager must be to offer the trades
 	 * @param factories a consumer to provide the factories
 	 */
-	public static void registerVillagerOffers(VillagerProfession profession, int level, Consumer<List<TradeOffers.Factory>> factories) {
+	public static void registerVillagerOffers(RegistryKey<VillagerProfession> profession, int level, Consumer<List<TradeOffers.Factory>> factories) {
 		TradeOfferInternals.registerVillagerOffers(profession, level, (trades, rebalanced) -> factories.accept(trades));
 	}
 
@@ -74,7 +75,7 @@ public final class TradeOfferHelper {
 	 * @param factories a consumer to provide the factories
 	 */
 	@ApiStatus.Experimental
-	public static void registerVillagerOffers(VillagerProfession profession, int level, VillagerOffersAdder factories) {
+	public static void registerVillagerOffers(RegistryKey<VillagerProfession> profession, int level, VillagerOffersAdder factories) {
 		TradeOfferInternals.registerVillagerOffers(profession, level, factories);
 	}
 

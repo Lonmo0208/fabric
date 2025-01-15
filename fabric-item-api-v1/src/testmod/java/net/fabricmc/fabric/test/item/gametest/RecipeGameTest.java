@@ -16,21 +16,8 @@
 
 package net.fabricmc.fabric.test.item.gametest;
 
-import java.util.List;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.CraftingRecipe;
-import net.minecraft.recipe.input.CraftingRecipeInput;
-import net.minecraft.test.GameTest;
-import net.minecraft.test.GameTestException;
-import net.minecraft.test.TestContext;
-import net.minecraft.util.collection.DefaultedList;
-
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
-import net.fabricmc.fabric.test.item.CustomDamageTest;
-
-public class RecipeGameTest implements FabricGameTest {
+public class RecipeGameTest {
+	/* TODO 1.21.5 tests
 	@GameTest(templateName = EMPTY_STRUCTURE)
 	public void vanillaRemainderTest(TestContext context) {
 		CraftingRecipeInput inventory = CraftingRecipeInput.create(1, 2, List.of(
@@ -96,4 +83,6 @@ public class RecipeGameTest implements FabricGameTest {
 		stack.setDamage(damage);
 		return stack;
 	}
+
+	 */
 }

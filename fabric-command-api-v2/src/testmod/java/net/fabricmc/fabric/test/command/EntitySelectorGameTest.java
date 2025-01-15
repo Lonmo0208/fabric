@@ -21,11 +21,8 @@ import java.util.Locale;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.test.GameTest;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.math.BlockPos;
-
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 
 public class EntitySelectorGameTest {
 	private void spawn(TestContext context, float health) {
@@ -34,7 +31,7 @@ public class EntitySelectorGameTest {
 		entity.setHealth(health);
 	}
 
-	@GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
+	// @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE) TODO 1.21.5 tests
 	public void testEntitySelector(TestContext context) {
 		BlockPos absolute = context.getAbsolutePos(BlockPos.ORIGIN);
 

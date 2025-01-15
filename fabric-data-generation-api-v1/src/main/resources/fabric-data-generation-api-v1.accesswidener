@@ -186,7 +186,7 @@ transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	
 transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	createAxisRotatedBlockState	(Lnet/minecraft/block/Block;Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/data/BlockStateSupplier;
 transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	registerAxisRotated	(Lnet/minecraft/block/Block;Lnet/minecraft/client/data/TexturedModel$Factory;Lnet/minecraft/client/data/TexturedModel$Factory;)V
 transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	registerCreakingHeart	(Lnet/minecraft/block/Block;)V
-transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	method_66528	(Lnet/minecraft/client/data/TexturedModel$Factory;Lnet/minecraft/block/Block;Ljava/lang/String;)Lnet/minecraft/util/Identifier;
+transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	createCreakingHeartModel	(Lnet/minecraft/client/data/TexturedModel$Factory;Lnet/minecraft/block/Block;Ljava/lang/String;)Lnet/minecraft/util/Identifier;
 transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	createSubModel	(Lnet/minecraft/block/Block;Ljava/lang/String;Lnet/minecraft/client/data/Model;Ljava/util/function/Function;)Lnet/minecraft/util/Identifier;
 transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	createPressurePlateBlockState	(Lnet/minecraft/block/Block;Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/data/BlockStateSupplier;
 transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	createSlabBlockState	(Lnet/minecraft/block/Block;Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/data/BlockStateSupplier;
@@ -221,9 +221,9 @@ transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	
 transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	uploadParticleModel	(Lnet/minecraft/block/Block;Lnet/minecraft/block/Block;)Lnet/minecraft/util/Identifier;
 transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	registerBuiltin	(Lnet/minecraft/block/Block;)V
 transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	registerWoolAndCarpet	(Lnet/minecraft/block/Block;Lnet/minecraft/block/Block;)V
-transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	method_66529	(Lnet/minecraft/block/Block;)V
+transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	registerLeafLitter	(Lnet/minecraft/block/Block;)V
 transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	registerFlowerbed	(Lnet/minecraft/block/Block;)V
-transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	method_66526	(Lnet/minecraft/block/Block;Lnet/minecraft/state/property/IntProperty;Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;)V
+transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	registerSegmentedBlock	(Lnet/minecraft/block/Block;Lnet/minecraft/state/property/IntProperty;Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;)V
 transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	registerRandomHorizontalRotations	(Lnet/minecraft/client/data/TexturedModel$Factory;[Lnet/minecraft/block/Block;)V
 transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	registerSouthDefaultHorizontalFacing	(Lnet/minecraft/client/data/TexturedModel$Factory;[Lnet/minecraft/block/Block;)V
 transitive-accessible	method	net/minecraft/client/data/BlockStateModelGenerator	registerGlassAndPane	(Lnet/minecraft/block/Block;Lnet/minecraft/block/Block;)V

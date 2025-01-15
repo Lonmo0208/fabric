@@ -16,26 +16,13 @@
 
 package net.fabricmc.fabric.test.item.gametest;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BrewingStandBlockEntity;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.PotionContentsComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.Potions;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.test.GameTest;
-import net.minecraft.test.TestContext;
 import net.minecraft.util.math.BlockPos;
 
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
-import net.fabricmc.fabric.test.item.CustomDamageTest;
-
-public class BrewingStandGameTest implements FabricGameTest {
+public class BrewingStandGameTest {
 	private static final int BREWING_TIME = 800;
 	private static final BlockPos POS = new BlockPos(0, 1, 0);
 
+	/* TODO 1.21.5 tests
 	@GameTest(templateName = EMPTY_STRUCTURE)
 	public void basicBrewing(TestContext context) {
 		context.setBlockState(POS, Blocks.BREWING_STAND);
@@ -153,4 +140,6 @@ public class BrewingStandGameTest implements FabricGameTest {
 		itemStack.set(DataComponentTypes.POTION_CONTENTS, new PotionContentsComponent(potion));
 		return itemStack;
 	}
+
+	 */
 }

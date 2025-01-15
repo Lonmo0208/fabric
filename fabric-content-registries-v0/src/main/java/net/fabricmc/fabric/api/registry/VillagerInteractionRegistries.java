@@ -24,8 +24,6 @@ import org.slf4j.LoggerFactory;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.loot.LootTable;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
 import net.minecraft.village.VillagerProfession;
 
 import net.fabricmc.fabric.impl.content.registry.VillagerInteractionRegistriesImpl;
@@ -78,25 +76,17 @@ public final class VillagerInteractionRegistries {
 	}
 
 	/**
-	 * @deprecated Use {@link #registerGiftLootTable(VillagerProfession, RegistryKey)} instead.
-	 */
-	@Deprecated
-	public static void registerGiftLootTable(VillagerProfession profession, Identifier lootTable) {
-		registerGiftLootTable(profession, RegistryKey.of(RegistryKeys.LOOT_TABLE, lootTable));
-	}
-
-	/**
 	 * Registers a hero of the village gifts loot table to a profession.
 	 * @param profession the profession to modify
 	 * @param lootTable  the loot table to associate with the profession
 	 */
-	public static void registerGiftLootTable(VillagerProfession profession, RegistryKey<LootTable> lootTable) {
+	public static void registerGiftLootTable(RegistryKey<VillagerProfession> profession, RegistryKey<LootTable> lootTable) {
 		Objects.requireNonNull(profession, "Profession cannot be null!");
 		Objects.requireNonNull(lootTable, "Loot table identifier cannot be null!");
 		RegistryKey<LootTable> oldValue = GiveGiftsToHeroTaskAccessor.fabric_getGifts().put(profession, lootTable);
 
 		if (oldValue != null) {
-			LOGGER.info("Overriding previous gift loot table of {} profession, was: {}, now: {}", profession.id(), oldValue, lootTable);
+			LOGGER.info("Overriding previous gift loot table of {} profession, was: {}, now: {}", profession.getValue(), oldValue, lootTable);
 		}
 	}
 }

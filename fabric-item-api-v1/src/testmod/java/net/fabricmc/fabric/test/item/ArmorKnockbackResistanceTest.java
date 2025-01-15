@@ -38,7 +38,7 @@ public class ArmorKnockbackResistanceTest implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		RegistryKey<Item> registryKey = RegistryKey.of(RegistryKeys.ITEM, Identifier.of("fabric-item-api-v1-testmod", "wooden_boots"));
-		Registry.register(Registries.ITEM, registryKey, new Item(new Item.Settings().method_66332(WOOD_ARMOR, EquipmentType.BOOTS).registryKey(registryKey)));
+		Registry.register(Registries.ITEM, registryKey, new Item(new Item.Settings().armor(WOOD_ARMOR, EquipmentType.BOOTS).registryKey(registryKey)));
 	}
 
 	private static ArmorMaterial createTestArmorMaterial() {
