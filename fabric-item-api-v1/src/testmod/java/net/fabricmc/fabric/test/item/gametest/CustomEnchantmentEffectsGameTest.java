@@ -16,34 +16,8 @@
 
 package net.fabricmc.fabric.test.item.gametest;
 
-import java.util.List;
-import java.util.Optional;
-
-import net.minecraft.component.EnchantmentEffectComponentTypes;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.effect.EnchantmentEffectEntry;
-import net.minecraft.enchantment.effect.EnchantmentValueEffect;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.test.GameTest;
-import net.minecraft.test.GameTestException;
-import net.minecraft.test.TestContext;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameMode;
-
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
-import net.fabricmc.fabric.test.item.CustomEnchantmentEffectsTest;
-
-public class CustomEnchantmentEffectsGameTest implements FabricGameTest {
+public class CustomEnchantmentEffectsGameTest {
+	/* TODO 1.21.5 tests
 	@GameTest(templateName = "fabric-item-api-v1-testmod:bedrock_platform")
 	public void weirdImpalingSetsFireToTargets(TestContext context) {
 		BlockPos pos = new BlockPos(3, 3, 3);
@@ -88,4 +62,6 @@ public class CustomEnchantmentEffectsGameTest implements FabricGameTest {
 		DynamicRegistryManager registryManager = context.getWorld().getRegistryManager();
 		return registryManager.getOrThrow(RegistryKeys.ENCHANTMENT);
 	}
+
+	 */
 }

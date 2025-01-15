@@ -37,7 +37,7 @@ public class AttackBlockTests implements ModInitializer {
 		});
 		// If a chest is attacked and the player holds a lava bucket, delete it!
 		AttackBlockCallback.EVENT.register((player, world, hand, pos, side) -> {
-			if (!player.isSpectator() && world.canPlayerModifyAt(player, pos)) {
+			if (!player.isSpectator() && world.canEntityModifyAt(player, pos)) {
 				if (world.getBlockState(pos).isOf(Blocks.CHEST)) {
 					if (player.getStackInHand(hand).isOf(Items.LAVA_BUCKET)) {
 						world.setBlockState(pos, Blocks.AIR.getDefaultState());

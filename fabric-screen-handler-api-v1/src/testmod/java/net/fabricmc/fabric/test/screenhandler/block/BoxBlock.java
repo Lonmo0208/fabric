@@ -67,7 +67,7 @@ public class BoxBlock extends BlockWithEntity {
 	}
 
 	@Override
-	public void method_66388(BlockState state, ServerWorld world, BlockPos pos, boolean moved) {
+	public void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved) {
 		BlockEntity be = world.getBlockEntity(pos);
 
 		if (be instanceof Inventory) {
@@ -75,7 +75,7 @@ public class BoxBlock extends BlockWithEntity {
 			world.updateComparators(pos, this);
 		}
 
-		super.method_66388(state, world, pos, moved);
+		super.onStateReplaced(state, world, pos, moved);
 	}
 
 	@Override

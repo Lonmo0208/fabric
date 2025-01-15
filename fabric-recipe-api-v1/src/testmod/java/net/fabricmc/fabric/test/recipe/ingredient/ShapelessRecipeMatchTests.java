@@ -27,18 +27,16 @@ import net.minecraft.recipe.ShapelessRecipe;
 import net.minecraft.recipe.input.CraftingRecipeInput;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.test.GameTest;
 import net.minecraft.test.GameTestException;
 import net.minecraft.test.TestContext;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 
 public class ShapelessRecipeMatchTests {
 	/**
 	 * The recipe requires at least one undamaged pickaxe.
 	 */
-	@GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
+	// @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE) TODO 1.21.5 tests
 	public void testShapelessMatch(TestContext context) {
 		RegistryKey<Recipe<?>> recipeKey = RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("fabric-recipe-api-v1-testmod", "test_shapeless_match"));
 		ShapelessRecipe recipe = (ShapelessRecipe) context.getWorld().getRecipeManager().get(recipeKey).get().value();
@@ -50,14 +48,14 @@ public class ShapelessRecipeMatchTests {
 		List<ItemStack> damagedPickaxes = Collections.nCopies(9, damagedPickaxe);
 
 		if (recipe.matches(CraftingRecipeInput.create(3, 3, damagedPickaxes), context.getWorld())) {
-			throw new GameTestException("Recipe should not match with only damaged pickaxes");
+			throw new GameTestException(Text.literal("Recipe should not match with only damaged pickaxes"), 0);
 		}
 
 		List<ItemStack> oneUndamagedPickaxe = new LinkedList<>(damagedPickaxes);
 		oneUndamagedPickaxe.set(0, undamagedPickaxe);
 
 		if (!recipe.matches(CraftingRecipeInput.create(3, 3, oneUndamagedPickaxe), context.getWorld())) {
-			throw new GameTestException("Recipe should match with at least one undamaged pickaxe");
+			throw new GameTestException(Text.literal("Recipe should match with at least one undamaged pickaxe"), 0);
 		}
 
 		context.complete();

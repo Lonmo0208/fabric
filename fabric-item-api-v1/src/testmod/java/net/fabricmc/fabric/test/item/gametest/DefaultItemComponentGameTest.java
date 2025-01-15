@@ -16,21 +16,8 @@
 
 package net.fabricmc.fabric.test.item.gametest;
 
-import java.util.function.Consumer;
-
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.FireworksComponent;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.test.GameTest;
-import net.minecraft.test.GameTestException;
-import net.minecraft.test.TestContext;
-import net.minecraft.text.Text;
-
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
-
-public class DefaultItemComponentGameTest implements FabricGameTest {
+public class DefaultItemComponentGameTest {
+	/* TODO 1.21.5 tests
 	@GameTest(templateName = EMPTY_STRUCTURE)
 	public void modify(TestContext context) {
 		Consumer<Text> checkText = text -> {
@@ -90,4 +77,6 @@ public class DefaultItemComponentGameTest implements FabricGameTest {
 		context.assertTrue(expectedName.contains(itemName), errorMessage.formatted(itemName, expectedName));
 		context.complete();
 	}
+
+	 */
 }

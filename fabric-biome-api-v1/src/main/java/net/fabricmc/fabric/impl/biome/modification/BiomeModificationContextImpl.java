@@ -46,7 +46,7 @@ import net.minecraft.sound.BiomeMoodSound;
 import net.minecraft.sound.MusicSound;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.collection.Pool;
-import net.minecraft.util.collection.Present;
+import net.minecraft.util.collection.Weighted;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.biome.BiomeParticleConfig;
@@ -341,7 +341,7 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 
 	private class SpawnSettingsContextImpl implements SpawnSettingsContext {
 		private final SpawnSettings spawnSettings = biome.getSpawnSettings();
-		private final EnumMap<SpawnGroup, List<Present<SpawnSettings.SpawnEntry>>> fabricSpawners = new EnumMap<>(SpawnGroup.class);
+		private final EnumMap<SpawnGroup, List<Weighted<SpawnSettings.SpawnEntry>>> fabricSpawners = new EnumMap<>(SpawnGroup.class);
 
 		SpawnSettingsContextImpl() {
 			unfreezeSpawners();
@@ -374,7 +374,7 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 		private void freezeSpawners() {
 			Map<SpawnGroup, Pool<SpawnSettings.SpawnEntry>> spawners = new HashMap<>(spawnSettings.spawners);
 
-			for (Map.Entry<SpawnGroup, List<Present<SpawnSettings.SpawnEntry>>> entry : fabricSpawners.entrySet()) {
+			for (Map.Entry<SpawnGroup, List<Weighted<SpawnSettings.SpawnEntry>>> entry : fabricSpawners.entrySet()) {
 				if (entry.getValue().isEmpty()) {
 					spawners.put(entry.getKey(), Pool.empty());
 				} else {
@@ -399,7 +399,7 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 			Objects.requireNonNull(spawnGroup);
 			Objects.requireNonNull(spawnEntry);
 
-			fabricSpawners.get(spawnGroup).add(new Present<>(spawnEntry, weight));
+			fabricSpawners.get(spawnGroup).add(new Weighted<>(spawnEntry, weight));
 		}
 
 		@Override

@@ -32,6 +32,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.village.TradeOffers;
@@ -51,9 +52,9 @@ public final class TradeOfferInternals {
 	 */
 	private static void initVillagerTrades() {
 		if (!(TradeOffers.REBALANCED_PROFESSION_TO_LEVELED_TRADE instanceof HashMap)) {
-			Map<VillagerProfession, Int2ObjectMap<TradeOffers.Factory[]>> map = new HashMap<>(TradeOffers.REBALANCED_PROFESSION_TO_LEVELED_TRADE);
+			Map<RegistryKey<VillagerProfession>, Int2ObjectMap<TradeOffers.Factory[]>> map = new HashMap<>(TradeOffers.REBALANCED_PROFESSION_TO_LEVELED_TRADE);
 
-			for (Map.Entry<VillagerProfession, Int2ObjectMap<TradeOffers.Factory[]>> trade : TradeOffers.PROFESSION_TO_LEVELED_TRADE.entrySet()) {
+			for (Map.Entry<RegistryKey<VillagerProfession>, Int2ObjectMap<TradeOffers.Factory[]>> trade : TradeOffers.PROFESSION_TO_LEVELED_TRADE.entrySet()) {
 				if (!map.containsKey(trade.getKey())) map.put(trade.getKey(), trade.getValue());
 			}
 
@@ -63,7 +64,7 @@ public final class TradeOfferInternals {
 
 	// synchronized guards against concurrent modifications - Vanilla does not mutate the underlying arrays (as of 1.16),
 	// so reads will be fine without locking.
-	public static synchronized void registerVillagerOffers(VillagerProfession profession, int level, TradeOfferHelper.VillagerOffersAdder factory) {
+	public static synchronized void registerVillagerOffers(RegistryKey<VillagerProfession> profession, int level, TradeOfferHelper.VillagerOffersAdder factory) {
 		Objects.requireNonNull(profession, "VillagerProfession may not be null.");
 		initVillagerTrades();
 		registerOffers(TradeOffers.PROFESSION_TO_LEVELED_TRADE.computeIfAbsent(profession, key -> new Int2ObjectOpenHashMap<>()), level, trades -> factory.onRegister(trades, false));

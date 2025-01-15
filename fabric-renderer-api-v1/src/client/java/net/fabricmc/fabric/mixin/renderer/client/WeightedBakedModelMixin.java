@@ -32,7 +32,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.WeightedBakedModel;
 import net.minecraft.util.collection.Pool;
-import net.minecraft.util.collection.Present;
+import net.minecraft.util.collection.Weighted;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
@@ -52,7 +52,7 @@ abstract class WeightedBakedModelMixin implements FabricBakedModel {
 
 	@Inject(at = @At("RETURN"), method = "<init>")
 	private void onInit(Pool<BakedModel> dataPool, CallbackInfo ci) {
-		for (Present<BakedModel> model : models.getEntries()) {
+		for (Weighted<BakedModel> model : models.getEntries()) {
 			if (!model.value().isVanillaAdapter()) {
 				isVanilla = false;
 				break;

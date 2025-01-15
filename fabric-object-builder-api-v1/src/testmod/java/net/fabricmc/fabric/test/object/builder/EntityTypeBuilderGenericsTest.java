@@ -16,8 +16,6 @@
 
 package net.fabricmc.fabric.test.object.builder;
 
-import java.util.Collections;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -58,11 +56,6 @@ final class EntityTypeBuilderGenericsTest {
 	private static class TestEntity extends LivingEntity {
 		protected TestEntity(EntityType<? extends LivingEntity> entityType, World world) {
 			super(entityType, world);
-		}
-
-		@Override
-		public Iterable<ItemStack> getArmorItems() {
-			return Collections.emptyList();
 		}
 
 		@Override

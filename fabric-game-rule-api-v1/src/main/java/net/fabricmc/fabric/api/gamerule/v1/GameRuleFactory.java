@@ -148,6 +148,7 @@ public final class GameRuleFactory {
 				type -> new BoundedIntRule(type, defaultValue, minimumValue, maximumValue), // Internally use a bounded int rule
 				changedCallback,
 				GameRules.Visitor::visitInt,
+				GameRules.IntRule.class,
 				FeatureSet.empty()
 		);
 	}
@@ -226,6 +227,7 @@ public final class GameRuleFactory {
 				type -> new DoubleRule(type, defaultValue, minimumValue, maximumValue),
 				changedCallback,
 				GameRuleFactory::visitDouble,
+				DoubleRule.class,
 				FeatureSet.empty()
 		);
 	}
@@ -292,7 +294,8 @@ public final class GameRuleFactory {
 				type -> new EnumRule<>(type, defaultValue, supportedValues),
 				changedCallback,
 				supportedValues,
-				GameRuleFactory::visitEnum
+				GameRuleFactory::visitEnum,
+				(Class<EnumRule<E>>) (Object) EnumRule.class
 		);
 	}
 

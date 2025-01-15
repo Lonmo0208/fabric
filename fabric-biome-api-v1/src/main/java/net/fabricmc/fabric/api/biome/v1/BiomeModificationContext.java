@@ -286,7 +286,7 @@ public interface BiomeModificationContext {
 		 * @see BiomeEffects.Builder#music(MusicSound)
 		 */
 		default void setMusic(@NotNull MusicSound sound) {
-			setMusic(Pool.method_66214(sound));
+			setMusic(Pool.of(sound));
 		}
 
 		/**
