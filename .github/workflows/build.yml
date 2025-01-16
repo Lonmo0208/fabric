@@ -5,7 +5,7 @@ jobs:
     strategy:
       matrix:
         java: [21-ubuntu]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04-arm
     container:
       image: mcr.microsoft.com/openjdk/jdk:${{ matrix.java }}
       options: --user root
@@ -34,7 +34,7 @@ jobs:
           path: /root/.m2/repository/net/fabricmc/
 
   client_test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04-arm
     steps:
       - uses: actions/checkout@v4
         with:
@@ -55,7 +55,7 @@ jobs:
           path: run/screenshots
 
   server_test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04-arm
     steps:
       - uses: actions/checkout@v4
         with:
@@ -68,7 +68,7 @@ jobs:
       - run: ./gradlew runProductionAutoTestServer --stacktrace --warning-mode=fail
 
   check_resources:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04-arm
     steps:
       - uses: actions/checkout@v4
         with:
