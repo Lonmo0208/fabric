@@ -16,9 +16,34 @@
 
 package net.fabricmc.fabric.test.item.gametest;
 
+import java.util.List;
+import java.util.Optional;
+
+import net.minecraft.component.EnchantmentEffectComponentTypes;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.effect.EnchantmentEffectEntry;
+import net.minecraft.enchantment.effect.EnchantmentValueEffect;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.test.TestContext;
+import net.minecraft.text.Text;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.GameMode;
+
+import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.test.item.CustomEnchantmentEffectsTest;
+
 public class CustomEnchantmentEffectsGameTest {
-	/* TODO 1.21.5 tests
-	@GameTest(templateName = "fabric-item-api-v1-testmod:bedrock_platform")
+	@FabricGameTest
 	public void weirdImpalingSetsFireToTargets(TestContext context) {
 		BlockPos pos = new BlockPos(3, 3, 3);
 		CreeperEntity creeper = context.spawnEntity(EntityType.CREEPER, pos);
@@ -28,7 +53,7 @@ public class CustomEnchantmentEffectsGameTest {
 		Optional<RegistryEntry.Reference<Enchantment>> impaling = getEnchantmentRegistry(context)
 				.getOptional(CustomEnchantmentEffectsTest.WEIRD_IMPALING);
 		if (impaling.isEmpty()) {
-			throw new GameTestException("Weird Impaling enchantment is not present");
+			throw context.createError("Weird Impaling enchantment is not present");
 		}
 
 		trident.addEnchantment(impaling.get(), 1);
@@ -40,12 +65,12 @@ public class CustomEnchantmentEffectsGameTest {
 		context.expectEntityWithDataEnd(pos, EntityType.CREEPER, Entity::isOnFire, true);
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE)
+	@FabricGameTest
 	public void weirdImpalingHasTwoDamageEffects(TestContext context) {
 		Enchantment impaling = getEnchantmentRegistry(context).get(CustomEnchantmentEffectsTest.WEIRD_IMPALING);
 
 		if (impaling == null) {
-			throw new GameTestException("Weird Impaling enchantment is not present");
+			throw context.createError("Weird Impaling enchantment is not present");
 		}
 
 		List<EnchantmentEffectEntry<EnchantmentValueEffect>> damageEffects = impaling
@@ -53,7 +78,7 @@ public class CustomEnchantmentEffectsGameTest {
 
 		context.assertTrue(
 				damageEffects.size() == 2,
-				String.format("Weird Impaling has %d damage effect(s), not the expected 2", damageEffects.size())
+				Text.literal(String.format("Weird Impaling has %d damage effect(s), not the expected 2", damageEffects.size()))
 		);
 		context.complete();
 	}
@@ -62,6 +87,4 @@ public class CustomEnchantmentEffectsGameTest {
 		DynamicRegistryManager registryManager = context.getWorld().getRegistryManager();
 		return registryManager.getOrThrow(RegistryKeys.ENCHANTMENT);
 	}
-
-	 */
 }

@@ -32,11 +32,13 @@ import net.minecraft.test.TestContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+
 public class ShapelessRecipeMatchTests {
 	/**
 	 * The recipe requires at least one undamaged pickaxe.
 	 */
-	// @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE) TODO 1.21.5 tests
+	@FabricGameTest
 	public void testShapelessMatch(TestContext context) {
 		RegistryKey<Recipe<?>> recipeKey = RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("fabric-recipe-api-v1-testmod", "test_shapeless_match"));
 		ShapelessRecipe recipe = (ShapelessRecipe) context.getWorld().getRecipeManager().get(recipeKey).get().value();

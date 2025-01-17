@@ -16,13 +16,28 @@
 
 package net.fabricmc.fabric.test.attachment.gametest;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.function.IntSupplier;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.mob.DrownedEntity;
+import net.minecraft.entity.mob.ZombieEntity;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.test.TestContext;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.TeleportTarget;
+import net.minecraft.world.World;
 
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.test.attachment.AttachmentTestMod;
+import net.fabricmc.fabric.test.attachment.mixin.ZombieEntityAccessor;
 
 public class AttachmentCopyTests {
 	// using a lambda type because serialization shouldn't play a role in this
@@ -34,8 +49,7 @@ public class AttachmentCopyTests {
 			AttachmentRegistry.Builder::copyOnDeath
 	);
 
-	/* TODO 1.21.5 tests
-	@GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
+	@FabricGameTest
 	public void testCrossWorldTeleport(TestContext context) {
 		MinecraftServer server = context.getWorld().getServer();
 		ServerWorld overworld = server.getOverworld();
@@ -48,20 +62,20 @@ public class AttachmentCopyTests {
 		entity.setAttached(COPY_ON_DEATH, () -> 10);
 
 		Entity moved = entity.teleportTo(new TeleportTarget(end, entity, TeleportTarget.NO_OP));
-		if (moved == null) throw new GameTestException("Cross-world teleportation failed");
+		if (moved == null) throw context.createError("Cross-world teleportation failed");
 
 		IntSupplier attached1 = moved.getAttached(DUMMY);
 		IntSupplier attached2 = moved.getAttached(COPY_ON_DEATH);
 
 		if (attached1 == null || attached1.getAsInt() != 10 || attached2 == null || attached2.getAsInt() != 10) {
-			throw new GameTestException("Attachment copying failed during cross-world teleportation");
+			throw context.createError("Attachment copying failed during cross-world teleportation");
 		}
 
 		moved.discard();
 		context.complete();
 	}
 
-	@GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
+	@FabricGameTest
 	public void testMobConversion(TestContext context) {
 		ZombieEntity mob = context.spawnEntity(EntityType.ZOMBIE, BlockPos.ORIGIN);
 		mob.setAttached(DUMMY, () -> 42);
@@ -72,25 +86,23 @@ public class AttachmentCopyTests {
 		List<DrownedEntity> drowned = context.getEntities(EntityType.DROWNED);
 
 		if (drowned.size() != 1) {
-			throw new GameTestException("Conversion failed");
+			throw context.createError("Conversion failed");
 		}
 
 		DrownedEntity converted = drowned.getFirst();
-		if (converted == null) throw new GameTestException("Conversion failed");
+		if (converted == null) throw context.createError("Conversion failed");
 
 		if (converted.hasAttached(DUMMY)) {
-			throw new GameTestException("Attachment shouldn't have been copied on mob conversion");
+			throw context.createError("Attachment shouldn't have been copied on mob conversion");
 		}
 
 		IntSupplier attached = converted.getAttached(COPY_ON_DEATH);
 
 		if (attached == null || attached.getAsInt() != 42) {
-			throw new GameTestException("Attachment copying failed during mob conversion");
+			throw context.createError("Attachment copying failed during mob conversion");
 		}
 
 		converted.discard();
 		context.complete();
 	}
-
-	*/
 }

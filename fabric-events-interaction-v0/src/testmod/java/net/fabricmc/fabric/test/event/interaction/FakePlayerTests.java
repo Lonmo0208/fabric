@@ -16,12 +16,29 @@
 
 package net.fabricmc.fabric.test.event.interaction;
 
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.Items;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.test.TestContext;
+import net.minecraft.text.Text;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+
+import net.fabricmc.fabric.api.entity.FakePlayer;
+import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+
 public class FakePlayerTests {
 	/**
 	 * Try placing a sign with a fake player.
 	 */
-	/* TODO 1.21.5 tests
-	@GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
+	@FabricGameTest
 	public void testFakePlayerPlaceSign(TestContext context) {
 		// This is for Fabric internal testing only, if you copy this to your mod you're on your own...
 
@@ -41,18 +58,15 @@ public class FakePlayerTests {
 		BlockHitResult hitResult = new BlockHitResult(hitPos, Direction.UP, context.getAbsolutePos(basePos), false);
 		signStack.useOnBlock(new ItemUsageContext(fakePlayer, Hand.MAIN_HAND, hitResult));
 
-		context.checkBlockState(signPos, x -> x.isOf(Blocks.OAK_SIGN), () -> "Sign was not placed");
-		context.assertTrue(signStack.isEmpty(), "Sign stack was not emptied");
+		context.checkBlockState(signPos, x -> x.isOf(Blocks.OAK_SIGN), (b) -> Text.literal("Sign was not placed"));
+		context.assertTrue(signStack.isEmpty(), Text.literal("Sign stack was not emptied"));
 		context.complete();
 	}
-
-	 */
 
 	/**
 	 * Try breaking a beehive with a fake player (see {@code BeehiveBlockMixin}).
 	 */
-	/* TODO 1.21.5 tests
-	@GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
+	@FabricGameTest
 	public void testFakePlayerBreakBeehive(TestContext context) {
 		BlockPos basePos = new BlockPos(0, 1, 0);
 		context.setBlockState(basePos, Blocks.BEEHIVE);
@@ -63,10 +77,8 @@ public class FakePlayerTests {
 		BlockPos fakePlayerPos = context.getAbsolutePos(basePos.add(2, 0, 2));
 		fakePlayer.setPosition(fakePlayerPos.getX(), fakePlayerPos.getY(), fakePlayerPos.getZ());
 
-		context.assertTrue(fakePlayer.interactionManager.tryBreakBlock(context.getAbsolutePos(basePos)), "Block was not broken");
+		context.assertTrue(fakePlayer.interactionManager.tryBreakBlock(context.getAbsolutePos(basePos)), Text.literal("Block was not broken"));
 		context.expectBlock(Blocks.AIR, basePos);
 		context.complete();
 	}
-
-	*/
 }

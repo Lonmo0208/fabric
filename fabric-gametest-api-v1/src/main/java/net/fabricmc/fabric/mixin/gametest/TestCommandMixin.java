@@ -18,8 +18,6 @@ package net.fabricmc.fabric.mixin.gametest;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import net.minecraft.server.command.TestCommand;
 
@@ -28,18 +26,18 @@ public class TestCommandMixin {
 	@Unique
 	private static final String OUTPUT_DIR = System.getProperty("fabric-api.gametest.structures.output-dir");
 
-	@ModifyArg(
-			method = "executeExport(Lnet/minecraft/server/command/ServerCommandSource;Ljava/lang/String;)I",
-			at = @At(
-					value = "INVOKE",
-					target = "Ljava/nio/file/Paths;get(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;"
-			)
-	)
-	private static String useCustomOutputDirectory(String first) {
-		if (OUTPUT_DIR != null) {
-			return OUTPUT_DIR;
-		}
-
-		return first;
-	}
+//	@ModifyArg(
+//			method = "executeExport(Lnet/minecraft/server/command/ServerCommandSource;Ljava/lang/String;)I",
+//			at = @At(
+//					value = "INVOKE",
+//					target = "Ljava/nio/file/Paths;get(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;"
+//			)
+//	)
+//	private static String useCustomOutputDirectory(String first) {
+//		if (OUTPUT_DIR != null) {
+//			return OUTPUT_DIR;
+//		}
+//
+//		return first;
+//	}
 }

@@ -43,7 +43,7 @@ import net.minecraft.structure.StructureTemplateManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.level.storage.LevelStorage;
 
-import net.fabricmc.fabric.impl.gametest.FabricGameTestHelper;
+import net.fabricmc.fabric.impl.gametest.FabricGameTestRunner;
 
 @Mixin(StructureTemplateManager.class)
 public abstract class StructureTemplateManagerMixin {
@@ -54,7 +54,7 @@ public abstract class StructureTemplateManagerMixin {
 	public abstract StructureTemplate createTemplate(NbtCompound nbt);
 
 	private Optional<StructureTemplate> fabric_loadSnbtFromResource(Identifier id) {
-		Identifier path = FabricGameTestHelper.GAMETEST_STRUCTURE_FINDER.toResourcePath(id);
+		Identifier path = FabricGameTestRunner.GAMETEST_STRUCTURE_FINDER.toResourcePath(id);
 		Optional<Resource> resource = this.resourceManager.getResource(path);
 
 		if (resource.isPresent()) {
@@ -71,7 +71,7 @@ public abstract class StructureTemplateManagerMixin {
 	}
 
 	private Stream<Identifier> fabric_streamTemplatesFromResource() {
-		ResourceFinder finder = FabricGameTestHelper.GAMETEST_STRUCTURE_FINDER;
+		ResourceFinder finder = FabricGameTestRunner.GAMETEST_STRUCTURE_FINDER;
 		return finder.findResources(this.resourceManager).keySet().stream().map(finder::toResourceId);
 	}
 
