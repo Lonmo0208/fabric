@@ -79,7 +79,7 @@ final class TestAnnotationLocator {
 		return methods;
 	}
 
-	// Recursively find all methods with the GameTestData annotation
+	// Recursively find all methods with the GameTest annotation
 	private void findMagicMethods(EntrypointContainer<Object> entrypoint, Class<?> testClass, List<TestMethod> methods) {
 		for (Method method : testClass.getDeclaredMethods()) {
 			if (method.isAnnotationPresent(GameTest.class)) {
