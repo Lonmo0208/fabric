@@ -35,7 +35,7 @@ import net.minecraft.world.World;
 
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.test.attachment.AttachmentTestMod;
 import net.fabricmc.fabric.test.attachment.mixin.ZombieEntityAccessor;
 
@@ -49,7 +49,7 @@ public class AttachmentCopyTests {
 			AttachmentRegistry.Builder::copyOnDeath
 	);
 
-	@FabricGameTest
+	@GameTest
 	public void testCrossWorldTeleport(TestContext context) {
 		MinecraftServer server = context.getWorld().getServer();
 		ServerWorld overworld = server.getOverworld();
@@ -75,7 +75,7 @@ public class AttachmentCopyTests {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void testMobConversion(TestContext context) {
 		ZombieEntity mob = context.spawnEntity(EntityType.ZOMBIE, BlockPos.ORIGIN);
 		mob.setAttached(DUMMY, () -> 42);

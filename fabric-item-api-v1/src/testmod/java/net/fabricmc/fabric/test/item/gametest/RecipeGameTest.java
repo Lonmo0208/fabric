@@ -25,11 +25,11 @@ import net.minecraft.recipe.input.CraftingRecipeInput;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.collection.DefaultedList;
 
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.test.item.CustomDamageTest;
 
 public class RecipeGameTest {
-	@FabricGameTest
+	@GameTest
 	public void vanillaRemainderTest(TestContext context) {
 		CraftingRecipeInput inventory = CraftingRecipeInput.create(1, 2, List.of(
 				new ItemStack(Items.WATER_BUCKET),
@@ -44,7 +44,7 @@ public class RecipeGameTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void fabricRemainderTest(TestContext context) {
 		CraftingRecipeInput inventory = CraftingRecipeInput.create(1, 4, List.of(
 				new ItemStack(CustomDamageTest.WEIRD_PICK),

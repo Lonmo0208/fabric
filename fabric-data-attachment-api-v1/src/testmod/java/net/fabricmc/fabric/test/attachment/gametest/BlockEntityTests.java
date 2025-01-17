@@ -32,14 +32,14 @@ import net.minecraft.test.TestContext;
 import net.minecraft.util.math.BlockPos;
 
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.test.attachment.AttachmentTestMod;
 import net.fabricmc.fabric.test.attachment.mixin.BlockEntityTypeAccessor;
 
 public class BlockEntityTests {
 	private static final Logger LOGGER = LogUtils.getLogger();
 
-	@FabricGameTest
+	@GameTest
 	public void testBlockEntitySync(TestContext context) {
 		BlockPos pos = BlockPos.ORIGIN.up();
 

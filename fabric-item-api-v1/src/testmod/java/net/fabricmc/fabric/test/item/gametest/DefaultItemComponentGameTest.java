@@ -26,10 +26,10 @@ import net.minecraft.item.Items;
 import net.minecraft.test.TestContext;
 import net.minecraft.text.Text;
 
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 
 public class DefaultItemComponentGameTest {
-	@FabricGameTest
+	@GameTest
 	public void modify(TestContext context) {
 		Consumer<Text> checkText = text -> {
 			if (text == null) {
@@ -56,7 +56,7 @@ public class DefaultItemComponentGameTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void afterModify(TestContext context) {
 		FireworksComponent fireworksComponent = Items.GOLD_NUGGET.getComponents().get(DataComponentTypes.FIREWORKS);
 
@@ -73,7 +73,7 @@ public class DefaultItemComponentGameTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void diamondPickaxeIsRenamed(TestContext context) {
 		Item testItem = Items.DIAMOND_PICKAXE;
 		ItemStack stack = testItem.getDefaultStack();

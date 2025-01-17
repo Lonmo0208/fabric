@@ -1,6 +1,23 @@
+/*
+ * Copyright (c) 2016, 2017, 2018, 2019 FabricMC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package net.fabricmc.fabric.impl.gametest;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -21,11 +38,11 @@ import net.minecraft.test.TestEnvironmentDefinition;
 import net.minecraft.test.TestInstance;
 import net.minecraft.util.Identifier;
 
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 
-public class TestAnnotationLocator {
+final class TestAnnotationLocator {
 	private static final String ENTRYPOINT_KEY = "fabric-gametest";
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestAnnotationLocator.class);
 
@@ -33,7 +50,7 @@ public class TestAnnotationLocator {
 
 	private List<TestMethod> testMethods = null;
 
-	public TestAnnotationLocator(FabricLoader fabricLoader) {
+	TestAnnotationLocator(FabricLoader fabricLoader) {
 		this.fabricLoader = fabricLoader;
 	}
 
@@ -65,9 +82,9 @@ public class TestAnnotationLocator {
 	// Recursively find all methods with the GameTestData annotation
 	private void findMagicMethods(EntrypointContainer<Object> entrypoint, Class<?> testClass, List<TestMethod> methods) {
 		for (Method method : testClass.getDeclaredMethods()) {
-			if (method.isAnnotationPresent(FabricGameTest.class)) {
+			if (method.isAnnotationPresent(GameTest.class)) {
 				validateMethod(method);
-				methods.add(new TestMethod(method, method.getAnnotation(FabricGameTest.class), entrypoint));
+				methods.add(new TestMethod(method, method.getAnnotation(GameTest.class), entrypoint));
 			}
 		}
 
@@ -80,9 +97,21 @@ public class TestAnnotationLocator {
 		if (method.getParameterCount() != 1 || method.getParameterTypes()[0] != TestContext.class) {
 			throw new UnsupportedOperationException("Method %s must have a single parameter of type TestContext".formatted(method.getName()));
 		}
+
+		if (!Modifier.isPublic(method.getModifiers())) {
+			throw new UnsupportedOperationException("Method %s must be public".formatted(method.getName()));
+		}
+
+		if (Modifier.isStatic(method.getModifiers())) {
+			throw new UnsupportedOperationException("Method %s must not be static".formatted(method.getName()));
+		}
+
+		if (method.getReturnType() != void.class) {
+			throw new UnsupportedOperationException("Method %s must return void".formatted(method.getName()));
+		}
 	}
 
-	public record TestMethod(Method method, FabricGameTest fabricGameTest, EntrypointContainer<Object> entrypoint) {
+	public record TestMethod(Method method, GameTest gameTest, EntrypointContainer<Object> entrypoint) {
 		Identifier identifier() {
 			String name = camelToSnake(entrypoint.getEntrypoint().getClass().getSimpleName() + "_" + method.getName());
 			return Identifier.of(entrypoint.getProvider().getMetadata().getId(), name);
@@ -100,19 +129,19 @@ public class TestAnnotationLocator {
 
 		TestData<RegistryEntry<TestEnvironmentDefinition>> testData(RegistryWrapper.WrapperLookup lookup) {
 			RegistryEntryLookup<TestEnvironmentDefinition> testEnvironments = lookup.getOrThrow(RegistryKeys.TEST_ENVIRONMENT);
-			RegistryEntry<TestEnvironmentDefinition> testEnvironment = testEnvironments.getOrThrow(RegistryKey.of(RegistryKeys.TEST_ENVIRONMENT, Identifier.of(fabricGameTest.environment())));
+			RegistryEntry<TestEnvironmentDefinition> testEnvironment = testEnvironments.getOrThrow(RegistryKey.of(RegistryKeys.TEST_ENVIRONMENT, Identifier.of(gameTest.environment())));
 
 			return new TestData<>(
 					testEnvironment,
-					Identifier.of(fabricGameTest.structure()),
-					fabricGameTest.maxTicks(),
-					fabricGameTest.setupTicks(),
-					fabricGameTest.required(),
-					fabricGameTest.rotation(),
-					fabricGameTest.manualOnly(),
-					fabricGameTest.maxAttempts(),
-					fabricGameTest.requiredSuccesses(),
-					fabricGameTest.skyAccess()
+					Identifier.of(gameTest.structure()),
+					gameTest.maxTicks(),
+					gameTest.setupTicks(),
+					gameTest.required(),
+					gameTest.rotation(),
+					gameTest.manualOnly(),
+					gameTest.maxAttempts(),
+					gameTest.requiredSuccesses(),
+					gameTest.skyAccess()
 			);
 		}
 

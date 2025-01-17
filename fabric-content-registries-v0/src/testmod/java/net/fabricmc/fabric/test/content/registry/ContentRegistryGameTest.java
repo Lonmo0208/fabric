@@ -39,10 +39,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.GameMode;
 
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 
 public class ContentRegistryGameTest {
-	@FabricGameTest
+	@GameTest
 	public void testCompostingChanceRegistry(TestContext context) {
 		BlockPos pos = new BlockPos(0, 1, 0);
 		context.setBlockState(pos, Blocks.COMPOSTER);
@@ -56,7 +56,7 @@ public class ContentRegistryGameTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void testFlattenableBlockRegistry(TestContext context) {
 		BlockPos pos = new BlockPos(0, 1, 0);
 		context.setBlockState(pos, Blocks.RED_WOOL);
@@ -120,31 +120,31 @@ public class ContentRegistryGameTest {
 		});
 	}
 
-	@FabricGameTest(maxTicks = 110)
+	@GameTest(maxTicks = 110)
 	public void testSmeltingFuelIncludedByItem(TestContext context) {
 		// Item with 50 fuel time x4 = 200 fuel time
 		smeltCompleted(context, new ItemStack(ContentRegistryTest.SMELTING_FUEL_INCLUDED_BY_ITEM, 4));
 	}
 
-	@FabricGameTest(maxTicks = 110)
+	@GameTest(maxTicks = 110)
 	public void testSmeltingFuelIncludedByTag(TestContext context) {
 		// Item in tag with 100 fuel time x2 = 200 fuel time
 		smeltCompleted(context, new ItemStack(ContentRegistryTest.SMELTING_FUEL_INCLUDED_BY_TAG, 2));
 	}
 
-	@FabricGameTest(maxTicks = 110)
+	@GameTest(maxTicks = 110)
 	public void testSmeltingFuelExcludedByTag(TestContext context) {
 		// Item is in both the smelting fuels tag and the excluded smithing fuels tag
 		smeltFailed(context, new ItemStack(ContentRegistryTest.SMELTING_FUEL_EXCLUDED_BY_TAG));
 	}
 
-	@FabricGameTest(maxTicks = 110)
+	@GameTest(maxTicks = 110)
 	public void testSmeltingFuelExcludedByVanillaTag(TestContext context) {
 		// Item is in both the smelting fuel tag and vanilla's excluded non-flammable wood tag
 		smeltFailed(context, new ItemStack(ContentRegistryTest.SMELTING_FUEL_EXCLUDED_BY_VANILLA_TAG));
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void testStrippableBlockRegistry(TestContext context) {
 		BlockPos pos = new BlockPos(0, 1, 0);
 		context.setBlockState(pos, Blocks.QUARTZ_PILLAR);
@@ -157,7 +157,7 @@ public class ContentRegistryGameTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void testTillableBlockRegistry(TestContext context) {
 		BlockPos pos = new BlockPos(0, 1, 0);
 		context.setBlockState(pos, Blocks.GREEN_WOOL);
@@ -170,7 +170,7 @@ public class ContentRegistryGameTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void testOxidizableBlocksRegistry(TestContext context) {
 		// Test de-oxidation. (the registry does not make the blocks oxidize.)
 		PlayerEntity player = context.createMockPlayer(GameMode.SURVIVAL);
@@ -188,7 +188,7 @@ public class ContentRegistryGameTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void testWaxableBlocksRegistry(TestContext context) {
 		PlayerEntity player = context.createMockPlayer(GameMode.SURVIVAL);
 		BlockPos pos = new BlockPos(0, 1, 0);
@@ -217,7 +217,7 @@ public class ContentRegistryGameTest {
 		context.waitAndRun(401, () -> callback.accept(brewingStand));
 	}
 
-	@FabricGameTest(maxTicks = 410)
+	@GameTest(maxTicks = 410)
 	public void testBrewingFlower(TestContext context) {
 		brew(context, new ItemStack(Items.DANDELION), PotionContentsComponent.createStack(Items.POTION, Potions.AWKWARD), brewingStand -> {
 			ItemStack bottle = brewingStand.getStack(0);
@@ -227,7 +227,7 @@ public class ContentRegistryGameTest {
 		});
 	}
 
-	@FabricGameTest(maxTicks = 410)
+	@GameTest(maxTicks = 410)
 	public void testBrewingDirt(TestContext context) {
 		brew(context, new ItemStack(Items.DIRT), PotionContentsComponent.createStack(Items.POTION, Potions.AWKWARD), brewingStand -> {
 			ItemStack bottle = brewingStand.getStack(0);

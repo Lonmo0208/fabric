@@ -35,7 +35,7 @@ import net.minecraft.test.TestContext;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.BiomeKeys;
 
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.fabricmc.fabric.impl.resource.conditions.ResourceConditionsImpl;
@@ -59,7 +59,7 @@ public class DefaultResourceConditionsTest {
 		ResourceCondition.CODEC.encodeStart(JsonOps.INSTANCE, condition).getOrThrow(message -> new AssertionError("Could not serialize \"%s\": %s".formatted(name, message)));
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void featuresEnabled(TestContext context) {
 		ResourceCondition vanilla = ResourceConditions.featuresEnabled(FeatureFlags.VANILLA);
 		// Reminder: GameTest enables all features by default
@@ -77,7 +77,7 @@ public class DefaultResourceConditionsTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void registryContains(TestContext context) {
 		// Dynamic registry (in vitro; separate testmod needs to determine if this actually functions while loading)
 		ResourceCondition plains = ResourceConditions.registryContains(BiomeKeys.PLAINS);
@@ -91,7 +91,7 @@ public class DefaultResourceConditionsTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void tagsPopulated(TestContext context) {
 		// We need to set the tags ourselves as it is cleared outside the resource loading context.
 		ResourceConditionsImpl.LOADED_TAGS.set(

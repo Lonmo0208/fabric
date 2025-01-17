@@ -24,14 +24,14 @@ import net.minecraft.item.Items;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.math.BlockPos;
 
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.test.item.CustomDamageTest;
 
 public class FurnaceGameTest {
 	private static final int COOK_TIME = 200;
 	private static final BlockPos POS = new BlockPos(0, 1, 0);
 
-	@FabricGameTest
+	@GameTest
 	public void basicSmelt(TestContext context) {
 		context.setBlockState(POS, Blocks.FURNACE);
 		FurnaceBlockEntity blockEntity = context.getBlockEntity(POS, FurnaceBlockEntity.class);
@@ -53,7 +53,7 @@ public class FurnaceGameTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void vanillaRemainderTest(TestContext context) {
 		context.setBlockState(POS, Blocks.FURNACE);
 		FurnaceBlockEntity blockEntity = context.getBlockEntity(POS, FurnaceBlockEntity.class);
@@ -69,7 +69,7 @@ public class FurnaceGameTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void fabricRemainderTest(TestContext context) {
 		context.setBlockState(POS, Blocks.FURNACE);
 		FurnaceBlockEntity blockEntity = context.getBlockEntity(POS, FurnaceBlockEntity.class);

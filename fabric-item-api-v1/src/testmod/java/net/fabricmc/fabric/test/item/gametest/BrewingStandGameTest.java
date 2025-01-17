@@ -28,14 +28,14 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.math.BlockPos;
 
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.test.item.CustomDamageTest;
 
 public class BrewingStandGameTest {
 	private static final int BREWING_TIME = 800;
 	private static final BlockPos POS = new BlockPos(0, 1, 0);
 
-	@FabricGameTest
+	@GameTest
 	public void basicBrewing(TestContext context) {
 		context.setBlockState(POS, Blocks.BREWING_STAND);
 		BrewingStandBlockEntity blockEntity = context.getBlockEntity(POS, BrewingStandBlockEntity.class);
@@ -56,7 +56,7 @@ public class BrewingStandGameTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void vanillaRemainderTest(TestContext context) {
 		context.setBlockState(POS, Blocks.BREWING_STAND);
 		BrewingStandBlockEntity blockEntity = context.getBlockEntity(POS, BrewingStandBlockEntity.class);

@@ -32,7 +32,7 @@ import net.minecraft.test.TestServer;
 import net.minecraft.world.level.storage.LevelStorage;
 
 public final class FabricGameTestRunner {
-	public static final boolean ENABLED = System.getProperty("fabric-api.gametest") != null;
+	public static final boolean ENABLED = System.getProperty(GameTestSystemProperties.ENABLED) != null;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FabricGameTestRunner.class);
 	private static final String GAMETEST_STRUCTURE_PATH = "gametest/structure";
@@ -43,7 +43,7 @@ public final class FabricGameTestRunner {
 	}
 
 	public static void runHeadlessServer(LevelStorage.Session session, ResourcePackManager resourcePackManager) {
-		String reportPath = System.getProperty("fabric-api.gametest.report-file");
+		String reportPath = System.getProperty(GameTestSystemProperties.REPORT_FILE);
 
 		if (reportPath != null) {
 			try {
@@ -55,10 +55,8 @@ public final class FabricGameTestRunner {
 
 		LOGGER.info("Starting test server");
 
-		// TODO support the vanilla arguments, maybe reuse TestBootstrap.PARSER?
-
-		MinecraftServer.startServer((thread) -> {
-			return TestServer.create(thread, session, resourcePackManager, Optional.empty(), false);
-		});
+		Optional<String> filter = Optional.ofNullable(System.getProperty(GameTestSystemProperties.FILTER));
+		boolean verify = Boolean.getBoolean(GameTestSystemProperties.VERIFY);
+		MinecraftServer.startServer((thread) -> TestServer.create(thread, session, resourcePackManager, filter, verify));
 	}
 }

@@ -39,11 +39,11 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameMode;
 
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.test.item.CustomEnchantmentEffectsTest;
 
 public class CustomEnchantmentEffectsGameTest {
-	@FabricGameTest
+	@GameTest
 	public void weirdImpalingSetsFireToTargets(TestContext context) {
 		BlockPos pos = new BlockPos(3, 3, 3);
 		CreeperEntity creeper = context.spawnEntity(EntityType.CREEPER, pos);
@@ -65,7 +65,7 @@ public class CustomEnchantmentEffectsGameTest {
 		context.expectEntityWithDataEnd(pos, EntityType.CREEPER, Entity::isOnFire, true);
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void weirdImpalingHasTwoDamageEffects(TestContext context) {
 		Enchantment impaling = getEnchantmentRegistry(context).get(CustomEnchantmentEffectsTest.WEIRD_IMPALING);
 

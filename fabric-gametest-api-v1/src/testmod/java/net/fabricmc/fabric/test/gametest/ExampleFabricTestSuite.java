@@ -21,10 +21,10 @@ import net.minecraft.test.TestContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 
 public class ExampleFabricTestSuite {
-	@FabricGameTest(structure = "fabric-gametest-api-v1-testmod:exampletestsuite.diamond")
+	@GameTest(structure = "fabric-gametest-api-v1-testmod:exampletestsuite.diamond")
 	public void diamond(TestContext context) {
 		// Nothing to do as the structure placed the block.
 		context.addInstantFinalTask(() ->
@@ -32,7 +32,7 @@ public class ExampleFabricTestSuite {
 		);
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void noStructure(TestContext context) {
 		context.setBlockState(0, 1, 0, Blocks.DIAMOND_BLOCK);
 		context.addInstantFinalTask(() ->

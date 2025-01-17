@@ -22,10 +22,10 @@ import net.minecraft.block.Block;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.math.BlockPos;
 
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 
 public class ObjectBuilderGameTest {
-	@FabricGameTest
+	@GameTest
 	public void testBlockUse(TestContext context) {
 		List<Block> blocks = List.of(BlockEntityTypeBuilderTest.INITIAL_BETRAYAL_BLOCK, BlockEntityTypeBuilderTest.ADDED_BETRAYAL_BLOCK, BlockEntityTypeBuilderTest.FIRST_MULTI_BETRAYAL_BLOCK, BlockEntityTypeBuilderTest.SECOND_MULTI_BETRAYAL_BLOCK);
 		BlockPos.Mutable pos = BlockPos.ORIGIN.up().mutableCopy();

@@ -20,10 +20,10 @@ import org.spongepowered.asm.mixin.MixinEnvironment;
 
 import net.minecraft.test.TestContext;
 
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 
 public class FabricApiBaseGameTest {
-	@FabricGameTest
+	@GameTest
 	public void auditMixins(TestContext context) {
 		MixinEnvironment.getCurrentEnvironment().audit();
 

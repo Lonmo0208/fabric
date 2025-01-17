@@ -27,7 +27,7 @@ import net.minecraft.registry.ReloadableRegistries;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.Identifier;
 
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 
 public class ConditionalResourcesTest {
 	private static final String MOD_ID = "fabric-resource-conditions-api-v1-testmod";
@@ -36,7 +36,7 @@ public class ConditionalResourcesTest {
 		return Identifier.of(MOD_ID, path);
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void conditionalRecipes(TestContext context) {
 		ServerRecipeManager manager = context.getWorld().getRecipeManager();
 
@@ -74,7 +74,7 @@ public class ConditionalResourcesTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void conditionalPredicates(TestContext context) {
 		// Predicates are internally handled as a kind of loot data,
 		// hence the yarn name "loot condition".
@@ -92,7 +92,7 @@ public class ConditionalResourcesTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void conditionalLootTables(TestContext context) {
 		ReloadableRegistries.Lookup registries = context.getWorld().getServer().getReloadableRegistries();
 
@@ -107,7 +107,7 @@ public class ConditionalResourcesTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void conditionalDynamicRegistry(TestContext context) {
 		Registry<BannerPattern> registry = context.getWorld().getRegistryManager().getOrThrow(RegistryKeys.BANNER_PATTERN);
 
@@ -122,7 +122,7 @@ public class ConditionalResourcesTest {
 		context.complete();
 	}
 
-	@FabricGameTest
+	@GameTest
 	public void conditionalOverlays(TestContext context) {
 		RegistryEntryLookup.RegistryLookup registries = context.getWorld().getServer().getReloadableRegistries().createRegistryLookup();
 

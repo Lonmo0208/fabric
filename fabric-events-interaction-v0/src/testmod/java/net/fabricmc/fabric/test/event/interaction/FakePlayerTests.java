@@ -32,13 +32,13 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 
 public class FakePlayerTests {
 	/**
 	 * Try placing a sign with a fake player.
 	 */
-	@FabricGameTest
+	@GameTest
 	public void testFakePlayerPlaceSign(TestContext context) {
 		// This is for Fabric internal testing only, if you copy this to your mod you're on your own...
 
@@ -66,7 +66,7 @@ public class FakePlayerTests {
 	/**
 	 * Try breaking a beehive with a fake player (see {@code BeehiveBlockMixin}).
 	 */
-	@FabricGameTest
+	@GameTest
 	public void testFakePlayerBreakBeehive(TestContext context) {
 		BlockPos basePos = new BlockPos(0, 1, 0);
 		context.setBlockState(basePos, Blocks.BEEHIVE);
