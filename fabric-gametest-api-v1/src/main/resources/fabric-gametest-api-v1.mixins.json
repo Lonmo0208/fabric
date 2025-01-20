@@ -3,6 +3,7 @@
   "package": "net.fabricmc.fabric.mixin.gametest",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "RegistryLoaderMixin",
     "StructureTemplateManagerMixin",
     "TestServerMixin"
   ],

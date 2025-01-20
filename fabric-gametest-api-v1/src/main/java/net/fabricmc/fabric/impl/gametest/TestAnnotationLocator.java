@@ -26,10 +26,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryEntryLookup;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.test.FunctionTestInstance;
 import net.minecraft.test.TestContext;
@@ -127,9 +126,8 @@ final class TestAnnotationLocator {
 			};
 		}
 
-		TestData<RegistryEntry<TestEnvironmentDefinition>> testData(RegistryWrapper.WrapperLookup lookup) {
-			RegistryEntryLookup<TestEnvironmentDefinition> testEnvironments = lookup.getOrThrow(RegistryKeys.TEST_ENVIRONMENT);
-			RegistryEntry<TestEnvironmentDefinition> testEnvironment = testEnvironments.getOrThrow(RegistryKey.of(RegistryKeys.TEST_ENVIRONMENT, Identifier.of(gameTest.environment())));
+		TestData<RegistryEntry<TestEnvironmentDefinition>> testData(Registry<TestEnvironmentDefinition> testEnvironmentDefinitionRegistry) {
+			RegistryEntry<TestEnvironmentDefinition> testEnvironment = testEnvironmentDefinitionRegistry.getOrThrow(RegistryKey.of(RegistryKeys.TEST_ENVIRONMENT, Identifier.of(gameTest.environment())));
 
 			return new TestData<>(
 					testEnvironment,
@@ -145,10 +143,10 @@ final class TestAnnotationLocator {
 			);
 		}
 
-		TestInstance testInstance(RegistryWrapper.WrapperLookup lookup) {
+		TestInstance testInstance(Registry<TestEnvironmentDefinition> testEnvironmentDefinitionRegistry) {
 			return new FunctionTestInstance(
 					Registries.TEST_FUNCTION.getEntry(identifier()).get(),
-					testData(lookup)
+					testData(testEnvironmentDefinitionRegistry)
 			);
 		}
 

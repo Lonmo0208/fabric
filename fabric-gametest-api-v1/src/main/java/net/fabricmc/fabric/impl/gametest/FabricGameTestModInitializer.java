@@ -16,17 +16,23 @@
 
 package net.fabricmc.fabric.impl.gametest;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.RegistryLoader;
+import net.minecraft.test.TestEnvironmentDefinition;
 import net.minecraft.test.TestInstance;
-import net.minecraft.test.TestInstances;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.registry.DynamicRegistrySetupCallback;
 import net.fabricmc.loader.api.FabricLoader;
 
 public final class FabricGameTestModInitializer implements ModInitializer {
@@ -44,19 +50,27 @@ public final class FabricGameTestModInitializer implements ModInitializer {
 			LOGGER.debug("Registering test method: {}", testMethod.identifier());
 			Registry.register(Registries.TEST_FUNCTION, testMethod.identifier(), testMethod.testFunction());
 		}
+	}
 
-		DynamicRegistrySetupCallback.EVENT.register(registryView -> {
-			// We ideally need an after loaded event, but this should hopefully work for now
-			registryView.registerEntryAdded(RegistryKeys.TEST_INSTANCE, (rawId, id, object) -> {
-				if (id.equals(TestInstances.ALWAYS_PASS.getValue())) {
-					Registry<TestInstance> testInstances = registryView.getOptional(RegistryKeys.TEST_INSTANCE).get();
+	public static void registerDynamicEntries(List<RegistryLoader.Loader<?>> registriesList) {
+		Map<RegistryKey<? extends Registry<?>>, Registry<?>> registries = new IdentityHashMap<>(registriesList.size());
 
-					for (TestAnnotationLocator.TestMethod testMethod : locator.getTestMethods()) {
-						TestInstance testInstance = testMethod.testInstance(registryView.asDynamicRegistryManager());
-						Registry.register(testInstances, testMethod.identifier(), testInstance);
-					}
-				}
-			});
-		});
+		for (RegistryLoader.Loader<?> entry : registriesList) {
+			registries.put(entry.registry().getKey(), entry.registry());
+		}
+
+		Registry<TestInstance> testInstances = (Registry<TestInstance>) registries.get(RegistryKeys.TEST_INSTANCE);
+
+		if (testInstances == null) {
+			// Not the correct dyn registry
+			return;
+		}
+
+		Registry<TestEnvironmentDefinition> testEnvironmentDefinitionRegistry = (Registry<TestEnvironmentDefinition>) Objects.requireNonNull(registries.get(RegistryKeys.TEST_ENVIRONMENT));
+
+		for (TestAnnotationLocator.TestMethod testMethod : locator.getTestMethods()) {
+			TestInstance testInstance = testMethod.testInstance(testEnvironmentDefinitionRegistry);
+			Registry.register(testInstances, testMethod.identifier(), testInstance);
+		}
 	}
 }
