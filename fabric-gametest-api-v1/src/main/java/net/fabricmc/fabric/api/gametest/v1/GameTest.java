@@ -42,8 +42,10 @@ public @interface GameTest {
 
 	/**
 	 * A namespaced ID pointing to a structure resource in the {@code modid/gametest/structure/} directory.
+	 *
+	 * <p>Defaults to an 8x8 structure with no blocks.
 	 */
-	String structure() default "minecraft:empty";
+	String structure() default "fabric-gametest-api-v1:empty";
 
 	/**
 	 * The maximum number of ticks the test is allowed to run for.
