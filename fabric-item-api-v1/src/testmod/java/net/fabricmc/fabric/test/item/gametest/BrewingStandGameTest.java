@@ -16,17 +16,29 @@
 
 package net.fabricmc.fabric.test.item.gametest;
 
+import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BrewingStandBlockEntity;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.PotionContentsComponent;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.Potions;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.test.TestContext;
 import net.minecraft.util.math.BlockPos;
+
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
+import net.fabricmc.fabric.test.item.CustomDamageTest;
 
 public class BrewingStandGameTest {
 	private static final int BREWING_TIME = 800;
 	private static final BlockPos POS = new BlockPos(0, 1, 0);
 
-	/* TODO 1.21.5 tests
-	@GameTest(templateName = EMPTY_STRUCTURE)
+	@GameTest
 	public void basicBrewing(TestContext context) {
 		context.setBlockState(POS, Blocks.BREWING_STAND);
-		BrewingStandBlockEntity blockEntity = context.getBlockEntity(POS);
+		BrewingStandBlockEntity blockEntity = context.getBlockEntity(POS, BrewingStandBlockEntity.class);
 
 		loadFuel(blockEntity, context);
 
@@ -44,10 +56,10 @@ public class BrewingStandGameTest {
 		context.complete();
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE)
+	@GameTest
 	public void vanillaRemainderTest(TestContext context) {
 		context.setBlockState(POS, Blocks.BREWING_STAND);
-		BrewingStandBlockEntity blockEntity = context.getBlockEntity(POS);
+		BrewingStandBlockEntity blockEntity = context.getBlockEntity(POS, BrewingStandBlockEntity.class);
 
 		loadFuel(blockEntity, context);
 
@@ -69,7 +81,7 @@ public class BrewingStandGameTest {
 	// Skip see: https://github.com/FabricMC/fabric/pull/2874
 	public void fabricRemainderTest(TestContext context) {
 		context.setBlockState(POS, Blocks.BREWING_STAND);
-		BrewingStandBlockEntity blockEntity = context.getBlockEntity(POS);
+		BrewingStandBlockEntity blockEntity = context.getBlockEntity(POS, BrewingStandBlockEntity.class);
 
 		loadFuel(blockEntity, context);
 
@@ -140,6 +152,4 @@ public class BrewingStandGameTest {
 		itemStack.set(DataComponentTypes.POTION_CONTENTS, new PotionContentsComponent(potion));
 		return itemStack;
 	}
-
-	 */
 }

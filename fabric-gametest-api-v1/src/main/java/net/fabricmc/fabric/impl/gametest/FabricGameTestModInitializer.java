@@ -16,49 +16,55 @@
 
 package net.fabricmc.fabric.impl.gametest;
 
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.minecraft.test.TestFunctions;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.RegistryLoader;
+import net.minecraft.test.TestEnvironmentDefinition;
+import net.minecraft.test.TestInstance;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 
 public final class FabricGameTestModInitializer implements ModInitializer {
-	private static final String ENTRYPOINT_KEY = "fabric-gametest";
-	private static final Map<Class<?>, String> GAME_TEST_IDS = new HashMap<>();
 	private static final Logger LOGGER = LoggerFactory.getLogger(FabricGameTestModInitializer.class);
+	private static TestAnnotationLocator locator = new TestAnnotationLocator(FabricLoader.getInstance());
 
 	@Override
 	public void onInitialize() {
-		List<EntrypointContainer<Object>> entrypointContainers = FabricLoader.getInstance()
-				.getEntrypointContainers(ENTRYPOINT_KEY, Object.class);
+		if (!(FabricGameTestRunner.ENABLED || FabricLoader.getInstance().isDevelopmentEnvironment())) {
+			// Don't try to load the tests if the game test runner is disabled or we are not in a development environment
+			return;
+		}
 
-		for (EntrypointContainer<Object> container : entrypointContainers) {
-			Class<?> testClass = container.getEntrypoint().getClass();
-			String modid = container.getProvider().getMetadata().getId();
-
-			if (GAME_TEST_IDS.containsKey(testClass)) {
-				throw new UnsupportedOperationException("Test class (%s) has already been registered with mod (%s)".formatted(testClass.getCanonicalName(), modid));
-			}
-
-			GAME_TEST_IDS.put(testClass, modid);
-			TestFunctions.register(testClass);
-
-			LOGGER.debug("Registered test class {} for mod {}", testClass.getCanonicalName(), modid);
+		for (TestAnnotationLocator.TestMethod testMethod : locator.getTestMethods()) {
+			LOGGER.debug("Registering test method: {}", testMethod.identifier());
+			Registry.register(Registries.TEST_FUNCTION, testMethod.identifier(), testMethod.testFunction());
 		}
 	}
 
-	public static String getModIdForTestClass(Class<?> testClass) {
-		if (!GAME_TEST_IDS.containsKey(testClass)) {
-			throw new UnsupportedOperationException("The test class (%s) was not registered using the '%s' entrypoint".formatted(testClass.getCanonicalName(), ENTRYPOINT_KEY));
+	public static void registerDynamicEntries(List<RegistryLoader.Loader<?>> registriesList) {
+		Map<RegistryKey<? extends Registry<?>>, Registry<?>> registries = new IdentityHashMap<>(registriesList.size());
+
+		for (RegistryLoader.Loader<?> entry : registriesList) {
+			registries.put(entry.registry().getKey(), entry.registry());
 		}
 
-		return GAME_TEST_IDS.get(testClass);
+		Registry<TestInstance> testInstances = (Registry<TestInstance>) registries.get(RegistryKeys.TEST_INSTANCE);
+		Registry<TestEnvironmentDefinition> testEnvironmentDefinitionRegistry = (Registry<TestEnvironmentDefinition>) Objects.requireNonNull(registries.get(RegistryKeys.TEST_ENVIRONMENT));
+
+		for (TestAnnotationLocator.TestMethod testMethod : locator.getTestMethods()) {
+			TestInstance testInstance = testMethod.testInstance(testEnvironmentDefinitionRegistry);
+			Registry.register(testInstances, testMethod.identifier(), testInstance);
+		}
 	}
 }

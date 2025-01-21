@@ -16,48 +16,27 @@
 
 package net.fabricmc.fabric.test.gametest;
 
-import java.lang.reflect.Method;
-
 import net.minecraft.block.Blocks;
-import net.minecraft.test.GameTest;
 import net.minecraft.test.TestContext;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 
-// optional to impl FabricGameTest
-public class ExampleFabricTestSuite implements FabricGameTest {
-	/**
-	 * By overriding invokeTestMethod you can wrap the method call.
-	 * This can be used as shown to run code before and after each test.
-	 */
-	@Override
-	public void invokeTestMethod(TestContext context, Method method) {
-		beforeEach(context);
-
-		FabricGameTest.super.invokeTestMethod(context, method);
-
-		afterEach(context);
-	}
-
-	private void beforeEach(TestContext context) {
-		System.out.println("Hello beforeEach");
-		context.setBlockState(0, 5, 0, Blocks.GOLD_BLOCK);
-	}
-
-	private void afterEach(TestContext context) {
+public class ExampleFabricTestSuite {
+	@GameTest(structure = "fabric-gametest-api-v1-testmod:exampletestsuite.diamond")
+	public void diamond(TestContext context) {
+		// Nothing to do as the structure placed the block.
 		context.addInstantFinalTask(() ->
-				context.checkBlock(new BlockPos(0, 1, 0), (block) -> block == Blocks.DIAMOND_BLOCK, "Expect block to be diamond")
+				context.checkBlock(new BlockPos(0, 1, 0), (block) -> block == Blocks.DIAMOND_BLOCK, (b) -> Text.literal("Expect block to be diamond"))
 		);
 	}
 
-	@GameTest(templateName = "fabric-gametest-api-v1-testmod:exampletestsuite.diamond")
-	public void diamond(TestContext context) {
-		// Nothing to do as the structure placed the block.
-	}
-
-	@GameTest(templateName = EMPTY_STRUCTURE)
+	@GameTest
 	public void noStructure(TestContext context) {
 		context.setBlockState(0, 1, 0, Blocks.DIAMOND_BLOCK);
+		context.addInstantFinalTask(() ->
+				context.checkBlock(new BlockPos(0, 1, 0), (block) -> block == Blocks.DIAMOND_BLOCK, (b) -> Text.literal("Expect block to be diamond"))
+		);
 	}
 }

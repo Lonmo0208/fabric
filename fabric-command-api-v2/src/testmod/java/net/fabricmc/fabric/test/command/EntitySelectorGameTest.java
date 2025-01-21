@@ -24,6 +24,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.math.BlockPos;
 
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
+
 public class EntitySelectorGameTest {
 	private void spawn(TestContext context, float health) {
 		MobEntity entity = context.spawnMob(EntityType.CREEPER, BlockPos.ORIGIN);
@@ -31,7 +33,7 @@ public class EntitySelectorGameTest {
 		entity.setHealth(health);
 	}
 
-	// @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE) TODO 1.21.5 tests
+	@GameTest
 	public void testEntitySelector(TestContext context) {
 		BlockPos absolute = context.getAbsolutePos(BlockPos.ORIGIN);
 

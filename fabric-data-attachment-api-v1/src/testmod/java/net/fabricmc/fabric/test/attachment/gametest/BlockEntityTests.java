@@ -19,11 +19,27 @@ package net.fabricmc.fabric.test.attachment.gametest;
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.test.TestContext;
+import net.minecraft.util.math.BlockPos;
+
+import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
+import net.fabricmc.fabric.test.attachment.AttachmentTestMod;
+import net.fabricmc.fabric.test.attachment.mixin.BlockEntityTypeAccessor;
+
 public class BlockEntityTests {
 	private static final Logger LOGGER = LogUtils.getLogger();
 
-	/* TODO 1.21.5 tests
-	@GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
+	@GameTest
 	public void testBlockEntitySync(TestContext context) {
 		BlockPos pos = BlockPos.ORIGIN.up();
 
@@ -60,12 +76,10 @@ public class BlockEntityTests {
 
 			if (nbt != null && nbt.contains(AttachmentTarget.NBT_ATTACHMENT_KEY)) {
 				// Note: this is a vanilla bug (it called createNbt, instead of the correct createComponentlessNbt)
-				throw new GameTestException("Packet NBT for " + entry + " had persistent data: " + nbt.asString());
+				throw context.createError("Packet NBT for " + entry + " had persistent data: " + nbt.asString());
 			}
 		}
 
 		context.complete();
 	}
-
-	 */
 }

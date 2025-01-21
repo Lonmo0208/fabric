@@ -22,12 +22,13 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.test.TestContext;
 
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 
 public class WorldDependentAttributesTest {
-	//@GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE) TODO 1.21.5 tests
+	@GameTest
 	public void testViscosity(TestContext context) {
 		ServerWorld overworld = context.getWorld();
 		ServerWorld nether = overworld.getServer().getWorld(ServerWorld.NETHER);

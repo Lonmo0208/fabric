@@ -16,17 +16,28 @@
 
 package net.fabricmc.fabric.test.item.gametest;
 
+import java.util.function.Consumer;
+
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FireworksComponent;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.test.TestContext;
+import net.minecraft.text.Text;
+
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
+
 public class DefaultItemComponentGameTest {
-	/* TODO 1.21.5 tests
-	@GameTest(templateName = EMPTY_STRUCTURE)
+	@GameTest
 	public void modify(TestContext context) {
 		Consumer<Text> checkText = text -> {
 			if (text == null) {
-				throw new GameTestException("Item name component not found on gold ingot");
+				throw context.createError("Item name component not found on gold ingot");
 			}
 
 			if (!"Fool's Gold".equals(text.getString())) {
-				throw new GameTestException("Item name component on gold ingot is not set");
+				throw context.createError("Item name component on gold ingot is not set");
 			}
 		};
 
@@ -39,30 +50,30 @@ public class DefaultItemComponentGameTest {
 		boolean isBeefFood = Items.BEEF.getComponents().contains(DataComponentTypes.FOOD);
 
 		if (isBeefFood) {
-			throw new GameTestException("Food component not removed from beef");
+			throw context.createError("Food component not removed from beef");
 		}
 
 		context.complete();
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE)
+	@GameTest
 	public void afterModify(TestContext context) {
 		FireworksComponent fireworksComponent = Items.GOLD_NUGGET.getComponents().get(DataComponentTypes.FIREWORKS);
 
 		if (fireworksComponent == null) {
-			throw new GameTestException("Fireworks component not found on gold nugget");
+			throw context.createError("Fireworks component not found on gold nugget");
 		}
 
 		Boolean enchantGlint = Items.GOLD_NUGGET.getComponents().get(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE);
 
 		if (enchantGlint != Boolean.TRUE) {
-			throw new GameTestException("Enchantment glint override not set on gold nugget");
+			throw context.createError("Enchantment glint override not set on gold nugget");
 		}
 
 		context.complete();
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE)
+	@GameTest
 	public void diamondPickaxeIsRenamed(TestContext context) {
 		Item testItem = Items.DIAMOND_PICKAXE;
 		ItemStack stack = testItem.getDefaultStack();
@@ -73,10 +84,8 @@ public class DefaultItemComponentGameTest {
 		String errorMessage = "Expected '%s' to be contained in '%s', but it was not!";
 
 		// if they contain each other, then they are equal
-		context.assertTrue(itemName.contains(expectedName), errorMessage.formatted(expectedName, itemName));
-		context.assertTrue(expectedName.contains(itemName), errorMessage.formatted(itemName, expectedName));
+		context.assertTrue(itemName.contains(expectedName), Text.literal(errorMessage.formatted(expectedName, itemName)));
+		context.assertTrue(expectedName.contains(itemName), Text.literal(errorMessage.formatted(itemName, expectedName)));
 		context.complete();
 	}
-
-	 */
 }

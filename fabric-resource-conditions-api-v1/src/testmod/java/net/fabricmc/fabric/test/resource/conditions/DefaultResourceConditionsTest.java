@@ -16,16 +16,29 @@
 
 package net.fabricmc.fabric.test.resource.conditions;
 
+import java.util.stream.Collectors;
+
 import com.mojang.serialization.JsonOps;
 
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryOps;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.tag.BiomeTags;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.resource.featuretoggle.FeatureFlag;
+import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.biome.BiomeKeys;
 
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
+import net.fabricmc.fabric.impl.resource.conditions.ResourceConditionsImpl;
 
 public class DefaultResourceConditionsTest {
 	private static final String TESTMOD_ID = "fabric-resource-conditions-api-v1-testmod";
@@ -46,8 +59,7 @@ public class DefaultResourceConditionsTest {
 		ResourceCondition.CODEC.encodeStart(JsonOps.INSTANCE, condition).getOrThrow(message -> new AssertionError("Could not serialize \"%s\": %s".formatted(name, message)));
 	}
 
-	/* TODO 1.21.5 tests
-	@GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
+	@GameTest
 	public void featuresEnabled(TestContext context) {
 		ResourceCondition vanilla = ResourceConditions.featuresEnabled(FeatureFlags.VANILLA);
 		// Reminder: GameTest enables all features by default
@@ -65,7 +77,7 @@ public class DefaultResourceConditionsTest {
 		context.complete();
 	}
 
-	@GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
+	@GameTest
 	public void registryContains(TestContext context) {
 		// Dynamic registry (in vitro; separate testmod needs to determine if this actually functions while loading)
 		ResourceCondition plains = ResourceConditions.registryContains(BiomeKeys.PLAINS);
@@ -79,7 +91,7 @@ public class DefaultResourceConditionsTest {
 		context.complete();
 	}
 
-	@GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
+	@GameTest
 	public void tagsPopulated(TestContext context) {
 		// We need to set the tags ourselves as it is cleared outside the resource loading context.
 		ResourceConditionsImpl.LOADED_TAGS.set(
@@ -113,6 +125,4 @@ public class DefaultResourceConditionsTest {
 
 		context.complete();
 	}
-
-	 */
 }

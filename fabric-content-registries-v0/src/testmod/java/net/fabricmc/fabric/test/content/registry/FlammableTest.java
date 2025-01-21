@@ -20,16 +20,17 @@ import net.minecraft.block.Blocks;
 import net.minecraft.test.TestContext;
 import net.minecraft.text.Text;
 
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 
 public class FlammableTest {
 	/**
 	 * Regression test for <a href="https://github.com/FabricMC/fabric/issues/2108">FlammableBlockRegistry ignoring tags on first load</a>.
 	 */
-	// @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE) TODO 1.21.5 tests
+	@GameTest
 	public void testFlammableTag(TestContext context) {
 		if (FlammableBlockRegistry.getDefaultInstance().get(Blocks.SAND).getBurnChance() != 4) {
-			context.method_66943(Text.literal("Expected blocks in the sand tag to be flammable!"));
+			throw context.createError(Text.literal("Expected blocks in the sand tag to be flammable!"));
 		}
 
 		context.complete();
