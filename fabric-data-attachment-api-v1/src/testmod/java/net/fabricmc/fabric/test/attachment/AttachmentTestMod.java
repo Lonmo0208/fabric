@@ -105,6 +105,7 @@ public class AttachmentTestMod implements ModInitializer {
 				if (blockEntity != null) {
 					blockEntity.setAttached(SYNCED_WITH_ALL, true);
 					player.sendMessage(Text.literal("Attached"), false);
+					return ActionResult.SUCCESS;
 				}
 			}
 
