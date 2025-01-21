@@ -60,12 +60,6 @@ public final class FabricGameTestModInitializer implements ModInitializer {
 		}
 
 		Registry<TestInstance> testInstances = (Registry<TestInstance>) registries.get(RegistryKeys.TEST_INSTANCE);
-
-		if (testInstances == null) {
-			// Not the correct dyn registry
-			return;
-		}
-
 		Registry<TestEnvironmentDefinition> testEnvironmentDefinitionRegistry = (Registry<TestEnvironmentDefinition>) Objects.requireNonNull(registries.get(RegistryKeys.TEST_ENVIRONMENT));
 
 		for (TestAnnotationLocator.TestMethod testMethod : locator.getTestMethods()) {
