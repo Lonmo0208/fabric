@@ -16,18 +16,19 @@
 
 package net.fabricmc.fabric.mixin.client.rendering;
 
-import com.google.common.collect.BiMap;
+import com.mojang.serialization.MapCodec;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
+import net.minecraft.client.texture.atlas.AtlasSource;
 import net.minecraft.client.texture.atlas.AtlasSourceManager;
-import net.minecraft.client.texture.atlas.AtlasSourceType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.dynamic.Codecs;
 
 @Mixin(AtlasSourceManager.class)
 public interface AtlasSourceManagerAccessor {
-	@Accessor("SOURCE_TYPE_BY_ID")
-	static BiMap<Identifier, AtlasSourceType> getSourceTypeById() {
+	@Accessor("field_56377")
+	static Codecs.IdMapper<Identifier, MapCodec<? extends AtlasSource>> getAtlasSourceCodecs() {
 		throw new AssertionError();
 	}
 }

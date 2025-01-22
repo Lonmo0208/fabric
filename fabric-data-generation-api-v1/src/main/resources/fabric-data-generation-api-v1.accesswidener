@@ -66,7 +66,7 @@ transitive-accessible	method	net/minecraft/data/recipe/RecipeGenerator	offerSmel
 transitive-accessible	method	net/minecraft/data/recipe/RecipeGenerator	offerBlasting	(Ljava/util/List;Lnet/minecraft/recipe/book/RecipeCategory;Lnet/minecraft/item/ItemConvertible;FILjava/lang/String;)V
 transitive-accessible	method	net/minecraft/data/recipe/RecipeGenerator	offerMultipleOptions	(Lnet/minecraft/recipe/RecipeSerializer;Lnet/minecraft/recipe/AbstractCookingRecipe$RecipeFactory;Ljava/util/List;Lnet/minecraft/recipe/book/RecipeCategory;Lnet/minecraft/item/ItemConvertible;FILjava/lang/String;Ljava/lang/String;)V
 transitive-accessible	method	net/minecraft/data/recipe/RecipeGenerator	offerNetheriteUpgradeRecipe	(Lnet/minecraft/item/Item;Lnet/minecraft/recipe/book/RecipeCategory;Lnet/minecraft/item/Item;)V
-transitive-accessible	method	net/minecraft/data/recipe/RecipeGenerator	offerSmithingTrimRecipe	(Lnet/minecraft/item/Item;Lnet/minecraft/registry/RegistryKey;)V
+transitive-accessible	method	net/minecraft/data/recipe/RecipeGenerator	offerSmithingTrimRecipe	(Lnet/minecraft/item/Item;Lnet/minecraft/registry/RegistryKey;Lnet/minecraft/registry/RegistryKey;)V
 transitive-accessible	method	net/minecraft/data/recipe/RecipeGenerator	offer2x2CompactingRecipe	(Lnet/minecraft/recipe/book/RecipeCategory;Lnet/minecraft/item/ItemConvertible;Lnet/minecraft/item/ItemConvertible;)V
 transitive-accessible	method	net/minecraft/data/recipe/RecipeGenerator	offerCompactingRecipe	(Lnet/minecraft/recipe/book/RecipeCategory;Lnet/minecraft/item/ItemConvertible;Lnet/minecraft/item/ItemConvertible;Ljava/lang/String;)V
 transitive-accessible	method	net/minecraft/data/recipe/RecipeGenerator	offerCompactingRecipe	(Lnet/minecraft/recipe/book/RecipeCategory;Lnet/minecraft/item/ItemConvertible;Lnet/minecraft/item/ItemConvertible;)V
@@ -347,7 +347,7 @@ transitive-accessible	method	net/minecraft/client/data/ItemModelGenerator	regist
 transitive-accessible	method	net/minecraft/client/data/ItemModelGenerator	uploadTwoLayers	(Lnet/minecraft/item/Item;Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;)Lnet/minecraft/util/Identifier;
 transitive-accessible	method	net/minecraft/client/data/ItemModelGenerator	uploadArmor	(Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;)Lnet/minecraft/util/Identifier;
 transitive-accessible	method	net/minecraft/client/data/ItemModelGenerator	uploadArmor	(Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;Lnet/minecraft/util/Identifier;)V
-transitive-accessible	method	net/minecraft/client/data/ItemModelGenerator	registerArmor	(Lnet/minecraft/item/Item;Lnet/minecraft/registry/RegistryKey;Ljava/lang/String;Z)V
+transitive-accessible	method	net/minecraft/client/data/ItemModelGenerator	registerArmor	(Lnet/minecraft/item/Item;Lnet/minecraft/registry/RegistryKey;Lnet/minecraft/util/Identifier;Z)V
 transitive-accessible	method	net/minecraft/client/data/ItemModelGenerator	registerBundle	(Lnet/minecraft/item/Item;)V
 transitive-accessible	method	net/minecraft/client/data/ItemModelGenerator	uploadOpenBundleModel	(Lnet/minecraft/item/Item;Lnet/minecraft/client/data/Model;Ljava/lang/String;)Lnet/minecraft/util/Identifier;
 transitive-accessible	method	net/minecraft/client/data/ItemModelGenerator	registerBow	(Lnet/minecraft/item/Item;)V

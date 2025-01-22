@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import net.minecraft.class_10712;
 import net.minecraft.component.ComponentChanges;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.fluid.Fluid;
@@ -47,16 +48,16 @@ class FluidVariantTests extends AbstractTransferApiTest {
 	@Test
 	public void testWithComponentChanges() {
 		FluidVariant variant = FluidVariant.of(Fluids.WATER, ComponentChanges.builder()
-				.add(DataComponentTypes.HIDE_TOOLTIP, Unit.INSTANCE)
+				.add(DataComponentTypes.TOOLTIP_DISPLAY, class_10712.field_56318)
 				.build());
 
 		FluidVariant newVariant = variant.withComponentChanges(ComponentChanges.builder()
-				.remove(DataComponentTypes.HIDE_TOOLTIP)
+				.remove(DataComponentTypes.TOOLTIP_DISPLAY)
 				.add(DataComponentTypes.GLIDER, Unit.INSTANCE)
 				.build());
 
 		Assertions.assertFalse(
-				newVariant.getComponentMap().contains(DataComponentTypes.HIDE_TOOLTIP),
+				newVariant.getComponentMap().contains(DataComponentTypes.TOOLTIP_DISPLAY),
 				"New variant's HIDE_TOOLTIP component was removed, but is still present"
 		);
 

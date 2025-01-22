@@ -31,7 +31,6 @@ import net.minecraft.client.texture.SpriteContents;
 import net.minecraft.client.texture.SpriteDimensions;
 import net.minecraft.client.texture.SpriteOpener;
 import net.minecraft.client.texture.atlas.AtlasSource;
-import net.minecraft.client.texture.atlas.AtlasSourceType;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.metadata.ResourceMetadata;
@@ -39,12 +38,12 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.AtlasSourceTypeRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.AtlasSourceRegistry;
 
 public class CustomAtlasSourcesTest implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
-		AtlasSourceTypeRegistry.register(Identifier.of("fabric-rendering-v1-testmod", "double"), DoubleAtlasSource.TYPE);
+		AtlasSourceRegistry.register(Identifier.of("fabric-rendering-v1-testmod", "double"), DoubleAtlasSource.CODEC);
 	}
 
 	private static class DoubleAtlasSource implements AtlasSource {
@@ -53,7 +52,6 @@ public class CustomAtlasSourcesTest implements ClientModInitializer {
 				Identifier.CODEC.fieldOf("resource").forGetter(source -> source.resource),
 				Identifier.CODEC.fieldOf("sprite").forGetter(source -> source.sprite)
 		).apply(instance, DoubleAtlasSource::new));
-		public static final AtlasSourceType TYPE = new AtlasSourceType(CODEC);
 
 		private final Identifier resource;
 		private final Identifier sprite;
@@ -76,8 +74,8 @@ public class CustomAtlasSourcesTest implements ClientModInitializer {
 		}
 
 		@Override
-		public AtlasSourceType getType() {
-			return TYPE;
+		public MapCodec<? extends AtlasSource> method_67288() {
+			return CODEC;
 		}
 
 		private static class DoubleSpriteRegion implements AtlasSource.SpriteRegion {

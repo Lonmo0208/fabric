@@ -18,23 +18,20 @@ package net.fabricmc.fabric.impl.client.rendering;
 
 import java.util.Objects;
 
-import net.minecraft.client.texture.atlas.AtlasSourceType;
+import com.mojang.serialization.MapCodec;
+
+import net.minecraft.client.texture.atlas.AtlasSource;
 import net.minecraft.util.Identifier;
 
 import net.fabricmc.fabric.mixin.client.rendering.AtlasSourceManagerAccessor;
 
-public final class AtlasSourceTypeRegistryImpl {
-	private AtlasSourceTypeRegistryImpl() {
+public final class AtlasSourceRegistryImpl {
+	private AtlasSourceRegistryImpl() {
 	}
 
-	public static void register(Identifier id, AtlasSourceType type) {
+	public static void register(Identifier id, MapCodec<? extends AtlasSource> codec) {
 		Objects.requireNonNull(id, "id must not be null!");
-		Objects.requireNonNull(type, "type must not be null!");
-
-		AtlasSourceType oldType = AtlasSourceManagerAccessor.getSourceTypeById().putIfAbsent(id, type);
-
-		if (oldType != null) {
-			throw new IllegalStateException("Duplicate registration " + id);
-		}
+		Objects.requireNonNull(codec, "codec must not be null!");
+		AtlasSourceManagerAccessor.getAtlasSourceCodecs().put(id, codec);
 	}
 }

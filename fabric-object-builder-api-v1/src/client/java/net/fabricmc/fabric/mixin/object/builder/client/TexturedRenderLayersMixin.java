@@ -22,7 +22,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.minecraft.class_10721;
 import net.minecraft.client.render.TexturedRenderLayers;
+import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
 
 import net.fabricmc.fabric.impl.object.builder.client.SignTypeTextureHelper;
@@ -34,13 +36,13 @@ abstract class TexturedRenderLayersMixin {
 		SignTypeTextureHelper.shouldAddTextures = true;
 	}
 
-	@Redirect(method = "createSignTextureId", at = @At(value = "INVOKE", target = "net/minecraft/util/Identifier.ofVanilla(Ljava/lang/String;)Lnet/minecraft/util/Identifier;"))
-	private static Identifier redirectSignVanillaId(String name) {
-		return Identifier.of(name);
+	@Redirect(method = "createSignTextureId", at = @At(value = "INVOKE", target = "Lnet/minecraft/class_10721;method_67274(Ljava/lang/String;)Lnet/minecraft/client/util/SpriteIdentifier;"))
+	private static SpriteIdentifier redirectSignVanillaId(class_10721 instance, String name) {
+		return instance.method_67273(Identifier.of(name));
 	}
 
-	@Redirect(method = "createHangingSignTextureId", at = @At(value = "INVOKE", target = "net/minecraft/util/Identifier.ofVanilla(Ljava/lang/String;)Lnet/minecraft/util/Identifier;"))
-	private static Identifier redirectHangingVanillaId(String name) {
-		return Identifier.of(name);
+	@Redirect(method = "createHangingSignTextureId", at = @At(value = "INVOKE", target = "Lnet/minecraft/class_10721;method_67274(Ljava/lang/String;)Lnet/minecraft/client/util/SpriteIdentifier;"))
+	private static SpriteIdentifier redirectHangingVanillaId(class_10721 instance, String name) {
+		return instance.method_67273(Identifier.of(name));
 	}
 }

@@ -77,7 +77,6 @@ transitive-accessible method net/minecraft/entity/ai/brain/Activity <init> (Ljav
 # Living entity methods
 transitive-accessible method net/minecraft/entity/LivingEntity damageArmor (Lnet/minecraft/entity/damage/DamageSource;F)V
 transitive-accessible method net/minecraft/entity/LivingEntity damageHelmet (Lnet/minecraft/entity/damage/DamageSource;F)V
-transitive-accessible method net/minecraft/entity/LivingEntity damageShield (F)V
 
 # Entity constructors
 transitive-accessible method net/minecraft/entity/projectile/ProjectileEntity <init> (Lnet/minecraft/entity/EntityType;Lnet/minecraft/world/World;)V

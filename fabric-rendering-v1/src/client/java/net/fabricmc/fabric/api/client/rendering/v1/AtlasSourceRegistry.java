@@ -16,25 +16,27 @@
 
 package net.fabricmc.fabric.api.client.rendering.v1;
 
-import net.minecraft.client.texture.atlas.AtlasSourceType;
+import com.mojang.serialization.MapCodec;
+
+import net.minecraft.client.texture.atlas.AtlasSource;
 import net.minecraft.util.Identifier;
 
-import net.fabricmc.fabric.impl.client.rendering.AtlasSourceTypeRegistryImpl;
+import net.fabricmc.fabric.impl.client.rendering.AtlasSourceRegistryImpl;
 
 /**
- * A registry for custom {@link AtlasSourceType}s. Registered types will be automatically available for use in atlas definition JSON files.
+ * A registry for custom {@link AtlasSource}s. Registered types will be automatically available for use in atlas definition JSON files.
  */
-public final class AtlasSourceTypeRegistry {
-	private AtlasSourceTypeRegistry() {
+public final class AtlasSourceRegistry {
+	private AtlasSourceRegistry() {
 	}
 
 	/**
-	 * Registers a new {@link AtlasSourceType}.
+	 * Registers a new {@link AtlasSource} by providing a codec for it.
 	 *
 	 * @param id the identifier of the atlas source type
-	 * @param type the atlas source type to register
+	 * @param codec the codec for the atlas source type
 	 */
-	public static void register(Identifier id, AtlasSourceType type) {
-		AtlasSourceTypeRegistryImpl.register(id, type);
+	public static void register(Identifier id, MapCodec<? extends AtlasSource> codec) {
+		AtlasSourceRegistryImpl.register(id, codec);
 	}
 }
