@@ -85,7 +85,7 @@ abstract class LivingEntityMixin {
 	}
 
 	@Inject(method = "damage", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
-	private void afterDamage(ServerWorld world, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir, float dealt, boolean blocked) {
+	private void afterDamage(ServerWorld world, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir, float dealt, float f, boolean blocked) {
 		if (!isDead()) {
 			ServerLivingEntityEvents.AFTER_DAMAGE.invoker().afterDamage((LivingEntity) (Object) this, source, dealt, amount, blocked);
 		}

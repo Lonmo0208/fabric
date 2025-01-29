@@ -25,7 +25,6 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -145,7 +144,7 @@ final class TestAnnotationLocator {
 
 		TestInstance testInstance(Registry<TestEnvironmentDefinition> testEnvironmentDefinitionRegistry) {
 			return new FunctionTestInstance(
-					Registries.TEST_FUNCTION.getEntry(identifier()).get(),
+					RegistryKey.of(RegistryKeys.TEST_FUNCTION, identifier()),
 					testData(testEnvironmentDefinitionRegistry)
 			);
 		}

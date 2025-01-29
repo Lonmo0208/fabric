@@ -23,13 +23,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.minecraft.class_10741;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.MutableWorldProperties;
-import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 
@@ -65,12 +65,13 @@ abstract class ServerWorldMixin extends World implements AttachmentTargetImpl {
 	private void createAttachmentsPersistentState(CallbackInfo ci) {
 		// Force persistent state creation
 		ServerWorld world = (ServerWorld) (Object) this;
-		var type = new PersistentState.Type<>(
+		var type = new class_10741<>(
+				AttachmentPersistentState.ID,
 				() -> new AttachmentPersistentState(world),
-				(nbt, wrapperLookup) -> AttachmentPersistentState.read(world, nbt, server.getRegistryManager()),
+				AttachmentPersistentState.codec(world),
 				null // Object builder API 12.1.0 and later makes this a no-op
 		);
-		world.getPersistentStateManager().getOrCreate(type, AttachmentPersistentState.ID);
+		world.getPersistentStateManager().getOrCreate(type);
 	}
 
 	@Override

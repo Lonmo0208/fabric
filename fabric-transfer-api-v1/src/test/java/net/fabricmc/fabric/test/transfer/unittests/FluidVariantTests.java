@@ -22,9 +22,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import net.minecraft.class_10712;
 import net.minecraft.component.ComponentChanges;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.util.Unit;
@@ -48,7 +48,7 @@ class FluidVariantTests extends AbstractTransferApiTest {
 	@Test
 	public void testWithComponentChanges() {
 		FluidVariant variant = FluidVariant.of(Fluids.WATER, ComponentChanges.builder()
-				.add(DataComponentTypes.TOOLTIP_DISPLAY, class_10712.field_56318)
+				.add(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT)
 				.build());
 
 		FluidVariant newVariant = variant.withComponentChanges(ComponentChanges.builder()

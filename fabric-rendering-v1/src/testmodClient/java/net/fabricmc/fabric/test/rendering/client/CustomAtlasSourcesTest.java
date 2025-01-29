@@ -74,7 +74,7 @@ public class CustomAtlasSourcesTest implements ClientModInitializer {
 		}
 
 		@Override
-		public MapCodec<? extends AtlasSource> method_67288() {
+		public MapCodec<? extends AtlasSource> getCodec() {
 			return CODEC;
 		}
 

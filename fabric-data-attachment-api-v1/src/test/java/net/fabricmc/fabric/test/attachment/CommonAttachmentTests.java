@@ -248,16 +248,25 @@ public class CommonAttachmentTests {
 	@Test
 	void testWorldPersistentState() {
 		// Trying to simulate actual saving and loading for the world is too hard
+		DynamicRegistryManager drm = mockDRM();
+
 		ServerWorld world = mockAndDisableSync(ServerWorld.class);
+		when(world.getRegistryManager()).thenReturn(drm);
+
 		AttachmentPersistentState state = new AttachmentPersistentState(world);
 		assertFalse(world.hasAttached(PERSISTENT));
+		assertFalse(state.isDirty());
 
 		int expected = 1;
 		world.setAttached(PERSISTENT, expected);
-		NbtCompound fakeSave = state.writeNbt(new NbtCompound(), mockDRM());
+		assertTrue(state.isDirty());
+		NbtCompound fakeSave = (NbtCompound) AttachmentPersistentState.codec(world).encodeStart(RegistryOps.of(NbtOps.INSTANCE, drm), state).getOrThrow();
+		assertEquals("{\"fabric:attachments\":{\"example:persistent\":1}}", fakeSave.toString());
 
 		world = mockAndDisableSync(ServerWorld.class);
-		AttachmentPersistentState.read(world, fakeSave, mockDRM());
+		when(world.getRegistryManager()).thenReturn(drm);
+
+		AttachmentPersistentState.codec(world).decode(RegistryOps.of(NbtOps.INSTANCE, drm), fakeSave).getOrThrow();
 		assertTrue(world.hasAttached(PERSISTENT));
 		assertEquals(expected, world.getAttached(PERSISTENT));
 	}

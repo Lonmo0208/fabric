@@ -27,7 +27,7 @@ import net.minecraft.util.dynamic.Codecs;
 
 @Mixin(AtlasSourceManager.class)
 public interface AtlasSourceManagerAccessor {
-	@Accessor("field_56377")
+	@Accessor("ID_MAPPER")
 	static Codecs.IdMapper<Identifier, MapCodec<? extends AtlasSource>> getAtlasSourceCodecs() {
 		throw new AssertionError();
 	}

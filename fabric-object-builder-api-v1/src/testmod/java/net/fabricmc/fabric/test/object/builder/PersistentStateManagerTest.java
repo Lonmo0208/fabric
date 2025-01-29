@@ -18,8 +18,10 @@ package net.fabricmc.fabric.test.object.builder;
 
 import java.util.Objects;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
+import net.minecraft.class_10741;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.PersistentState;
 
@@ -44,10 +46,13 @@ public class PersistentStateManagerTest implements ModInitializer {
 		/**
 		 * We are testing that null can be passed as the dataFixType.
 		 */
-		private static final PersistentState.Type<TestState> TYPE = new Type<>(TestState::new, TestState::fromTag, null);
+		private static final Codec<TestState> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+				Codec.STRING.fieldOf("value").forGetter(TestState::getValue)
+		).apply(instance, TestState::new));
+		private static final class_10741<TestState> TYPE = new class_10741<>(ObjectBuilderTestConstants.id("test_state").toString().replace(":", "_"), TestState::new, CODEC, null);
 
 		public static TestState getOrCreate(ServerWorld world) {
-			return world.getPersistentStateManager().getOrCreate(TestState.TYPE, ObjectBuilderTestConstants.id("test_state").toString().replace(":", "_"));
+			return world.getPersistentStateManager().getOrCreate(TestState.TYPE);
 		}
 
 		private String value = "";
@@ -66,16 +71,6 @@ public class PersistentStateManagerTest implements ModInitializer {
 		public void setValue(String value) {
 			this.value = value;
 			markDirty();
-		}
-
-		@Override
-		public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup wrapperLookup) {
-			nbt.putString("value", value);
-			return nbt;
-		}
-
-		private static TestState fromTag(NbtCompound tag, RegistryWrapper.WrapperLookup wrapperLookup) {
-			return new TestState(tag.getString("value"));
 		}
 	}
 }
