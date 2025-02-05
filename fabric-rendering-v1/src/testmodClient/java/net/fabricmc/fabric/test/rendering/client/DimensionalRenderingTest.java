@@ -16,70 +16,69 @@
 
 package net.fabricmc.fabric.test.rendering.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import org.joml.Matrix4f;
-
-import net.minecraft.client.gl.ShaderProgramKeys;
-import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.DimensionEffects;
-import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderPhase;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.TriState;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 
 public class DimensionalRenderingTest implements ClientModInitializer {
-	private static final Identifier END_SKY = Identifier.ofVanilla("textures/block/dirt.png");
+	private static final Identifier SKY_TEXTURE = Identifier.ofVanilla("textures/block/dirt.png");
+	private static final RenderLayer RENDER_LAYER = RenderLayer.of(
+			"fabric-rendering-v1-testmod:void_sky",
+			VertexFormats.POSITION_TEXTURE_COLOR,
+			VertexFormat.DrawMode.QUADS,
+			1536,
+			false,
+			false,
+			RenderLayer.MultiPhaseParameters.builder()
+					.program(RenderLayer.POSITION_TEXTURE_COLOR_PROGRAM)
+					.texture(new RenderPhase.Texture(SKY_TEXTURE, TriState.FALSE, false))
+					.transparency(RenderLayer.TRANSLUCENT_TRANSPARENCY)
+					.writeMaskState(RenderLayer.COLOR_MASK)
+					.build(false)
+	);
 
 	private static void render(WorldRenderContext context) {
-		RenderSystem.enableBlend();
-		RenderSystem.defaultBlendFunc();
-		RenderSystem.depthMask(false);
-		RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
-		RenderSystem.setShaderTexture(0, END_SKY);
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
+		VertexConsumer vertexConsumer = context.consumers().getBuffer(RENDER_LAYER);
+		vertexConsumer.vertex(-100.0f, -100.0f, -100.0f).texture(0.0F, 0.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(-100.0f, -100.0f, 100.0f).texture(0.0F, 1.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(100.0f, -100.0f, 100.0f).texture(1.0F, 1.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(100.0f, -100.0f, -100.0f).texture(1.0F, 0.0F).color(255, 255, 255, 255);
 
-		Matrix4f matrix4f = context.positionMatrix();
-		bufferBuilder.vertex(matrix4f, -100.0f, -100.0f, -100.0f).texture(0.0F, 0.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, -100.0f, -100.0f, 100.0f).texture(0.0F, 1.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, 100.0f, -100.0f, 100.0f).texture(1.0F, 1.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, 100.0f, -100.0f, -100.0f).texture(1.0F, 0.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(-100.0f, 100.0f, -100.0f).texture(0.0F, 0.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(-100.0f, -100.0f, -99.0f).texture(0.0F, 1.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(100.0f, -100.0f, -99.0f).texture(1.0F, 1.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(100.0f, 100.0f, -100.0f).texture(1.0F, 0.0F).color(255, 255, 255, 255);
 
-		bufferBuilder.vertex(matrix4f, -100.0f, 100.0f, -100.0f).texture(0.0F, 0.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, -100.0f, -100.0f, -99.0f).texture(0.0F, 1.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, 100.0f, -100.0f, -99.0f).texture(1.0F, 1.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, 100.0f, 100.0f, -100.0f).texture(1.0F, 0.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(-100.0f, -100.0f, 100.0f).texture(0.0F, 0.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(-100.0f, 100.0f, 100.0f).texture(0.0F, 1.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(100.0f, 100.0f, 100.0f).texture(1.0F, 1.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(100.0f, -100.0f, 100.0f).texture(1.0F, 0.0F).color(255, 255, 255, 255);
 
-		bufferBuilder.vertex(matrix4f, -100.0f, -100.0f, 100.0f).texture(0.0F, 0.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, -100.0f, 100.0f, 100.0f).texture(0.0F, 1.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, 100.0f, 100.0f, 100.0f).texture(1.0F, 1.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, 100.0f, -100.0f, 100.0f).texture(1.0F, 0.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(-100.0f, 100.0f, 101.0f).texture(0.0F, 0.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(-100.0f, 100.0f, -100.0f).texture(0.0F, 1.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(100.0f, 100.0f, -100.0f).texture(1.0F, 1.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(100.0f, 100.0f, 100.0f).texture(1.0F, 0.0F).color(255, 255, 255, 255);
 
-		bufferBuilder.vertex(matrix4f, -100.0f, 100.0f, 101.0f).texture(0.0F, 0.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, -100.0f, 100.0f, -100.0f).texture(0.0F, 1.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, 100.0f, 100.0f, -100.0f).texture(1.0F, 1.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, 100.0f, 100.0f, 100.0f).texture(1.0F, 0.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(100.0f, -100.0f, -100.0f).texture(0.0F, 0.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(100.0f, -100.0f, 100.0f).texture(0.0F, 1.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(100.0f, 100.0f, 100.0f).texture(1.0F, 1.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(100.0f, 100.0f, -100.0f).texture(1.0F, 0.0F).color(255, 255, 255, 255);
 
-		bufferBuilder.vertex(matrix4f, 100.0f, -100.0f, -100.0f).texture(0.0F, 0.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, 100.0f, -100.0f, 100.0f).texture(0.0F, 1.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, 100.0f, 100.0f, 100.0f).texture(1.0F, 1.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, 100.0f, 100.0f, -100.0f).texture(1.0F, 0.0F).color(255, 255, 255, 255);
-
-		bufferBuilder.vertex(matrix4f, -100.0f, 100.0f, -100.0f).texture(0.0F, 0.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, -100.0f, 100.0f, 100.0f).texture(0.0F, 1.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, -100.0f, -100.0f, 100.0f).texture(1.0F, 1.0F).color(255, 255, 255, 255);
-		bufferBuilder.vertex(matrix4f, -100.0f, -100.0f, -100.0f).texture(1.0F, 0.0F).color(255, 255, 255, 255);
-		// TODO 1.21.5
-		// BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
-
-		RenderSystem.depthMask(true);
-		RenderSystem.disableBlend();
+		vertexConsumer.vertex(-100.0f, 100.0f, -100.0f).texture(0.0F, 0.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(-100.0f, 100.0f, 100.0f).texture(0.0F, 1.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(-100.0f, -100.0f, 100.0f).texture(1.0F, 1.0F).color(255, 255, 255, 255);
+		vertexConsumer.vertex(-100.0f, -100.0f, -100.0f).texture(1.0F, 0.0F).color(255, 255, 255, 255);
 	}
 
 	@Override
