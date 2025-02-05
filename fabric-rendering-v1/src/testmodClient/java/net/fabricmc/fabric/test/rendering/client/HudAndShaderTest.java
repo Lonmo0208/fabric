@@ -23,10 +23,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Defines;
 import net.minecraft.client.gl.ShaderProgramKey;
 import net.minecraft.client.gl.ShaderProgramKeys;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.Window;
 import net.minecraft.util.Identifier;
@@ -55,12 +53,15 @@ public class HudAndShaderTest implements ClientModInitializer {
 			RenderSystem.setShader(TEST_SHADER);
 			RenderSystem.setShaderColor(0f, 1f, 0f, 1f);
 			Matrix4f positionMatrix = drawContext.getMatrices().peek().getPositionMatrix();
-			BufferBuilder buffer = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-			buffer.vertex(positionMatrix, x, y, 50);
-			buffer.vertex(positionMatrix, x, y + 10, 50);
-			buffer.vertex(positionMatrix, x + 10, y + 10, 50);
-			buffer.vertex(positionMatrix, x + 10, y, 50);
-			BufferRenderer.drawWithGlobalProgram(buffer.end());
+
+			drawContext.draw(vertexConsumerProvider -> {
+				VertexConsumer buffer = vertexConsumerProvider.getBuffer(RenderLayer.getGui());
+				buffer.vertex(positionMatrix, x, y, 50).color(255, 255, 255, 255);
+				buffer.vertex(positionMatrix, x, y + 10, 50).color(255, 255, 255, 255);
+				buffer.vertex(positionMatrix, x + 10, y + 10, 50).color(255, 255, 255, 255);
+				buffer.vertex(positionMatrix, x + 10, y, 50).color(255, 255, 255, 255);
+			});
+
 			// Reset shader color
 			RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 		});

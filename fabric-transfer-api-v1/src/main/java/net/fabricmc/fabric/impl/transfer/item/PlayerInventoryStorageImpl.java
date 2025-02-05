@@ -85,10 +85,10 @@ class PlayerInventoryStorageImpl extends InventoryStorageImpl implements PlayerI
 	@Override
 	public SingleSlotStorage<ItemVariant> getHandSlot(Hand hand) {
 		if (Objects.requireNonNull(hand) == Hand.MAIN_HAND) {
-			if (PlayerInventory.isValidHotbarIndex(playerInventory.selectedSlot)) {
-				return getSlot(playerInventory.selectedSlot);
+			if (PlayerInventory.isValidHotbarIndex(playerInventory.method_67532())) {
+				return getSlot(playerInventory.method_67532());
 			} else {
-				throw new RuntimeException("Unexpected player selected slot: " + playerInventory.selectedSlot);
+				throw new RuntimeException("Unexpected player selected slot: " + playerInventory.method_67532());
 			}
 		} else if (hand == Hand.OFF_HAND) {
 			return getSlot(PlayerInventory.OFF_HAND_SLOT);

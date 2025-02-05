@@ -21,9 +21,9 @@ import java.util.Objects;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import net.minecraft.class_10741;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.PersistentState;
+import net.minecraft.world.PersistentStateType;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -49,7 +49,7 @@ public class PersistentStateManagerTest implements ModInitializer {
 		private static final Codec<TestState> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 				Codec.STRING.fieldOf("value").forGetter(TestState::getValue)
 		).apply(instance, TestState::new));
-		private static final class_10741<TestState> TYPE = new class_10741<>(ObjectBuilderTestConstants.id("test_state").toString().replace(":", "_"), TestState::new, CODEC, null);
+		private static final PersistentStateType<TestState> TYPE = new PersistentStateType<>(ObjectBuilderTestConstants.id("test_state").toString().replace(":", "_"), TestState::new, CODEC, null);
 
 		public static TestState getOrCreate(ServerWorld world) {
 			return world.getPersistentStateManager().getOrCreate(TestState.TYPE);
