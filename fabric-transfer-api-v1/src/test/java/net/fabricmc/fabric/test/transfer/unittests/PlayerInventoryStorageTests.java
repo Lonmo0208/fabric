@@ -23,6 +23,7 @@ import java.util.function.Function;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import net.minecraft.entity.EntityEquipment;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -52,16 +53,16 @@ public class PlayerInventoryStorageTests extends AbstractTransferApiTest {
 
 	private void testStacking(Function<PlayerInventoryStorage, InsertionFunction> inserterBuilder) {
 		// A bit hacky... but nothing should try using the null player entity as long as we don't call drop.
-		PlayerInventory inv = new PlayerInventory(null);
+		PlayerInventory inv = new PlayerInventory(null, new EntityEquipment());
 		InsertionFunction inserter = inserterBuilder.apply(PlayerInventoryStorage.of(inv));
 
 		// Fill everything with stone besides the first two inventory slots.
-		inv.selectedSlot = 3;
-		inv.main.set(3, new ItemStack(Items.STONE, 63));
-		inv.offHand.set(0, new ItemStack(Items.STONE, 62));
+		inv.setSelectedSlot(3);
+		inv.method_67531(new ItemStack(Items.STONE, 63));
+		inv.setStack(PlayerInventory.OFF_HAND_SLOT, new ItemStack(Items.STONE, 62));
 
 		for (int i = 4; i < PlayerInventory.MAIN_SIZE; ++i) {
-			inv.main.set(i, new ItemStack(Items.STONE, 61));
+			inv.setStack(i, new ItemStack(Items.STONE, 61));
 		}
 
 		ItemVariant stone = ItemVariant.of(Items.STONE);
@@ -70,15 +71,15 @@ public class PlayerInventoryStorageTests extends AbstractTransferApiTest {
 			assertEquals(1L, inserter.insert(stone, 1, tx));
 
 			// Should have gone into the main stack
-			assertEquals(64, inv.main.get(3).getCount());
+			assertEquals(64, inv.getStack(3).getCount());
 		}
 
 		try (Transaction tx = Transaction.openOuter()) {
 			assertEquals(2L, inserter.insert(stone, 2, tx));
 
 			// Should have gone into the main and offhand stacks.
-			assertEquals(64, inv.main.get(3).getCount());
-			assertEquals(63, inv.offHand.get(0).getCount());
+			assertEquals(64, inv.getStack(3).getCount());
+			assertEquals(63, inv.getStack(PlayerInventory.OFF_HAND_SLOT).getCount());
 		}
 
 		long toInsertStacking = 1 + 2 + (PlayerInventory.MAIN_SIZE - 4) * 3;
@@ -87,22 +88,22 @@ public class PlayerInventoryStorageTests extends AbstractTransferApiTest {
 		try (Transaction tx = Transaction.openOuter()) {
 			assertEquals(toInsertStacking, inserter.insert(stone, toInsertStacking, tx));
 
-			assertEquals(64, inv.main.get(3).getCount());
-			assertEquals(64, inv.offHand.get(0).getCount());
+			assertEquals(64, inv.getStack(3).getCount());
+			assertEquals(64, inv.getStack(PlayerInventory.OFF_HAND_SLOT).getCount());
 
 			for (int i = 4; i < PlayerInventory.MAIN_SIZE; ++i) {
-				assertEquals(64, inv.main.get(i).getCount());
+				assertEquals(64, inv.getStack(i).getCount());
 			}
 
 			for (int i = 0; i < 3; ++i) {
-				assertEquals(true, inv.main.get(i).isEmpty());
+				assertEquals(true, inv.getStack(i).isEmpty());
 			}
 
 			// Now insertion should fill the remaining stacks
 			assertEquals(150L, inserter.insert(stone, 150, tx));
-			assertEquals(64, inv.main.get(0).getCount());
-			assertEquals(64, inv.main.get(1).getCount());
-			assertEquals(22, inv.main.get(2).getCount());
+			assertEquals(64, inv.getStack(0).getCount());
+			assertEquals(64, inv.getStack(1).getCount());
+			assertEquals(22, inv.getStack(2).getCount());
 
 			// Only 64 - 22 = 42 room left!
 			assertEquals(42L, inserter.insert(stone, Long.MAX_VALUE, tx));

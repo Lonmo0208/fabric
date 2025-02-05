@@ -21,7 +21,6 @@ import org.joml.Matrix4f;
 
 import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.DimensionEffects;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
@@ -76,7 +75,8 @@ public class DimensionalRenderingTest implements ClientModInitializer {
 		bufferBuilder.vertex(matrix4f, -100.0f, 100.0f, 100.0f).texture(0.0F, 1.0F).color(255, 255, 255, 255);
 		bufferBuilder.vertex(matrix4f, -100.0f, -100.0f, 100.0f).texture(1.0F, 1.0F).color(255, 255, 255, 255);
 		bufferBuilder.vertex(matrix4f, -100.0f, -100.0f, -100.0f).texture(1.0F, 0.0F).color(255, 255, 255, 255);
-		BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
+		// TODO 1.21.5
+		// BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
 
 		RenderSystem.depthMask(true);
 		RenderSystem.disableBlend();

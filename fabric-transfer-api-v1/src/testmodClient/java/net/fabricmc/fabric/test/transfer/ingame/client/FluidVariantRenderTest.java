@@ -19,19 +19,16 @@ package net.fabricmc.fabric.test.transfer.ingame.client;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import org.joml.Matrix4f;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.text.Text;
@@ -86,15 +83,12 @@ public class FluidVariantRenderTest implements ClientModInitializer {
 	private static void drawFluidInGui(DrawContext drawContext, Sprite sprite, int color, int i, int j) {
 		if (sprite == null) return;
 
-		RenderSystem.setShaderTexture(0, SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
-
 		float r = ((color >> 16) & 255) / 255f;
 		float g = ((color >> 8) & 255) / 255f;
 		float b = (color & 255) / 255f;
 		RenderSystem.disableDepthTest();
 
 		RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
-		BufferBuilder bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
 		float x0 = (float) i;
 		float y0 = (float) j;
 		float x1 = x0 + 16;
@@ -104,12 +98,14 @@ public class FluidVariantRenderTest implements ClientModInitializer {
 		float v0 = sprite.getMinV();
 		float u1 = sprite.getMaxU();
 		float v1 = sprite.getMaxV();
-		Matrix4f model = drawContext.getMatrices().peek().getPositionMatrix();
-		bufferBuilder.vertex(model, x0, y1, z).color(r, g, b, 1).texture(u0, v1);
-		bufferBuilder.vertex(model, x1, y1, z).color(r, g, b, 1).texture(u1, v1);
-		bufferBuilder.vertex(model, x1, y0, z).color(r, g, b, 1).texture(u1, v0);
-		bufferBuilder.vertex(model, x0, y0, z).color(r, g, b, 1).texture(u0, v0);
-		BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
+		MatrixStack.Entry matrixEntry = drawContext.getMatrices().peek();
+		drawContext.draw(vertexConsumerProvider -> {
+			VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getGuiTextured(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE));
+			vertexConsumer.vertex(matrixEntry, x0, y1, z).color(r, g, b, 1).texture(u0, v1);
+			vertexConsumer.vertex(matrixEntry, x1, y1, z).color(r, g, b, 1).texture(u1, v1);
+			vertexConsumer.vertex(matrixEntry, x1, y0, z).color(r, g, b, 1).texture(u1, v0);
+			vertexConsumer.vertex(matrixEntry, x0, y0, z).color(r, g, b, 1).texture(u0, v0);
+		});
 
 		RenderSystem.enableDepthTest();
 	}
