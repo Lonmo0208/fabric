@@ -112,11 +112,11 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
 	private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
 		if (keyCode == GLFW.GLFW_KEY_PAGE_UP) {
-			if (switchToNextPage()) {
+			if (switchToPreviousPage()) {
 				cir.setReturnValue(true);
 			}
 		} else if (keyCode == GLFW.GLFW_KEY_PAGE_DOWN) {
-			if (switchToPreviousPage()) {
+			if (switchToNextPage()) {
 				cir.setReturnValue(true);
 			}
 		}
