@@ -1,9 +1,7 @@
 plugins {
 	id "java-library"
 	id "eclipse"
-	id "idea"
 	id "maven-publish"
-	id 'jacoco'
 	id "fabric-loom" version "1.10.0-alpha.11" apply false
 	id "com.diffplug.spotless" version "6.20.0"
 	id "org.ajoberstar.grgit" version "5.2.2"
@@ -13,7 +11,8 @@ plugins {
 
 def ENV = System.getenv()
 
-version = project.version + "+" + (ENV.GITHUB_RUN_NUMBER ? "" : "local-") + getBranch()
+def branchProvider = providers.of(GitBranchValueSource.class) {}
+version = project.version + "+" + (ENV.MAVEN_URL ? "" : "local-") + branchProvider.get()
 logger.lifecycle("Building Fabric: " + version)
 
 def metaProjects = [
@@ -29,9 +28,10 @@ def debugArgs = [
 	"-Dmixin.debug.countInjections=true",
 ]
 
-import net.fabricmc.loom.util.gradle.SourceSetHelper
 import groovy.json.JsonSlurper
 import org.apache.commons.codec.digest.DigestUtils
+import net.fabricmc.fabric.impl.build.CommitHashValueSource
+import net.fabricmc.fabric.impl.build.GitBranchValueSource
 
 def getSubprojectVersion(project) {
 	// Get the version from the gradle.properties file
@@ -41,32 +41,10 @@ def getSubprojectVersion(project) {
 		throw new NullPointerException("Could not find version for " + project.name)
 	}
 
-	if (grgit == null) {
-		return version + "+nogit"
+	def hashProvider = project.providers.of(CommitHashValueSource.class) {
+		parameters.directory = project.name
 	}
-
-	def latestCommits = grgit.log(paths: [project.name], maxCommits: 1)
-
-	if (latestCommits.isEmpty()) {
-		return version + "+uncommited"
-	}
-
-	return version + "+" + latestCommits.get(0).id.substring(0, 8) + DigestUtils.sha256Hex(project.rootProject.minecraft_version).substring(0, 2)
-}
-
-def getBranch() {
-	def ENV = System.getenv()
-	if (ENV.GITHUB_REF) {
-		def branch = ENV.GITHUB_REF
-		return branch.substring(branch.lastIndexOf("/") + 1)
-	}
-
-	if (grgit == null) {
-		return "unknown"
-	}
-
-	def branch = grgit.branch.current().name
-	return branch.substring(branch.lastIndexOf("/") + 1)
+	return version + "+" + hashProvider.get().substring(0, 8) + DigestUtils.sha256Hex(project.rootProject.minecraft_version).substring(0, 2)
 }
 
 def moduleDependencies(project, List<String> depNames) {
@@ -433,19 +411,6 @@ loom {
 			vmArg "-Dfabric-tag-conventions-v2.missingTagTranslationWarning=fail"
 			vmArg "-Dfabric-tag-conventions-v1.legacyTagWarning=fail"
 		}
-
-		// Create duplicate tasks for this, as jacoco slows things down a bit
-		gametestCoverage {
-			inherit gametest
-			name "Game Test Coverage"
-			ideConfigGenerated = false
-		}
-
-		clientGametestCoverage {
-			inherit clientGametest
-			name "Client Game Test Coverage"
-			ideConfigGenerated = false
-		}
 	}
 }
 
@@ -454,37 +419,6 @@ runGametest {
 }
 
 test.dependsOn runGametest
-
-def coverageTasks = [
-	runGametestCoverage,
-	runClientGametestCoverage
-]
-
-jacoco {
-	coverageTasks.forEach {
-		applyTo it
-	}
-}
-
-tasks.register('coverage', JacocoReport) {
-	dependsOn coverageTasks
-	coverageTasks.forEach {
-		executionData it
-	}
-
-	// Add all source as input
-	allprojects { p ->
-		if (p.path.startsWith(":deprecated") || metaProjects.contains(p.name)) {
-			return
-		}
-		sourceSets p.sourceSets.main, p.sourceSets.client, p.sourceSets.testmod, p.sourceSets.testmodClient
-	}
-
-	// Exclude mixins
-	classDirectories.setFrom(files(classDirectories.files.collect {
-		fileTree(dir: it, exclude: '**/mixin/**')
-	}))
-}
 
 configurations {
 	productionMods {
