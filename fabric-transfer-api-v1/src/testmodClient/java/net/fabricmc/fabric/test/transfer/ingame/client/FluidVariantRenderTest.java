@@ -18,17 +18,13 @@ package net.fabricmc.fabric.test.transfer.ingame.client;
 
 import java.util.List;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.text.Text;
@@ -86,9 +82,7 @@ public class FluidVariantRenderTest implements ClientModInitializer {
 		float r = ((color >> 16) & 255) / 255f;
 		float g = ((color >> 8) & 255) / 255f;
 		float b = (color & 255) / 255f;
-		RenderSystem.disableDepthTest();
 
-		RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
 		float x0 = (float) i;
 		float y0 = (float) j;
 		float x1 = x0 + 16;
@@ -98,15 +92,13 @@ public class FluidVariantRenderTest implements ClientModInitializer {
 		float v0 = sprite.getMinV();
 		float u1 = sprite.getMaxU();
 		float v1 = sprite.getMaxV();
-		MatrixStack.Entry matrixEntry = drawContext.getMatrices().peek();
+
 		drawContext.draw(vertexConsumerProvider -> {
 			VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getGuiTextured(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE));
-			vertexConsumer.vertex(matrixEntry, x0, y1, z).color(r, g, b, 1).texture(u0, v1);
-			vertexConsumer.vertex(matrixEntry, x1, y1, z).color(r, g, b, 1).texture(u1, v1);
-			vertexConsumer.vertex(matrixEntry, x1, y0, z).color(r, g, b, 1).texture(u1, v0);
-			vertexConsumer.vertex(matrixEntry, x0, y0, z).color(r, g, b, 1).texture(u0, v0);
+			vertexConsumer.vertex(x0, y1, z).color(r, g, b, 1).texture(u0, v1);
+			vertexConsumer.vertex(x1, y1, z).color(r, g, b, 1).texture(u1, v1);
+			vertexConsumer.vertex(x1, y0, z).color(r, g, b, 1).texture(u1, v0);
+			vertexConsumer.vertex(x0, y0, z).color(r, g, b, 1).texture(u0, v0);
 		});
-
-		RenderSystem.enableDepthTest();
 	}
 }
