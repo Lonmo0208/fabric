@@ -6,11 +6,11 @@ jobs:
       matrix:
         java: [21-ubuntu]
     runs-on: ubuntu-22.04
-    container:
-      image: mcr.microsoft.com/openjdk/jdk:${{ matrix.java }}
-      options: --user root
     steps:
-      - run: apt update && apt install git -y && git --version
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'microsoft'
+          java-version: '21'
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
