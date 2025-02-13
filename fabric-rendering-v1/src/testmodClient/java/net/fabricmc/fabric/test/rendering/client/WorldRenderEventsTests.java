@@ -20,7 +20,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexRendering;
@@ -65,7 +64,6 @@ public class WorldRenderEventsTests implements ClientModInitializer {
 		matrices.push();
 		matrices.translate(-camera.x, -camera.y, -camera.z);
 
-		RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
 		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();

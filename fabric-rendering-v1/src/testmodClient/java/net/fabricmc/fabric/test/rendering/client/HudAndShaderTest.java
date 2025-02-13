@@ -16,19 +16,6 @@
 
 package net.fabricmc.fabric.test.rendering.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import org.joml.Matrix4f;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.Defines;
-import net.minecraft.client.gl.ShaderProgramKey;
-import net.minecraft.client.gl.ShaderProgramKeys;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.util.Window;
-import net.minecraft.util.Identifier;
-
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
@@ -37,12 +24,15 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
  * in the lower-right corner of the screen.
  */
 public class HudAndShaderTest implements ClientModInitializer {
+	/* TODO 1.21.5
 	private static final ShaderProgramKey TEST_SHADER = new ShaderProgramKey(
 			Identifier.of("fabric-rendering-v1-testmod", "core/test"),
 			VertexFormats.POSITION, Defines.EMPTY);
+	 */
 
 	@Override
 	public void onInitializeClient() {
+		/* TODO 1.21.5
 		ShaderProgramKeys.getAll().add(TEST_SHADER);
 
 		HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
@@ -70,5 +60,6 @@ public class HudAndShaderTest implements ClientModInitializer {
 			// Reset shader color
 			RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 		});
+		 */
 	}
 }

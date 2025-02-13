@@ -18,14 +18,10 @@ package net.fabricmc.fabric.test.rendering.client;
 
 import net.minecraft.client.render.DimensionEffects;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.TriState;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
@@ -33,23 +29,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 
 public class DimensionalRenderingTest implements ClientModInitializer {
 	private static final Identifier SKY_TEXTURE = Identifier.ofVanilla("textures/block/dirt.png");
-	private static final RenderLayer RENDER_LAYER = RenderLayer.of(
-			"fabric-rendering-v1-testmod:void_sky",
-			VertexFormats.POSITION_TEXTURE_COLOR,
-			VertexFormat.DrawMode.QUADS,
-			1536,
-			false,
-			false,
-			RenderLayer.MultiPhaseParameters.builder()
-					.program(RenderLayer.POSITION_TEXTURE_COLOR_PROGRAM)
-					.texture(new RenderPhase.Texture(SKY_TEXTURE, TriState.FALSE, false))
-					.transparency(RenderLayer.TRANSLUCENT_TRANSPARENCY)
-					.writeMaskState(RenderLayer.COLOR_MASK)
-					.build(false)
-	);
 
 	private static void render(WorldRenderContext context) {
-		VertexConsumer vertexConsumer = context.consumers().getBuffer(RENDER_LAYER);
+		VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderLayer.getCelestial(SKY_TEXTURE));
 		vertexConsumer.vertex(-100.0f, -100.0f, -100.0f).texture(0.0F, 0.0F).color(255, 255, 255, 255);
 		vertexConsumer.vertex(-100.0f, -100.0f, 100.0f).texture(0.0F, 1.0F).color(255, 255, 255, 255);
 		vertexConsumer.vertex(100.0f, -100.0f, 100.0f).texture(1.0F, 1.0F).color(255, 255, 255, 255);
