@@ -8,26 +8,44 @@ publishing {
 		mavenJava(MavenPublication) {
 			artifactId = 'fabric-api-deprecated'
 
+			List<Map<String, String>> dependencies = []
+
+			allprojects.each {
+				if (it.name == "deprecated") {
+					return // Dont depend on yourself :)
+				}
+
+				// Depend on all of the deprecated projects
+				if (!it.path.startsWith(":deprecated")) {
+					return
+				}
+
+				dependencies.add([
+					'groupId': it.group,
+					'artifactId': it.name,
+					'version': it.version,
+					'scope': 'compile'
+				])
+			}
+
+			def thisGroup = group
+			def thisVersion = version
+
 			pom.withXml {
 				def depsNode = asNode().appendNode("dependencies")
-				allprojects.each {
-					if (it.name == "deprecated") return // Dont depend on yourself :)
-
-						// Depend on all of the deprecated projects
-						if (!it.path.startsWith(":deprecated")) return
-
-						def depNode = depsNode.appendNode("dependency")
-					depNode.appendNode("groupId", it.group)
-					depNode.appendNode("artifactId", it.name)
-					depNode.appendNode("version", it.version)
-					depNode.appendNode("scope", "compile")
+				for (dep in dependencies) {
+					def depNode = depsNode.appendNode("dependency")
+					depNode.appendNode("groupId", dep['groupId'])
+					depNode.appendNode("artifactId", dep['artifactId'])
+					depNode.appendNode("version", dep['version'])
+					depNode.appendNode("scope", dep['scope'])
 				}
 
 				// Depend on the main project.
 				def depNode = depsNode.appendNode("dependency")
-				depNode.appendNode("groupId", group)
+				depNode.appendNode("groupId", thisGroup)
 				depNode.appendNode("artifactId", "fabric-api")
-				depNode.appendNode("version", version)
+				depNode.appendNode("version", thisVersion)
 				depNode.appendNode("scope", "compile")
 			}
 		}
