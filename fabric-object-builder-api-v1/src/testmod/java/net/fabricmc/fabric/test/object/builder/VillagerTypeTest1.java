@@ -24,6 +24,7 @@ import static net.minecraft.server.command.CommandManager.literal;
 import java.util.Optional;
 
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
@@ -106,8 +107,8 @@ public class VillagerTypeTest1 implements ModInitializer {
 						WanderingTraderEntity trader = (WanderingTraderEntity) entity;
 						trader.getOffers().clear();
 
-						for (TradeOffers.Factory[] value : TradeOffers.WANDERING_TRADER_TRADES.values()) {
-							for (TradeOffers.Factory factory : value) {
+						for (Pair<TradeOffers.Factory[], Integer> value : TradeOffers.WANDERING_TRADER_TRADES) {
+							for (TradeOffers.Factory factory : value.getKey()) {
 								final TradeOffer result = factory.create(trader, Random.create());
 
 								if (result == null) {

@@ -72,7 +72,25 @@ public final class TradeOfferInternals {
 	}
 
 	public static synchronized void registerWanderingTraderOffers(int level, Consumer<List<TradeOffers.Factory>> factory) {
-		registerOffers(TradeOffers.WANDERING_TRADER_TRADES, level, factory);
+		final List<TradeOffers.Factory> list = new ArrayList<>();
+		factory.accept(list);
+		WanderingTraderOffersBuilderImpl.initWanderingTraderTrades();
+
+		Int2ObjectMap<TradeOffers.Factory[]> tradeMap = new Int2ObjectOpenHashMap<>();
+
+		TradeOffers.WANDERING_TRADER_TRADES.forEach(pair -> {
+			tradeMap.put(pair.getRight(), pair.getLeft());
+		});
+
+		registerOffers(tradeMap, level, factory);
+
+		List<Pair<TradeOffers.Factory[], Integer>> tradeList = new ArrayList<>();
+
+		tradeMap.forEach((key, value) -> {
+			tradeList.add(Pair.of(value, key));
+		});
+
+		TradeOffers.WANDERING_TRADER_TRADES = tradeList;
 	}
 
 	// Shared code to register offers for both villagers and wandering traders.
@@ -85,11 +103,6 @@ public final class TradeOfferInternals {
 
 		final TradeOffers.Factory[] allEntries = ArrayUtils.addAll(originalEntries, addedEntries);
 		leveledTradeMap.put(level, allEntries);
-	}
-
-	public static void printRefreshOffersWarning() {
-		Throwable loggingThrowable = new Throwable();
-		LOGGER.warn("TradeOfferHelper#refreshOffers does not do anything, yet it was called! Stack trace:", loggingThrowable);
 	}
 
 	public static class WanderingTraderOffersBuilderImpl implements TradeOfferHelper.WanderingTraderOffersBuilder {
@@ -105,8 +118,8 @@ public final class TradeOfferInternals {
 		 * Make the trade list modifiable.
 		 */
 		static void initWanderingTraderTrades() {
-			if (!(TradeOffers.REBALANCED_WANDERING_TRADER_TRADES instanceof ArrayList)) {
-				TradeOffers.REBALANCED_WANDERING_TRADER_TRADES = new ArrayList<>(TradeOffers.REBALANCED_WANDERING_TRADER_TRADES);
+			if (!(TradeOffers.WANDERING_TRADER_TRADES instanceof ArrayList)) {
+				TradeOffers.WANDERING_TRADER_TRADES = new ArrayList<>(TradeOffers.WANDERING_TRADER_TRADES);
 			}
 		}
 
@@ -121,8 +134,8 @@ public final class TradeOfferInternals {
 
 			Pair<TradeOffers.Factory[], Integer> pool = Pair.of(factories, count);
 			initWanderingTraderTrades();
-			ID_TO_INDEX.put(id, TradeOffers.REBALANCED_WANDERING_TRADER_TRADES.size());
-			TradeOffers.REBALANCED_WANDERING_TRADER_TRADES.add(pool);
+			ID_TO_INDEX.put(id, TradeOffers.WANDERING_TRADER_TRADES.size());
+			TradeOffers.WANDERING_TRADER_TRADES.add(pool);
 			TradeOffers.Factory[] delayedModifications = DELAYED_MODIFICATIONS.remove(id);
 
 			if (delayedModifications != null) addOffersToPool(id, delayedModifications);
@@ -143,9 +156,9 @@ public final class TradeOfferInternals {
 
 			int poolIndex = ID_TO_INDEX.getInt(pool);
 			initWanderingTraderTrades();
-			Pair<TradeOffers.Factory[], Integer> poolPair = TradeOffers.REBALANCED_WANDERING_TRADER_TRADES.get(poolIndex);
+			Pair<TradeOffers.Factory[], Integer> poolPair = TradeOffers.WANDERING_TRADER_TRADES.get(poolIndex);
 			TradeOffers.Factory[] modified = ArrayUtils.addAll(poolPair.getLeft(), factories);
-			TradeOffers.REBALANCED_WANDERING_TRADER_TRADES.set(poolIndex, Pair.of(modified, poolPair.getRight()));
+			TradeOffers.WANDERING_TRADER_TRADES.set(poolIndex, Pair.of(modified, poolPair.getRight()));
 			return this;
 		}
 	}

@@ -105,14 +105,6 @@ public final class TradeOfferHelper {
 		factory.accept(new TradeOfferInternals.WanderingTraderOffersBuilderImpl());
 	}
 
-	/**
-	 * @deprecated This never did anything useful.
-	 */
-	@Deprecated(forRemoval = true)
-	public static void refreshOffers() {
-		TradeOfferInternals.printRefreshOffersWarning();
-	}
-
 	private TradeOfferHelper() {
 	}
 

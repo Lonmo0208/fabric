@@ -58,7 +58,7 @@ public class PlayerInventoryStorageTests extends AbstractTransferApiTest {
 
 		// Fill everything with stone besides the first two inventory slots.
 		inv.setSelectedSlot(3);
-		inv.method_67531(new ItemStack(Items.STONE, 63));
+		inv.setSelectedStack(new ItemStack(Items.STONE, 63));
 		inv.setStack(PlayerInventory.OFF_HAND_SLOT, new ItemStack(Items.STONE, 62));
 
 		for (int i = 4; i < PlayerInventory.MAIN_SIZE; ++i) {
