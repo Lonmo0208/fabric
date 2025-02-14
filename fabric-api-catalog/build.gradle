@@ -15,31 +15,42 @@ tasks.withType(GenerateModuleMetadata) {
 	enabled = true
 }
 
-for (proj in rootProject.allprojects) {
-	if (proj == project) { // the catalog itself
-		continue
-	}
+// Avoid configuration ordering issues by creating the catalog entries during task execution time
+tasks.register('configureCatalog') {
+	doConfigureCatalog()
+}
 
-	String catalogName = proj.name
-	if (catalogName == 'fabric-api-base') {
-		catalogName = 'base'
-	} else if (catalogName == 'fabric-api-bom') {
-		catalogName = 'bom'
-	} else if (catalogName == 'deprecated') {
-		catalogName = 'deprecated-fabric-api'
-	} else if (catalogName == 'fabric-api') {
-		catalogName = 'fabric-api'
-	} else {
-		catalogName = catalogName.substring('fabric-'.length())
-	}
+tasks.named('generateCatalogAsToml') {
+	dependsOn('configureCatalog')
+}
 
-	if (proj.parent != null && proj.parent.name == 'deprecated') {
-		catalogName = 'deprecated-' + catalogName
-	}
+def doConfigureCatalog() {
+	for (proj in rootProject.allprojects) {
+		if (proj == project) { // the catalog itself
+			continue
+		}
 
-	catalog {
-		versionCatalog {
-			library(catalogName, "net.fabricmc.fabric-api:${proj.name}:${proj.version}")
+		String catalogName = proj.name
+		if (catalogName == 'fabric-api-base') {
+			catalogName = 'base'
+		} else if (catalogName == 'fabric-api-bom') {
+			catalogName = 'bom'
+		} else if (catalogName == 'deprecated') {
+			catalogName = 'deprecated-fabric-api'
+		} else if (catalogName == 'fabric-api') {
+			catalogName = 'fabric-api'
+		} else {
+			catalogName = catalogName.substring('fabric-'.length())
+		}
+
+		if (proj.parent != null && proj.parent.name == 'deprecated') {
+			catalogName = 'deprecated-' + catalogName
+		}
+
+		catalog {
+			versionCatalog {
+				library(catalogName, "net.fabricmc.fabric-api:${proj.name}:${proj.version}")
+			}
 		}
 	}
 }
