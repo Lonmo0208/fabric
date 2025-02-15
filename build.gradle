@@ -1,19 +1,15 @@
 plugins {
 	id "java-library"
 	id "eclipse"
-	id "idea"
 	id "maven-publish"
-	id 'jacoco'
-	id "fabric-loom" version "1.9.2" apply false
-	id "com.diffplug.spotless" version "6.20.0"
-	id "org.ajoberstar.grgit" version "5.2.2"
+	id "fabric-loom" version "1.10.1" apply false
+	id "com.diffplug.spotless" version "7.0.2"
 	id "me.modmuss50.remotesign" version "0.5.0" apply false
 	id "me.modmuss50.mod-publish-plugin" version "0.4.5"
 }
 
-def ENV = System.getenv()
-
-version = project.version + "+" + (ENV.GITHUB_RUN_NUMBER ? "" : "local-") + getBranch()
+def branchProvider = providers.of(GitBranchValueSource.class) {}
+version = project.version + "+" + (providers.environmentVariable("CI").present ? branchProvider.get() : "local")
 logger.lifecycle("Building Fabric: " + version)
 
 def metaProjects = [
@@ -29,11 +25,12 @@ def debugArgs = [
 	"-Dmixin.debug.countInjections=true",
 ]
 
-import net.fabricmc.loom.util.gradle.SourceSetHelper
 import groovy.json.JsonSlurper
 import org.apache.commons.codec.digest.DigestUtils
+import net.fabricmc.fabric.impl.build.CommitHashValueSource
+import net.fabricmc.fabric.impl.build.GitBranchValueSource
 
-def getSubprojectVersion(project) {
+def getSubprojectVersion(Project project) {
 	// Get the version from the gradle.properties file
 	def version = project.properties["${project.name}-version"]
 
@@ -41,32 +38,14 @@ def getSubprojectVersion(project) {
 		throw new NullPointerException("Could not find version for " + project.name)
 	}
 
-	if (grgit == null) {
-		return version + "+nogit"
+	if (!project.providers.environmentVariable("CI").present) {
+		return version + "+local"
 	}
 
-	def latestCommits = grgit.log(paths: [project.name], maxCommits: 1)
-
-	if (latestCommits.isEmpty()) {
-		return version + "+uncommited"
+	def hashProvider = project.providers.of(CommitHashValueSource.class) {
+		parameters.directory = project.name
 	}
-
-	return version + "+" + latestCommits.get(0).id.substring(0, 8) + DigestUtils.sha256Hex(project.rootProject.minecraft_version).substring(0, 2)
-}
-
-def getBranch() {
-	def ENV = System.getenv()
-	if (ENV.GITHUB_REF) {
-		def branch = ENV.GITHUB_REF
-		return branch.substring(branch.lastIndexOf("/") + 1)
-	}
-
-	if (grgit == null) {
-		return "unknown"
-	}
-
-	def branch = grgit.branch.current().name
-	return branch.substring(branch.lastIndexOf("/") + 1)
+	return version + "+" + hashProvider.get().substring(0, 8) + DigestUtils.sha256Hex(project.rootProject.minecraft_version).substring(0, 2)
 }
 
 def moduleDependencies(project, List<String> depNames) {
@@ -83,18 +62,28 @@ def moduleDependencies(project, List<String> depNames) {
 		}
 	}
 
+	def depNodes = deps.collect {
+		[
+			groupId: it.group,
+			artifactId: it.name,
+			version: it.version,
+			scope: "compile"
+		]
+	}
+
 	// As we manually handle the maven artifacts, we need to also manually specify the deps.
 	project.publishing {
 		publications {
 			mavenJava(MavenPublication) {
 				pom.withXml {
 					def depsNode = asNode().appendNode("dependencies")
-					deps.each {
-						def depNode = depsNode.appendNode("dependency")
-						depNode.appendNode("groupId", it.group)
-						depNode.appendNode("artifactId", it.name)
-						depNode.appendNode("version", it.version)
-						depNode.appendNode("scope", "compile")
+
+					for (def depNode in depNodes) {
+						def node = depsNode.appendNode("dependency")
+
+						for (def entry in depNode) {
+							node.appendNode(entry.key, entry.value)
+						}
 					}
 				}
 			}
@@ -128,11 +117,11 @@ allprojects {
 	}
 
 	remoteSign {
-		requestUrl = ENV.SIGNING_SERVER
-		pgpAuthKey = ENV.SIGNING_PGP_KEY
-		jarAuthKey = ENV.SIGNING_JAR_KEY
+		requestUrl = providers.environmentVariable("SIGNING_SERVER")
+		pgpAuthKey = providers.environmentVariable("SIGNING_PGP_KEY")
+		jarAuthKey = providers.environmentVariable("SIGNING_JAR_KEY")
 
-		useDummyForTesting = ENV.SIGNING_SERVER == null
+		useDummyForTesting = !providers.environmentVariable("SIGNING_SERVER").present
 
 		afterEvaluate {
 			// PGP sign all maven publications.
@@ -249,11 +238,12 @@ allprojects {
 		useJUnitPlatform()
 	}
 
+	def resourceVersion = project.version
 	tasks.withType(ProcessResources).configureEach {
-		inputs.property "version", project.version
+		inputs.property "version", resourceVersion
 
 		filesMatching("fabric.mod.json") {
-			expand "version": project.version
+			expand "version": resourceVersion
 		}
 	}
 
@@ -264,7 +254,7 @@ allprojects {
 			licenseHeaderFile(rootProject.file("HEADER"))
 			removeUnusedImports()
 			importOrder('java', 'javax', '', 'net.minecraft', 'net.fabricmc')
-			indentWithTabs()
+			leadingSpacesToTabs()
 			trimTrailingWhitespace()
 		}
 
@@ -303,19 +293,20 @@ allprojects {
 		archiveClassifier = "testmod"
 	}
 
+	String archivesName = project.base.archivesName.get()
 	[jar, sourcesJar].each {
 		it.from(rootProject.file("LICENSE")) {
-			rename { "${it}-${project.base.archivesName.get()}"}
+			rename { "${it}-${archivesName}"}
 		}
 	}
 
 	if (file("src/client").exists() && !file("src/main").exists()) {
-		remapJar {
-			additionalClientOnlyEntries.add("LICENSE-${project.base.archivesName.get()}")
+		tasks.named("remapJar", net.fabricmc.loom.task.AbstractRemapJarTask) {
+			additionalClientOnlyEntries.add("LICENSE-${archivesName}".toString())
 		}
 
 		remapSourcesJar {
-			additionalClientOnlyEntries.add("LICENSE-${project.base.archivesName.get()}")
+			additionalClientOnlyEntries.add("LICENSE-${archivesName}".toString())
 		}
 	}
 
@@ -432,19 +423,6 @@ loom {
 			vmArg "-Dfabric-tag-conventions-v2.missingTagTranslationWarning=fail"
 			vmArg "-Dfabric-tag-conventions-v1.legacyTagWarning=fail"
 		}
-
-		// Create duplicate tasks for this, as jacoco slows things down a bit
-		gametestCoverage {
-			inherit gametest
-			name "Game Test Coverage"
-			ideConfigGenerated = false
-		}
-
-		clientGametestCoverage {
-			inherit clientGametest
-			name "Client Game Test Coverage"
-			ideConfigGenerated = false
-		}
 	}
 }
 
@@ -454,126 +432,40 @@ runGametest {
 
 test.dependsOn runGametest
 
-def coverageTasks = [
-	runGametestCoverage,
-	runClientGametestCoverage
-]
-
-jacoco {
-	coverageTasks.forEach {
-		applyTo it
-	}
-}
-
-tasks.register('coverage', JacocoReport) {
-	dependsOn coverageTasks
-	coverageTasks.forEach {
-		executionData it
-	}
-
-	// Add all source as input
-	allprojects { p ->
-		if (p.path.startsWith(":deprecated") || metaProjects.contains(p.name)) {
-			return
-		}
-		sourceSets p.sourceSets.main, p.sourceSets.client, p.sourceSets.testmod, p.sourceSets.testmodClient
-	}
-
-	// Exclude mixins
-	classDirectories.setFrom(files(classDirectories.files.collect {
-		fileTree(dir: it, exclude: '**/mixin/**')
-	}))
-}
-
 configurations {
-	productionRuntime {
-		extendsFrom configurations.minecraftLibraries
-		extendsFrom configurations.loaderLibraries
-		extendsFrom configurations.minecraftRuntimeLibraries
-	}
-	productionRuntimeServer
 	productionMods {
 		transitive = false
 	}
 }
 
 dependencies {
-	productionRuntime "net.fabricmc:fabric-loader:${project.loader_version}"
-	productionRuntime "net.fabricmc:intermediary:${project.minecraft_version}"
-
-	productionRuntimeServer "net.fabricmc:fabric-installer:${project.installer_version}:server"
 	productionMods project(':fabric-client-gametest-api-v1')
 }
 
-import net.fabricmc.loom.util.Platform
-
 def productionMods = project.files(configurations.productionMods, remapJar.archiveFile, remapTestmodJar.archiveFile)
 
-// This is very far beyond loom's API if you copy this, you're on your own.
-tasks.register('runProductionClientGametest', JavaExec) {
-	dependsOn productionMods, downloadAssets
-	classpath.from configurations.productionRuntime
-	mainClass = "net.fabricmc.loader.impl.launch.knot.KnotClient"
-	workingDir = file("run")
+tasks.register('runProductionClientGametest', net.fabricmc.loom.task.prod.ClientProductionRunTask) {
+	mods.setFrom productionMods
+	jvmArgs.addAll([
+		"-Dfabric.client.gametest",
+		"-Dfabric-tag-conventions-v2.missingTagTranslationWarning=fail",
+		"-Dfabric-tag-conventions-v1.legacyTagWarning=fail"
+	])
+	jvmArgs.addAll(debugArgs)
 
-	doFirst {
-		classpath.from loom.minecraftProvider.minecraftClientJar
-		workingDir.mkdirs()
-
-		args(
-				"--assetIndex", loom.minecraftProvider.versionInfo.assetIndex().fabricId(loom.minecraftProvider.minecraftVersion()),
-				"--assetsDir", new File(loom.files.userCache, "assets").absolutePath,
-				"--gameDir", workingDir.absolutePath
-				)
-
-		if (Platform.CURRENT.operatingSystem.isMacOS()) {
-			jvmArgs(
-					"-XstartOnFirstThread"
-					)
+	if (providers.environmentVariable("ENABLE_TRACY").present) {
+		tracy {
+			tracyCapture = file("tracy-capture")
+			output = file("profile.tracy")
 		}
-
-		jvmArgs(
-				"-Dfabric.addMods=${productionMods.collect { it.absolutePath }.join(File.pathSeparator)}",
-				"-Dfabric.client.gametest",
-				"-Dfabric-tag-conventions-v2.missingTagTranslationWarning=fail",
-				"-Dfabric-tag-conventions-v1.legacyTagWarning=fail"
-				)
-		jvmArgs(debugArgs)
 	}
 }
 
-tasks.register('serverPropertiesJar', Jar) {
-	def propsFile = file("build/tmp/install.properties")
-
-	doFirst {
-		propsFile.text = """\
-						fabric-loader-version=${project.loader_version}
-						game-version=${project.minecraft_version}
-						""".stripMargin().stripIndent()
-	}
-
-	archiveFileName = "test-server-properties.jar"
-	destinationDirectory = file("build/tmp")
-	from(propsFile)
-}
-
-tasks.register('runProductionAutoTestServer', JavaExec) {
-	dependsOn productionMods, serverPropertiesJar
-	classpath.from configurations.productionRuntimeServer, serverPropertiesJar
-	mainClass = "net.fabricmc.installer.ServerLauncher"
-	workingDir = file("run")
-
-	doFirst {
-		workingDir.mkdirs()
-
-		jvmArgs(
-				"-Dfabric.addMods=${productionMods.collect { it.absolutePath }.join(File.pathSeparator)}",
-				"-Dfabric.autoTest",
-				)
-		jvmArgs(debugArgs)
-
-		args("nogui")
-	}
+tasks.register('runProductionAutoTestServer', net.fabricmc.loom.task.prod.ServerProductionRunTask) {
+	mods.setFrom productionMods
+	jvmArgs.add("-Dfabric.autoTest")
+	jvmArgs.addAll(debugArgs)
+	programArgs.add("nogui")
 }
 
 // Format all the gradle files
@@ -686,26 +578,40 @@ publishing {
 				addPomMetadataInformation(rootProject, pom)
 			}
 
+			List<Map<String, String>> dependencies = []
+
+			subprojects.each {
+				// The maven BOM containing all of the deprecated modules is added manually below.
+				if (it.path.startsWith(":deprecated") || metaProjects.contains(it.name)) {
+					return
+				}
+
+				dependencies.add([
+					'groupId': it.group,
+					'artifactId': it.name,
+					'version': it.version,
+					'scope': 'compile'
+				])
+			}
+
+			def thisGroup = group
+			def thisVersion = version
+
 			pom.withXml {
 				def depsNode = asNode().appendNode("dependencies")
-				subprojects.each {
-					// The maven BOM containing all of the deprecated modules is added manually below.
-					if (it.path.startsWith(":deprecated") || metaProjects.contains(it.name)) {
-						return
-					}
-
+				for (dep in dependencies) {
 					def depNode = depsNode.appendNode("dependency")
-					depNode.appendNode("groupId", it.group)
-					depNode.appendNode("artifactId", it.name)
-					depNode.appendNode("version", it.version)
-					depNode.appendNode("scope", "compile")
+					depNode.appendNode("groupId", dep['groupId'])
+					depNode.appendNode("artifactId", dep['artifactId'])
+					depNode.appendNode("version", dep['version'])
+					depNode.appendNode("scope", dep['scope'])
 				}
 
 				// Depend on the deprecated BOM to allow opting out of deprecated modules.
 				def depNode = depsNode.appendNode("dependency")
-				depNode.appendNode("groupId", group)
+				depNode.appendNode("groupId", thisGroup)
 				depNode.appendNode("artifactId", "fabric-api-deprecated")
-				depNode.appendNode("version", version)
+				depNode.appendNode("version", thisVersion)
 				depNode.appendNode("scope", "compile")
 			}
 		}
@@ -717,15 +623,12 @@ loom.disableDeprecatedPomGeneration(publishing.publications.mavenJava)
 
 void setupRepositories(RepositoryHandler repositories) {
 	//repositories.mavenLocal() // uncomment for testing
-	def ENV = System.getenv()
-	if (ENV.MAVEN_URL) {
+	if (providers.environmentVariable("MAVEN_URL").present) {
 		repositories.maven {
-			url ENV.MAVEN_URL
-			if (ENV.MAVEN_USERNAME) {
-				credentials {
-					username ENV.MAVEN_USERNAME
-					password ENV.MAVEN_PASSWORD
-				}
+			url = providers.environmentVariable("MAVEN_URL")
+			credentials {
+				username = providers.environmentVariable("MAVEN_USERNAME")
+				password = providers.environmentVariable("MAVEN_PASSWORD")
 			}
 		}
 	}

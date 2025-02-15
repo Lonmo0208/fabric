@@ -6,13 +6,12 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
-    container:
-      image: mcr.microsoft.com/openjdk/jdk:21-ubuntu
-      options: --user root
+    runs-on: ubuntu-24.04
     steps:
-      - run: apt update && apt install git -y && git --version
-      - run: git config --global --add safe.directory /__w/fabric/fabric
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'microsoft'
+          java-version: '21'
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -22,7 +21,7 @@ jobs:
           context: changelog
           workflow_id: release.yml
       - uses: gradle/wrapper-validation-action@v2
-      - run: ./gradlew checkVersion build publish publishMods --stacktrace
+      - run: ./gradlew checkVersion build publish publishMods --stacktrace --no-configuration-cache
         env:
           MAVEN_URL: ${{ secrets.MAVEN_URL }}
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
