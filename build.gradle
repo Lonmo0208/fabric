@@ -627,8 +627,8 @@ void setupRepositories(RepositoryHandler repositories) {
 		repositories.maven {
 			url = providers.environmentVariable("MAVEN_URL")
 			credentials {
-				username = providers.environmentVariable("MAVEN_USERNAME")
-				password = providers.environmentVariable("MAVEN_PASSWORD")
+				username = providers.environmentVariable("MAVEN_USERNAME").get()
+				password = providers.environmentVariable("MAVEN_PASSWORD").get()
 			}
 		}
 	}
