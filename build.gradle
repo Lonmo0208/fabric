@@ -238,12 +238,11 @@ allprojects {
 		useJUnitPlatform()
 	}
 
-	def resourceVersion = project.version
 	tasks.withType(ProcessResources).configureEach {
-		inputs.property "version", resourceVersion
+		inputs.property "version", project.version
 
 		filesMatching("fabric.mod.json") {
-			expand "version": resourceVersion
+			expand "version": inputs.properties.version
 		}
 	}
 
