@@ -9,6 +9,7 @@
     "CyclingButtonWidgetAccessor",
     "GlDebugMixin",
     "ScreenAccessor",
+    "TracyFrameCapturerMixin",
     "input.FramebufferMixin",
     "input.InputUtilMixin",
     "input.KeyBindingAccessor",

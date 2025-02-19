@@ -36,7 +36,6 @@ import net.minecraft.client.util.MonitorTracker;
 import net.minecraft.client.util.VideoMode;
 import net.minecraft.client.util.Window;
 
-import net.fabricmc.fabric.impl.client.gametest.util.ClientGameTestImpl;
 import net.fabricmc.fabric.impl.client.gametest.util.WindowHooks;
 
 @Mixin(Window.class)
@@ -175,8 +174,6 @@ public abstract class WindowMixin implements WindowHooks {
 		if (width == this.width && width == this.windowedWidth && width == this.framebufferWidth && height == this.height && height == this.windowedHeight && height == this.framebufferHeight) {
 			return;
 		}
-
-		ClientGameTestImpl.resetGlErrorState();
 
 		// Move the top left corner of the window so that the window expands/contracts from its center, while also
 		// trying to keep the window within the monitor's bounds
