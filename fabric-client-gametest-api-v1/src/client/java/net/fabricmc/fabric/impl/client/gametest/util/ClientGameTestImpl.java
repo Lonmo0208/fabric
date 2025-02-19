@@ -16,6 +16,7 @@
 
 package net.fabricmc.fabric.impl.client.gametest.util;
 
+import org.lwjgl.opengl.GL11;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,5 +72,15 @@ public final class ClientGameTestImpl {
 
 	private static boolean isWorldLoadingFinished(MinecraftClient client) {
 		return client.world != null && !(client.currentScreen instanceof LevelLoadingScreen);
+	}
+
+	public static void resetGlErrorState() {
+		// When resizing the window or taking a screenshot Minecraft code will query the OpenGL error state, crashing if an error is present.
+		// OpenGL errors are cleared after being queried, so we reset the error state in case an error occurred before this point.
+		int error = GL11.glGetError();
+
+		if (error != GL11.GL_NO_ERROR) {
+			LOGGER.error("Suppressing OpenGL error 0x{} before resizing the window", Integer.toHexString(error));
+		}
 	}
 }

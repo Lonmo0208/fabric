@@ -21,9 +21,6 @@ import java.util.Optional;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -39,6 +36,7 @@ import net.minecraft.client.util.MonitorTracker;
 import net.minecraft.client.util.VideoMode;
 import net.minecraft.client.util.Window;
 
+import net.fabricmc.fabric.impl.client.gametest.util.ClientGameTestImpl;
 import net.fabricmc.fabric.impl.client.gametest.util.WindowHooks;
 
 @Mixin(Window.class)
@@ -76,9 +74,6 @@ public abstract class WindowMixin implements WindowHooks {
 
 	@Shadow
 	protected abstract void updateWindowRegion();
-
-	@Unique
-	private static final Logger LOGGER = LoggerFactory.getLogger("Fabric|WindowMixin");
 
 	@Unique
 	private int defaultWidth;
@@ -181,13 +176,7 @@ public abstract class WindowMixin implements WindowHooks {
 			return;
 		}
 
-		// When resizing the window, Minecraft code will query the OpenGL error state. If there is an error, it will crash the game.
-		// OpenGL errors are cleared after being queried, so we reset the error state from any errors caused outside of this method.
-		int error = GL11.glGetError();
-
-		if (error != GL11.GL_NO_ERROR) {
-			LOGGER.error("Suppressing OpenGL error 0x{} before resizing the window", Integer.toHexString(error));
-		}
+		ClientGameTestImpl.resetGlErrorState();
 
 		// Move the top left corner of the window so that the window expands/contracts from its center, while also
 		// trying to keep the window within the monitor's bounds

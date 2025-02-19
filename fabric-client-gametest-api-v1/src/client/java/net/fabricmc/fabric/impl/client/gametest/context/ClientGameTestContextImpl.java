@@ -70,6 +70,7 @@ import net.fabricmc.fabric.impl.client.gametest.screenshot.TestScreenshotCompari
 import net.fabricmc.fabric.impl.client.gametest.screenshot.TestScreenshotComparisonOptionsImpl;
 import net.fabricmc.fabric.impl.client.gametest.screenshot.TestScreenshotOptionsImpl;
 import net.fabricmc.fabric.impl.client.gametest.threading.ThreadingImpl;
+import net.fabricmc.fabric.impl.client.gametest.util.ClientGameTestImpl;
 import net.fabricmc.fabric.impl.client.gametest.world.TestWorldBuilderImpl;
 import net.fabricmc.fabric.mixin.client.gametest.CyclingButtonWidgetAccessor;
 import net.fabricmc.fabric.mixin.client.gametest.ScreenAccessor;
@@ -386,6 +387,8 @@ public final class ClientGameTestContextImpl implements ClientGameTestContext {
 			CompletableFuture<T> future = computeOnClient(client -> {
 				client.gameRenderer.render(RenderTickCounterConstantAccessor.create(options.tickDelta), true);
 				CompletableFuture<T> resultFuture = new CompletableFuture<>();
+
+				ClientGameTestImpl.resetGlErrorState();
 
 				ScreenshotRecorder.takeScreenshot(client.getFramebuffer(), screenshot -> {
 					try {
