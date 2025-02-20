@@ -21,12 +21,12 @@ import java.util.function.Consumer;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FireworksComponent;
-import net.minecraft.component.type.UnbreakableComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.test.TestContext;
 import net.minecraft.text.Text;
+import net.minecraft.util.Unit;
 
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 
@@ -91,31 +91,31 @@ public class DefaultItemComponentGameTest {
 		context.complete();
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE)
+	@GameTest
 	public void emptyComponentMapDoesNotContainUnbreakable(TestContext context) {
 		ComponentMap.Builder builder = ComponentMap.builder();
 
-		context.assertFalse(builder.contains(DataComponentTypes.UNBREAKABLE), "Empty component map contains unbreakable type");
+		context.assertFalse(builder.contains(DataComponentTypes.UNBREAKABLE), Text.literal("Empty component map contains unbreakable type"));
 		context.complete();
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE)
+	@GameTest
 	public void componentMapWithItemNameDoesNotContainUnbreakable(TestContext context) {
 		ComponentMap.Builder builder = ComponentMap.builder();
 
 		builder.add(DataComponentTypes.ITEM_NAME, Text.of("Weird Name"));
 
-		context.assertFalse(builder.contains(DataComponentTypes.UNBREAKABLE), "Component map should not contain unbreakable type");
+		context.assertFalse(builder.contains(DataComponentTypes.UNBREAKABLE), Text.literal("Component map should not contain unbreakable type"));
 		context.complete();
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE)
+	@GameTest
 	public void componentMapWithUnbreakableContainsUnbreakable(TestContext context) {
 		ComponentMap.Builder builder = ComponentMap.builder();
 
-		builder.add(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(true));
+		builder.add(DataComponentTypes.UNBREAKABLE, Unit.INSTANCE);
 
-		context.assertTrue(builder.contains(DataComponentTypes.UNBREAKABLE), "Component map does not contain unbreakable type");
+		context.assertTrue(builder.contains(DataComponentTypes.UNBREAKABLE), Text.literal("Component map does not contain unbreakable type"));
 		context.complete();
 	}
 }
