@@ -44,5 +44,6 @@ public class FramebufferMixin {
 
 		return height;
 	}
+
 	*/
 }
