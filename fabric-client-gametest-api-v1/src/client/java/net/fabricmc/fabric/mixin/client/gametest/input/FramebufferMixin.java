@@ -17,17 +17,12 @@
 package net.fabricmc.fabric.mixin.client.gametest.input;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.util.Window;
-
-import net.fabricmc.fabric.impl.client.gametest.util.WindowHooks;
 
 @Mixin(Framebuffer.class)
 public class FramebufferMixin {
+	/*
 	@ModifyVariable(method = {"draw", "drawInternal"}, at = @At("HEAD"), ordinal = 0, argsOnly = true)
 	private int modifyWidth(int width) {
 		Window window = MinecraftClient.getInstance().getWindow();
@@ -49,4 +44,5 @@ public class FramebufferMixin {
 
 		return height;
 	}
+	*/
 }
