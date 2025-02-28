@@ -37,6 +37,7 @@ import net.minecraft.test.TestEnvironmentDefinition;
 import net.minecraft.test.TestInstance;
 import net.minecraft.util.Identifier;
 
+import net.fabricmc.fabric.api.gametest.v1.CustomTestMethodInvoker;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
@@ -82,7 +83,11 @@ final class TestAnnotationLocator {
 	private void findMagicMethods(EntrypointContainer<Object> entrypoint, Class<?> testClass, List<TestMethod> methods) {
 		for (Method method : testClass.getDeclaredMethods()) {
 			if (method.isAnnotationPresent(GameTest.class)) {
-				validateMethod(method);
+				if (!CustomTestMethodInvoker.class.isAssignableFrom(testClass)) {
+					// Only validate the test method when using the default reflection invoker
+					validateMethod(method);
+				}
+
 				methods.add(new TestMethod(method, method.getAnnotation(GameTest.class), entrypoint));
 			}
 		}
@@ -118,8 +123,15 @@ final class TestAnnotationLocator {
 
 		Consumer<TestContext> testFunction() {
 			return context -> {
+				Object instance = entrypoint.getEntrypoint();
+
 				try {
-					method.invoke(entrypoint.getEntrypoint(), context);
+					if (instance instanceof CustomTestMethodInvoker customTestMethodInvoker) {
+						customTestMethodInvoker.invokeTestMethod(context, method);
+						return;
+					}
+
+					method.invoke(instance, context);
 				} catch (ReflectiveOperationException e) {
 					throw new RuntimeException("Failed to invoke test method", e);
 				}
