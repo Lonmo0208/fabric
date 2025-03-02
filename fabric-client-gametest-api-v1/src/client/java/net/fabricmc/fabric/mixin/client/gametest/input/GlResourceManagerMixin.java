@@ -22,13 +22,13 @@ import com.llamalad7.mixinextras.sugar.Local;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-import net.minecraft.class_10860;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.GlResourceManager;
 import net.minecraft.client.texture.DrawableTexture;
 
 import net.fabricmc.fabric.impl.client.gametest.util.WindowHooks;
 
-@Mixin(class_10860.class)
+@Mixin(GlResourceManager.class)
 public class GlResourceManagerMixin {
 	@WrapOperation(method = "method_68357", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/GlStateManager;_glBlitFrameBuffer(IIIIIIIIII)V"))
 	private void blitFrameBuffer(int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1, int mask, int filter, Operation<Void> original, @Local(argsOnly = true) DrawableTexture drawableTexture) {
