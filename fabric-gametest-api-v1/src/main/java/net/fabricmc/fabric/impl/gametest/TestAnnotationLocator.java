@@ -73,7 +73,7 @@ final class TestAnnotationLocator {
 		findMagicMethods(entrypoint, testClass, methods);
 
 		if (methods.isEmpty()) {
-			LOGGER.warn("No methods with the FabricGameTest annotation were found in {}", testClass.getName());
+			LOGGER.warn("No methods with the GameTest annotation were found in {}", testClass.getName());
 		}
 
 		return methods;
@@ -98,21 +98,30 @@ final class TestAnnotationLocator {
 	}
 
 	private void validateMethod(Method method) {
+		List<String> issues = new ArrayList<>();
+
 		if (method.getParameterCount() != 1 || method.getParameterTypes()[0] != TestContext.class) {
-			throw new UnsupportedOperationException("Method %s must have a single parameter of type TestContext".formatted(method.getName()));
+			issues.add("must have a single parameter of type TestContext");
 		}
 
 		if (!Modifier.isPublic(method.getModifiers())) {
-			throw new UnsupportedOperationException("Method %s must be public".formatted(method.getName()));
+			issues.add("must be public");
 		}
 
 		if (Modifier.isStatic(method.getModifiers())) {
-			throw new UnsupportedOperationException("Method %s must not be static".formatted(method.getName()));
+			issues.add("must not be static");
 		}
 
 		if (method.getReturnType() != void.class) {
-			throw new UnsupportedOperationException("Method %s must return void".formatted(method.getName()));
+			issues.add("must return void");
 		}
+
+		if (issues.isEmpty()) {
+			return;
+		}
+
+		String methodName = method.getDeclaringClass().getName() + "#" + method.getName();
+		throw new UnsupportedOperationException("Test method (%s) has the following issues: %s".formatted(methodName, String.join(", ", issues)));
 	}
 
 	public record TestMethod(Method method, GameTest gameTest, EntrypointContainer<Object> entrypoint) {
