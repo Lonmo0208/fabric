@@ -37,6 +37,7 @@ import net.minecraft.test.TestEnvironmentDefinition;
 import net.minecraft.test.TestInstance;
 import net.minecraft.util.Identifier;
 
+import net.fabricmc.fabric.api.gametest.v1.CustomTestMethodInvoker;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
@@ -72,7 +73,7 @@ final class TestAnnotationLocator {
 		findMagicMethods(entrypoint, testClass, methods);
 
 		if (methods.isEmpty()) {
-			LOGGER.warn("No methods with the FabricGameTest annotation were found in {}", testClass.getName());
+			LOGGER.warn("No methods with the GameTest annotation were found in {}", testClass.getName());
 		}
 
 		return methods;
@@ -82,7 +83,11 @@ final class TestAnnotationLocator {
 	private void findMagicMethods(EntrypointContainer<Object> entrypoint, Class<?> testClass, List<TestMethod> methods) {
 		for (Method method : testClass.getDeclaredMethods()) {
 			if (method.isAnnotationPresent(GameTest.class)) {
-				validateMethod(method);
+				if (!CustomTestMethodInvoker.class.isAssignableFrom(testClass)) {
+					// Only validate the test method when using the default reflection invoker
+					validateMethod(method);
+				}
+
 				methods.add(new TestMethod(method, method.getAnnotation(GameTest.class), entrypoint));
 			}
 		}
@@ -93,21 +98,30 @@ final class TestAnnotationLocator {
 	}
 
 	private void validateMethod(Method method) {
+		List<String> issues = new ArrayList<>();
+
 		if (method.getParameterCount() != 1 || method.getParameterTypes()[0] != TestContext.class) {
-			throw new UnsupportedOperationException("Method %s must have a single parameter of type TestContext".formatted(method.getName()));
+			issues.add("must have a single parameter of type TestContext");
 		}
 
 		if (!Modifier.isPublic(method.getModifiers())) {
-			throw new UnsupportedOperationException("Method %s must be public".formatted(method.getName()));
+			issues.add("must be public");
 		}
 
 		if (Modifier.isStatic(method.getModifiers())) {
-			throw new UnsupportedOperationException("Method %s must not be static".formatted(method.getName()));
+			issues.add("must not be static");
 		}
 
 		if (method.getReturnType() != void.class) {
-			throw new UnsupportedOperationException("Method %s must return void".formatted(method.getName()));
+			issues.add("must return void");
 		}
+
+		if (issues.isEmpty()) {
+			return;
+		}
+
+		String methodName = method.getDeclaringClass().getName() + "#" + method.getName();
+		throw new UnsupportedOperationException("Test method (%s) has the following issues: %s".formatted(methodName, String.join(", ", issues)));
 	}
 
 	public record TestMethod(Method method, GameTest gameTest, EntrypointContainer<Object> entrypoint) {
@@ -118,8 +132,15 @@ final class TestAnnotationLocator {
 
 		Consumer<TestContext> testFunction() {
 			return context -> {
+				Object instance = entrypoint.getEntrypoint();
+
 				try {
-					method.invoke(entrypoint.getEntrypoint(), context);
+					if (instance instanceof CustomTestMethodInvoker customTestMethodInvoker) {
+						customTestMethodInvoker.invokeTestMethod(context, method);
+						return;
+					}
+
+					method.invoke(instance, context);
 				} catch (ReflectiveOperationException e) {
 					throw new RuntimeException("Failed to invoke test method", e);
 				}
