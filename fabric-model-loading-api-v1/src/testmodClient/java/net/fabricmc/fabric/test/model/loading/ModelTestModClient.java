@@ -16,42 +16,22 @@
 
 package net.fabricmc.fabric.test.model.loading;
 
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.HorizontalConnectingBlock;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.Baker;
-import net.minecraft.client.render.model.GroupableModel;
+import net.minecraft.client.render.model.BlockStateModel;
 import net.minecraft.client.render.model.MissingModel;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelTextures;
-import net.minecraft.client.render.model.WrapperBakedModel;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.SimpleBlockStateModel;
 import net.minecraft.client.render.model.json.ModelVariant;
-import net.minecraft.client.render.model.json.WeightedUnbakedModel;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.AffineTransformation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockRenderView;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelModifier;
-import net.fabricmc.fabric.api.client.model.loading.v1.WrapperUnbakedModel;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
 public class ModelTestModClient implements ClientModInitializer {
@@ -64,7 +44,7 @@ public class ModelTestModClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ModelLoadingPlugin.register(pluginContext -> {
-			pluginContext.addModels(HALF_RED_SAND_MODEL_ID);
+			//pluginContext.addModels(HALF_RED_SAND_MODEL_ID);
 
 			// Make wheat stages 1->6 use the same model as stage 0. This can be done with resource packs, this is just a test.
 			pluginContext.registerBlockStateResolver(Blocks.WHEAT, context -> {
@@ -72,8 +52,8 @@ public class ModelTestModClient implements ClientModInitializer {
 
 				Identifier wheatStage0Id = Identifier.ofVanilla("block/wheat_stage0");
 				Identifier wheatStage7Id = Identifier.ofVanilla("block/wheat_stage7");
-				GroupableModel wheatStage0Model = simpleGroupableModel(wheatStage0Id);
-				GroupableModel wheatStage7Model = simpleGroupableModel(wheatStage7Id);
+				BlockStateModel.UnbakedGrouped wheatStage0Model = simpleUnbakedGroupedBlockStateModel(wheatStage0Id);
+				BlockStateModel.UnbakedGrouped wheatStage7Model = simpleUnbakedGroupedBlockStateModel(wheatStage7Id);
 
 				for (int age = 0; age <= 6; age++) {
 					context.setModel(state.with(CropBlock.AGE, age), wheatStage0Model);
@@ -82,52 +62,54 @@ public class ModelTestModClient implements ClientModInitializer {
 				context.setModel(state.with(CropBlock.AGE, 7), wheatStage7Model);
 			});
 
+			// FIXME
 			// Replace the brown glazed terracotta model with a missing model without affecting child models.
 			// Since 1.21.4, the item model is not a child model, so it is also affected.
-			pluginContext.modifyModelOnLoad().register(ModelModifier.WRAP_PHASE, (model, context) -> {
-				if (context.id().equals(BROWN_GLAZED_TERRACOTTA_MODEL_ID)) {
-					return new WrapperUnbakedModel(model) {
-						@Override
-						public void resolve(Resolver resolver) {
-							super.resolve(resolver);
-							resolver.resolve(MissingModel.ID);
-						}
-
-						@Override
-						public BakedModel bake(ModelTextures textures, Baker baker, ModelBakeSettings settings, boolean ambientOcclusion, boolean isSideLit, ModelTransformation transformation) {
-							return baker.bake(MissingModel.ID, settings);
-						}
-					};
-				}
-
-				return model;
-			});
+			//pluginContext.modifyModelOnLoad().register(ModelModifier.WRAP_PHASE, (model, context) -> {
+			//	if (context.id().equals(BROWN_GLAZED_TERRACOTTA_MODEL_ID)) {
+			//		return new WrapperUnbakedModel(model) {
+			//			@Override
+			//			public void resolve(Resolver resolver) {
+			//				super.resolve(resolver);
+			//				resolver.resolve(MissingModel.ID);
+			//			}
+			//
+			//			@Override
+			//			public BakedModel bake(ModelTextures textures, Baker baker, ModelBakeSettings settings, boolean ambientOcclusion, boolean isSideLit, ModelTransformation transformation) {
+			//				return baker.bake(MissingModel.ID, settings);
+			//			}
+			//		};
+			//	}
+			//
+			//	return model;
+			//});
 
 			// Make oak fences with west: true and everything else false appear to be a missing model visually.
 			BlockState westOakFence = Blocks.OAK_FENCE.getDefaultState().with(HorizontalConnectingBlock.WEST, true);
 			pluginContext.modifyBlockModelOnLoad().register(ModelModifier.OVERRIDE_PHASE, (model, context) -> {
 				if (context.state() == westOakFence) {
-					return simpleGroupableModel(MissingModel.ID);
+					return simpleUnbakedGroupedBlockStateModel(MissingModel.ID);
 				}
 
 				return model;
 			});
 
+			// FIXME
 			// Remove bottom face of gold blocks
-			pluginContext.modifyModelAfterBake().register(ModelModifier.WRAP_PHASE, (model, context) -> {
-				if (context.id().equals(GOLD_BLOCK_MODEL_ID)) {
-					return new DownQuadRemovingModel(model);
-				}
-
-				return model;
-			});
+			//pluginContext.modifyModelAfterBake().register(ModelModifier.WRAP_PHASE, (model, context) -> {
+			//	if (context.id().equals(GOLD_BLOCK_MODEL_ID)) {
+			//		return new DownQuadRemovingModel(model);
+			//	}
+			//
+			//	return model;
+			//});
 		});
 
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(SpecificModelReloadListener.INSTANCE);
 
 		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
 			if (entityRenderer instanceof PlayerEntityRenderer playerRenderer) {
-				registrationHelper.register(new BakedModelFeatureRenderer<>(playerRenderer, SpecificModelReloadListener.INSTANCE::getSpecificModel));
+				//registrationHelper.register(new BakedModelFeatureRenderer<>(playerRenderer, SpecificModelReloadListener.INSTANCE::getSpecificModel));
 			}
 		});
 	}
@@ -136,20 +118,20 @@ public class ModelTestModClient implements ClientModInitializer {
 		return Identifier.of(ID, path);
 	}
 
-	private static GroupableModel simpleGroupableModel(Identifier model) {
-		return new WeightedUnbakedModel(List.of(new ModelVariant(model, AffineTransformation.identity(), false, 1)));
+	private static BlockStateModel.UnbakedGrouped simpleUnbakedGroupedBlockStateModel(Identifier model) {
+		return new SimpleBlockStateModel.Unbaked(new ModelVariant(model)).cached();
 	}
 
-	private static class DownQuadRemovingModel extends WrapperBakedModel implements FabricBakedModel {
-		DownQuadRemovingModel(BakedModel model) {
-			super(model);
-		}
-
-		@Override
-		public void emitBlockQuads(QuadEmitter emitter, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, Predicate<@Nullable Direction> cullTest) {
-			emitter.pushTransform(q -> q.cullFace() != Direction.DOWN);
-			((FabricBakedModel) wrapped).emitBlockQuads(emitter, blockView, state, pos, randomSupplier, cullTest);
-			emitter.popTransform();
-		}
-	}
+	//private static class DownQuadRemovingModel extends WrapperBakedModel implements FabricBakedModel {
+	//	DownQuadRemovingModel(BakedModel model) {
+	//		super(model);
+	//	}
+	//
+	//	@Override
+	//	public void emitBlockQuads(QuadEmitter emitter, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, Predicate<@Nullable Direction> cullTest) {
+	//		emitter.pushTransform(q -> q.cullFace() != Direction.DOWN);
+	//		((FabricBakedModel) wrapped).emitBlockQuads(emitter, blockView, state, pos, randomSupplier, cullTest);
+	//		emitter.popTransform();
+	//	}
+	//}
 }

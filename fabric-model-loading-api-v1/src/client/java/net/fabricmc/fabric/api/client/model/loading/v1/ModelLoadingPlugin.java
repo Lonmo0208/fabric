@@ -16,7 +16,6 @@
 
 package net.fabricmc.fabric.api.client.model.loading.v1;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.jetbrains.annotations.ApiStatus;
@@ -24,7 +23,6 @@ import org.jetbrains.annotations.UnmodifiableView;
 
 import net.minecraft.block.Block;
 import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.impl.client.model.loading.ModelLoadingPluginManager;
@@ -61,18 +59,6 @@ public interface ModelLoadingPlugin {
 	@ApiStatus.NonExtendable
 	interface Context {
 		/**
-		 * Adds one or more models that will be loaded, baked, and made available through
-		 * {@link FabricBakedModelManager#getModel(Identifier)}.
-		 */
-		void addModels(Identifier... ids);
-
-		/**
-		 * Adds multiple models that will be loaded, baked, and made available through
-		 * {@link FabricBakedModelManager#getModel(Identifier)}.
-		 */
-		void addModels(Collection<? extends Identifier> ids);
-
-		/**
 		 * Registers a block state resolver for a block.
 		 *
 		 * <p>The block must be registered and a block state resolver must not have been previously registered for the
@@ -83,23 +69,10 @@ public interface ModelLoadingPlugin {
 		/**
 		 * Event access to monitor unbaked model loads and replace the loaded model.
 		 *
-		 * <p>Replacements done by listeners of this callback <b>do</b> affect child models (that is, models whose
-		 * parent hierarchy contains the replaced model), unlike {@link #modifyModelBeforeBake}.
+		 * <p>Replacements done by listeners of this callback affect child models (that is, models whose
+		 * parent hierarchy contains the replaced model).
 		 */
 		Event<ModelModifier.OnLoad> modifyModelOnLoad();
-
-		/**
-		 * Event access to replace the unbaked model used for baking without replacing the cached model.
-		 *
-		 * <p>Replacements done by listeners of this callback <b>do not</b> affect child models (that is, models whose
-		 * parent hierarchy contains the replaced model), unlike {@link #modifyModelOnLoad}.
-		 */
-		Event<ModelModifier.BeforeBake> modifyModelBeforeBake();
-
-		/**
-		 * Event access to replace the baked model.
-		 */
-		Event<ModelModifier.AfterBake> modifyModelAfterBake();
 
 		/**
 		 * Event access to monitor unbaked block model loads and replace the loaded model.
@@ -115,5 +88,15 @@ public interface ModelLoadingPlugin {
 		 * Event access to replace the baked block model.
 		 */
 		Event<ModelModifier.AfterBakeBlock> modifyBlockModelAfterBake();
+
+		/**
+		 * Event access to replace the unbaked item model used for baking.
+		 */
+		Event<ModelModifier.BeforeBakeItem> modifyItemModelBeforeBake();
+
+		/**
+		 * Event access to replace the baked item model.
+		 */
+		Event<ModelModifier.AfterBakeItem> modifyItemModelAfterBake();
 	}
 }

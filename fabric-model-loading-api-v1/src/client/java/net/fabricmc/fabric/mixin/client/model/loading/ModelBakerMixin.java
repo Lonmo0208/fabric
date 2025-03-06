@@ -16,11 +16,12 @@
 
 package net.fabricmc.fabric.mixin.client.model.loading;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
@@ -29,26 +30,28 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.render.item.model.ItemModel;
+import net.minecraft.client.render.model.BakedSimpleModel;
 import net.minecraft.client.render.model.Baker;
-import net.minecraft.client.render.model.GroupableModel;
+import net.minecraft.client.render.model.BlockStateModel;
 import net.minecraft.client.render.model.ModelBaker;
-import net.minecraft.client.render.model.ModelRotation;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;
 
-import net.fabricmc.fabric.impl.client.model.loading.BakedModelsHooks;
-import net.fabricmc.fabric.impl.client.model.loading.ModelBakerHooks;
 import net.fabricmc.fabric.impl.client.model.loading.ModelLoadingEventDispatcher;
 
 @Mixin(ModelBaker.class)
-abstract class ModelBakerMixin implements ModelBakerHooks {
+abstract class ModelBakerMixin {
 	@Shadow
 	@Final
 	static Logger LOGGER;
+
+	@Shadow
+	@Final
+	Map<Identifier, BakedSimpleModel> simpleModels;
 
 	@Unique
 	@Nullable
@@ -59,39 +62,37 @@ abstract class ModelBakerMixin implements ModelBakerHooks {
 		fabric_eventDispatcher = ModelLoadingEventDispatcher.CURRENT.get();
 	}
 
-	@WrapOperation(method = "method_65737", at = @At(value = "INVOKE", target = "net/minecraft/client/render/model/GroupableModel.bake(Lnet/minecraft/client/render/model/Baker;)Lnet/minecraft/client/render/model/BakedModel;"))
-	private BakedModel wrapBlockModelBake(GroupableModel unbakedModel, Baker baker, Operation<BakedModel> operation, ModelBaker.ErrorCollectingSpriteGetter spriteGetter, Map<ModelIdentifier, BakedModel> map, ModelIdentifier id) {
+	@ModifyArg(method = "bake", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/FutureModel;newTask(Ljava/util/Map;Ljava/util/function/BiFunction;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;", ordinal = 0), index = 1)
+	private BiFunction<BlockState, BlockStateModel.UnbakedGrouped, BlockStateModel> hookBlockModelBake(BiFunction<BlockState, BlockStateModel.UnbakedGrouped, BlockStateModel> bifunction) {
 		if (fabric_eventDispatcher == null) {
-			return operation.call(unbakedModel, baker);
+			return bifunction;
 		}
 
-		unbakedModel = fabric_eventDispatcher.modifyBlockModelBeforeBake(unbakedModel, id, baker);
-		BakedModel model = operation.call(unbakedModel, baker);
-		return fabric_eventDispatcher.modifyBlockModelAfterBake(model, id, unbakedModel, baker);
+		return (state, unbakedModel) -> {
+			ModelLoadingEventDispatcher.CURRENT.set(fabric_eventDispatcher);
+			BlockStateModel model = bifunction.apply(state, unbakedModel);
+			ModelLoadingEventDispatcher.CURRENT.remove();
+			return model;
+		};
 	}
 
-	@Inject(method = "bake", at = @At("RETURN"))
-	private void onReturnBake(ModelBaker.ErrorCollectingSpriteGetter spriteGetter, CallbackInfoReturnable<ModelBaker.BakedModels> cir) {
-		if (fabric_eventDispatcher == null) {
-			return;
+	@WrapOperation(method = "method_68018", at = @At(value = "INVOKE", target = "net/minecraft/client/render/model/BlockStateModel$UnbakedGrouped.getModel(Lnet/minecraft/block/BlockState;Lnet/minecraft/client/render/model/Baker;)Lnet/minecraft/client/render/model/BlockStateModel;"))
+	private static BlockStateModel wrapBlockModelBake(BlockStateModel.UnbakedGrouped unbakedModel, BlockState state, Baker baker, Operation<BlockStateModel> operation) {
+		ModelLoadingEventDispatcher eventDispatcher = ModelLoadingEventDispatcher.CURRENT.get();
+
+		if (eventDispatcher == null) {
+			return operation.call(unbakedModel, state, baker);
 		}
 
-		ModelBaker.BakedModels models = cir.getReturnValue();
-		Map<Identifier, BakedModel> extraModels = new HashMap<>();
-		fabric_eventDispatcher.forEachExtraModel(id -> {
-			try {
-				BakedModel model = ((ModelBaker) (Object) this).new BakerImpl(spriteGetter, id::toString).bake(id, ModelRotation.X0_Y0);
-				extraModels.put(id, model);
-			} catch (Exception e) {
-				LOGGER.warn("Unable to bake extra model: '{}': {}", id, e);
-			}
-		});
-		((BakedModelsHooks) (Object) models).fabric_setExtraModels(extraModels);
+		return eventDispatcher.modifyBlockModel(unbakedModel, state, baker, operation);
 	}
 
-	@Override
-	@Nullable
-	public ModelLoadingEventDispatcher fabric_getDispatcher() {
-		return fabric_eventDispatcher;
+	@WrapOperation(method = "method_68019", at = @At(value = "INVOKE", target = "net/minecraft/client/render/item/model/ItemModel$Unbaked.bake(Lnet/minecraft/client/render/item/model/ItemModel$BakeContext;)Lnet/minecraft/client/render/item/model/ItemModel;"))
+	private ItemModel wrapItemModelBake(ItemModel.Unbaked unbakedModel, ItemModel.BakeContext bakeContext, Operation<ItemModel> operation, @Local Identifier itemId) {
+		if (fabric_eventDispatcher == null) {
+			return operation.call(unbakedModel, bakeContext);
+		}
+
+		return fabric_eventDispatcher.modifyItemModel(unbakedModel, itemId, bakeContext, operation);
 	}
 }

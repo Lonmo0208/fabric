@@ -19,27 +19,27 @@ package net.fabricmc.fabric.test.model.loading;
 import java.util.Collection;
 import java.util.List;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.BlockStateModel;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 
 import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 
+// FIXME
 public class SpecificModelReloadListener implements SimpleSynchronousResourceReloadListener {
 	public static final SpecificModelReloadListener INSTANCE = new SpecificModelReloadListener();
 	public static final Identifier ID = Identifier.of(ModelTestModClient.ID, "specific_model");
 
-	private BakedModel specificModel;
+	private BlockStateModel specificModel;
 
-	public BakedModel getSpecificModel() {
+	public BlockStateModel getSpecificModel() {
 		return specificModel;
 	}
 
 	@Override
 	public void reload(ResourceManager manager) {
-		specificModel = MinecraftClient.getInstance().getBakedModelManager().getModel(ModelTestModClient.HALF_RED_SAND_MODEL_ID);
+		//specificModel = MinecraftClient.getInstance().getBakedModelManager().getModel(ModelTestModClient.HALF_RED_SAND_MODEL_ID);
 	}
 
 	@Override
