@@ -90,7 +90,12 @@ public final class NetworkingPlayPacketTest implements ModInitializer {
 					));
 					ServerPlayNetworking.getSender(ctx.getSource().getPlayer()).sendPacket(packet);
 					return Command.SINGLE_SUCCESS;
-				})));
+				}))
+				.then(literal("reconfigure").executes(ctx -> {
+					ServerPlayNetworking.reconfigure(ctx.getSource().getPlayer());
+					return Command.SINGLE_SUCCESS;
+				}))
+		);
 	}
 
 	@Override
