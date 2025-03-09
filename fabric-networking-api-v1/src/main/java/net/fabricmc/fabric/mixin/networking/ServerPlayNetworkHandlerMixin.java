@@ -36,6 +36,7 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 
 import net.fabricmc.fabric.impl.networking.NetworkHandlerExtensions;
 import net.fabricmc.fabric.impl.networking.UntrackedNetworkHandler;
+import net.fabricmc.fabric.impl.networking.server.ServerNetworkingImpl;
 import net.fabricmc.fabric.impl.networking.server.ServerPlayNetworkAddon;
 
 // We want to apply a bit earlier than other mods which may not use us in order to prevent refCount issues
@@ -69,8 +70,10 @@ abstract class ServerPlayNetworkHandlerMixin extends ServerCommonNetworkHandler 
 	private <T extends PacketListener> void onAcknowledgeReconfiguration(ClientConnection instance, NetworkState<T> state, T packetListener, Operation<Void> original) {
 		original.call(instance, state, packetListener);
 
+		ServerConfigurationNetworkHandler networkHandler = (ServerConfigurationNetworkHandler) packetListener;
+		ServerNetworkingImpl.getAddon(networkHandler).setReconfiguring();
+
 		if (addon.requestedReconfigure()) {
-			ServerConfigurationNetworkHandler networkHandler = (ServerConfigurationNetworkHandler) packetListener;
 			networkHandler.sendConfigurations();
 		}
 	}
