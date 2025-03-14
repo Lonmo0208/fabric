@@ -571,9 +571,9 @@ subprojects {
 
 			def client = HttpClient.newHttpClient()
 			def request = HttpRequest.newBuilder()
-				.uri(URI.create(artifactPath))
-				.method("HEAD", HttpRequest.BodyPublishers.noBody())
-				.build()
+					.uri(URI.create(artifactPath))
+					.method("HEAD", HttpRequest.BodyPublishers.noBody())
+					.build()
 
 			def response = client.send(request, HttpResponse.BodyHandlers.discarding())
 			boolean exists = response.statusCode() == 200
