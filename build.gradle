@@ -666,10 +666,6 @@ void setupRepositories(RepositoryHandler repositories) {
 			}
 		}
 	}
-
-	repositories.maven {
-		url = "https://localhost"
-	}
 }
 
 subprojects.each {
