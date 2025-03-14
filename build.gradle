@@ -553,6 +553,34 @@ subprojects {
 		}
 	}
 
+	def projectName = it.name
+	def projectVersion = getSubprojectVersion(it)
+
+	// Skip publishing if the artifact already exists on the maven server
+	tasks.withType(PublishToMavenRepository).configureEach {
+		onlyIf {
+			if (!providers.environmentVariable("MAVEN_URL").present) {
+				// Always try to publish if the maven url is not set (e.g locally)
+				return true
+			}
+
+			def artifactPath = "https://maven.fabricmc.net/net/fabricmc/fabric-api/${projectName}/${projectVersion}/${projectName}-${projectVersion}.pom"
+
+			def connection = URI.create(artifactPath).toURL().openConnection() as HttpURLConnection
+			connection.setRequestMethod("HEAD")
+			connection.connect()
+			def exists = connection.responseCode == 200
+
+			if (exists) {
+				logger.lifecycle("${projectName}-${projectVersion}.pom has already been published")
+			} else {
+				logger.lifecycle("${projectName}-${projectVersion}.pom does not exist, publishing")
+			}
+
+			return !exists
+		}
+	}
+
 	// We manually handle the pom generation
 	loom.disableDeprecatedPomGeneration(publishing.publications.mavenJava)
 
