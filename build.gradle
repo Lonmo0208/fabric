@@ -569,14 +569,15 @@ subprojects {
 
 			def artifactPath = "https://maven.fabricmc.net/net/fabricmc/fabric-api/${projectName}/${projectVersion}/${projectName}-${projectVersion}.pom"
 
-			def client = HttpClient.newHttpClient()
-			def request = HttpRequest.newBuilder()
-					.uri(URI.create(artifactPath))
-					.method("HEAD", HttpRequest.BodyPublishers.noBody())
-					.build()
+			boolean exists = HttpClient.newHttpClient().withCloseable { client ->
+				def request = HttpRequest.newBuilder()
+						.uri(URI.create(artifactPath))
+						.method("HEAD", HttpRequest.BodyPublishers.noBody())
+						.build()
 
-			def response = client.send(request, HttpResponse.BodyHandlers.discarding())
-			boolean exists = response.statusCode() == 200
+				def response = client.send(request, HttpResponse.BodyHandlers.discarding())
+				response.statusCode() == 200
+			}
 
 			if (exists) {
 				logger.lifecycle("${projectName}-${projectVersion}.pom has already been published")
