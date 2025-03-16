@@ -16,7 +16,7 @@ jobs:
           fetch-depth: 0
       - uses: gradle/wrapper-validation-action@v2
       - run: ./gradlew check build :buildSrc:check publishToMavenLocal --stacktrace
-      - uses: Juuxel/publish-checkstyle-report@v1
+      - uses: FabricMCBot/publish-checkstyle-report@2ed34a273aa5e916c12bb3dc584a5297b0916c16
         if: ${{ failure() }}
         with:
           reports: |
