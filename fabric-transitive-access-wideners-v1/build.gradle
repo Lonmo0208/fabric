@@ -49,6 +49,8 @@ tasks.register('generateAccessWidener') {
 			generateRenderPhaseFields(lines, fs)
 			lines.add("")
 			generateRenderPhaseInnerClasses(lines, fs)
+			lines.add("")
+			generateRenderLayerInnerClasses(lines, fs)
 		}
 
 		file('src/main/resources/fabric-transitive-access-wideners-v1.accesswidener').text = String.join('\n', lines) + '\n'
@@ -127,6 +129,19 @@ def generateRenderPhaseInnerClasses(List<String> lines, FileSystem fs) {
 		// All protected static inner classes of RenderPhase
 		if ((innerClass.access & Opcodes.ACC_PROTECTED) != 0 && (innerClass.access & Opcodes.ACC_STATIC) != 0) {
 			lines.add("transitive-accessible class net/minecraft/client/render/RenderPhase\$${innerClass.innerName}")
+		}
+	}
+}
+
+def generateRenderLayerInnerClasses(List<String> lines, FileSystem fs) {
+	lines.add("# Protected methods of RenderLayer.MultiPhaseParameters.Builder")
+
+	def node = loadClass(fs.getPath("net/minecraft/client/render/RenderLayer\$MultiPhaseParameters\$Builder.class"))
+
+	for (def method : node.methods) {
+		// All protected static inner classes of RenderPhase
+		if ((method.access & Opcodes.ACC_PROTECTED) != 0) {
+			lines.add("transitive-accessible method $node.name $method.name $method.desc")
 		}
 	}
 }
