@@ -118,7 +118,7 @@ public abstract class WorldRendererMixin {
 	@Inject(method = "renderTargetBlockOutline", at = @At("HEAD"))
 	private void beforeRenderOutline(Camera camera, VertexConsumerProvider.Immediate vertexConsumers, MatrixStack matrices, boolean translucent, CallbackInfo ci) {
 		context.setTranslucentBlockOutline(translucent);
-		context.renderBlockOutline = WorldRenderEvents.BEFORE_BLOCK_OUTLINE.invoker().beforeBlockOutline(context, client.crosshairTarget);
+		context.renderBlockOutline = WorldRenderEvents.BEFORE_BLOCK_OUTLINE.invoker().beforeBlockOutline(context, translucent, client.crosshairTarget);
 	}
 
 	@SuppressWarnings("ConstantConditions")

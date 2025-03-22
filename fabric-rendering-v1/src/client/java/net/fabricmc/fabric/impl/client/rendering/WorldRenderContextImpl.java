@@ -213,10 +213,4 @@ public final class WorldRenderContextImpl implements WorldRenderContext.BlockOut
 	public BlockState blockState() {
 		return blockState;
 	}
-
-	@Deprecated
-	@Override
-	public VertexConsumer vertexConsumer() {
-		return consumers.getBuffer(RenderLayer.getLines());
-	}
 }
