@@ -26,5 +26,8 @@
       "environment": "client",
       "config": "fabric-model-loading-api-v1.mixins.json"
     }
-  ]
+  ],
+  "custom": {
+    "fabric-api:module-lifecycle": "stable"
+  }
 }
