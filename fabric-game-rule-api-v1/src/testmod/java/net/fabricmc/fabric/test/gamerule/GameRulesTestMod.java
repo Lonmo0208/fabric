@@ -89,7 +89,7 @@ public class GameRulesTestMod implements ModInitializer {
 
 		// Validate the EnumRule has registered it's commands
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-			RootCommandNode<ServerCommandSource> dispatcher = server.getCommandManager().getDispatcher().getRoot();
+			RootCommandNode<ServerCommandSource> dispatcher = server.method_70562().method_68992().getDispatcher().getRoot();
 			// Find the GameRule node
 			CommandNode<ServerCommandSource> gamerule = dispatcher.getChild("gamerule");
 

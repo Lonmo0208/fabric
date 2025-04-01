@@ -30,7 +30,9 @@ public enum GlintMode {
 	DEFAULT(null),
 	NONE(ItemRenderState.Glint.NONE),
 	STANDARD(ItemRenderState.Glint.STANDARD),
-	SPECIAL(ItemRenderState.Glint.SPECIAL);
+	SPECIAL(ItemRenderState.Glint.SPECIAL),
+	WON(ItemRenderState.Glint.WON),
+	LOST(ItemRenderState.Glint.LOST);
 
 	@Nullable
 	public final ItemRenderState.Glint glint;
@@ -45,6 +47,8 @@ public enum GlintMode {
 		case NONE -> NONE;
 		case STANDARD -> STANDARD;
 		case SPECIAL -> SPECIAL;
+		case WON -> WON;
+		case LOST -> LOST;
 		};
 	}
 }

@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.class_10961;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.world.GameRules;
 
@@ -115,7 +115,7 @@ public final class EnumRule<E extends Enum<E>> extends GameRules.Rule<EnumRule<E
 	}
 
 	@Override
-	public void setValue(EnumRule<E> rule, MinecraftServer minecraftServer) {
+	public void setValue(EnumRule<E> rule, class_10961 minecraftServer) {
 		if (!this.supports(rule.value)) {
 			throw new IllegalArgumentException(String.format("Rule does not support value: %s", rule.value));
 		}
@@ -145,7 +145,7 @@ public final class EnumRule<E extends Enum<E>> extends GameRules.Rule<EnumRule<E
 		return this.supportedValues.contains(value);
 	}
 
-	public void set(E value, @Nullable MinecraftServer server) throws IllegalArgumentException {
+	public void set(E value, @Nullable class_10961 server) throws IllegalArgumentException {
 		checkNotNull(value);
 
 		if (!this.supports(value)) {

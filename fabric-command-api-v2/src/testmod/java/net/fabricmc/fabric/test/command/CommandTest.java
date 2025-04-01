@@ -62,7 +62,7 @@ public final class CommandTest implements ModInitializer {
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
 			// Verify the commands actually exist in the command dispatcher.
 			final boolean dedicated = server.isDedicated();
-			final RootCommandNode<ServerCommandSource> rootNode = server.getCommandManager().getDispatcher().getRoot();
+			final RootCommandNode<ServerCommandSource> rootNode = server.method_70562().method_68992().getDispatcher().getRoot();
 
 			// Now we climb the tree
 			final CommandNode<ServerCommandSource> fabricCommonTestCommand = rootNode.getChild("fabric_common_test_command");
@@ -116,7 +116,7 @@ public final class CommandTest implements ModInitializer {
 	private int executeCommonCommand(CommandContext<ServerCommandSource> context) {
 		final ServerCommandSource source = context.getSource();
 		source.sendFeedback(() -> Text.literal("Common test command is working."), false);
-		source.sendFeedback(() -> Text.literal("Server Is Dedicated: " + source.getServer().isDedicated()), false);
+		source.sendFeedback(() -> Text.literal("Server Is Dedicated: " + source.method_69818().method_68961().isDedicated()), false);
 
 		return 1;
 	}
@@ -124,12 +124,12 @@ public final class CommandTest implements ModInitializer {
 	private int executeDedicatedCommand(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 		final ServerCommandSource source = context.getSource();
 
-		if (!source.getServer().isDedicated()) {
+		if (!source.method_69818().method_68961().isDedicated()) {
 			throw WRONG_SIDE_SHOULD_BE_DEDICATED.create();
 		}
 
 		source.sendFeedback(() -> Text.literal("Dedicated test command is working."), false);
-		source.sendFeedback(() -> Text.literal("Server Is Dedicated: " + source.getServer().isDedicated()), false);
+		source.sendFeedback(() -> Text.literal("Server Is Dedicated: " + source.method_69818().method_68961().isDedicated()), false);
 
 		return 1;
 	}
@@ -137,12 +137,12 @@ public final class CommandTest implements ModInitializer {
 	private int executeIntegratedCommand(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 		final ServerCommandSource source = context.getSource();
 
-		if (source.getServer().isDedicated()) {
+		if (source.method_69818().method_68961().isDedicated()) {
 			throw WRONG_SIDE_SHOULD_BE_INTEGRATED.create();
 		}
 
 		source.sendFeedback(() -> Text.literal("Integrated test command is working."), false);
-		source.sendFeedback(() -> Text.literal("Server Is Integrated: " + !source.getServer().isDedicated()), false);
+		source.sendFeedback(() -> Text.literal("Server Is Integrated: " + !source.method_69818().method_68961().isDedicated()), false);
 
 		return 1;
 	}

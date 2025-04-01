@@ -71,7 +71,7 @@ public class EntityApiLookupImpl<A, C> implements EntityApiLookup<A, C> {
 			synchronized (REGISTERED_SELVES) {
 				REGISTERED_SELVES.forEach((apiClass, entityTypes) -> {
 					for (EntityType<?> entityType : entityTypes) {
-						Entity entity = entityType.create(server.getOverworld(), SpawnReason.LOAD);
+						Entity entity = entityType.create(server.method_70562().method_68995(), SpawnReason.LOAD);
 
 						if (entity == null) {
 							String errorMessage = String.format(

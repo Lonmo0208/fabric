@@ -52,6 +52,7 @@ import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.biome.BiomeParticleConfig;
 import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
+import net.minecraft.world.biome.Weather;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.carver.ConfiguredCarver;
 import net.minecraft.world.gen.feature.Feature;
@@ -111,22 +112,22 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 	private class WeatherContextImpl implements WeatherContext {
 		@Override
 		public void setPrecipitation(boolean hasPrecipitation) {
-			biome.weather = new Biome.Weather(hasPrecipitation, biome.weather.temperature(), biome.weather.temperatureModifier(), biome.weather.downfall());
+			biome.weather = new Weather(hasPrecipitation, biome.weather.temperature(), biome.weather.temperatureModifier(), biome.weather.downfall());
 		}
 
 		@Override
 		public void setTemperature(float temperature) {
-			biome.weather = new Biome.Weather(biome.weather.hasPrecipitation(), temperature, biome.weather.temperatureModifier(), biome.weather.downfall());
+			biome.weather = new Weather(biome.weather.hasPrecipitation(), temperature, biome.weather.temperatureModifier(), biome.weather.downfall());
 		}
 
 		@Override
 		public void setTemperatureModifier(Biome.TemperatureModifier temperatureModifier) {
-			biome.weather = new Biome.Weather(biome.weather.hasPrecipitation(), biome.weather.temperature(), Objects.requireNonNull(temperatureModifier), biome.weather.downfall());
+			biome.weather = new Weather(biome.weather.hasPrecipitation(), biome.weather.temperature(), Objects.requireNonNull(temperatureModifier), biome.weather.downfall());
 		}
 
 		@Override
 		public void setDownfall(float downfall) {
-			biome.weather = new Biome.Weather(biome.weather.hasPrecipitation(), biome.weather.temperature(), biome.weather.temperatureModifier(), downfall);
+			biome.weather = new Weather(biome.weather.hasPrecipitation(), biome.weather.temperature(), biome.weather.temperatureModifier(), downfall);
 		}
 	}
 

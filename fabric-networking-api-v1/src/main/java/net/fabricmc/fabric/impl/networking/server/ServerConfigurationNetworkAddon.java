@@ -52,7 +52,7 @@ public final class ServerConfigurationNetworkAddon extends AbstractChanneledNetw
 	private boolean isReconfiguring = false;
 
 	public ServerConfigurationNetworkAddon(ServerConfigurationNetworkHandler handler, MinecraftServer server) {
-		super(ServerNetworkingImpl.CONFIGURATION, ((ServerCommonNetworkHandlerAccessor) handler).getConnection(), "ServerConfigurationNetworkAddon for " + handler.getDebugProfile().getName());
+		super(ServerNetworkingImpl.CONFIGURATION, ((ServerCommonNetworkHandlerAccessor) handler).getConnection(), "ServerConfigurationNetworkAddon for " + ((ServerCommonNetworkHandlerAccessor) handler).getProfile().getName());
 		this.handler = handler;
 		this.server = server;
 		this.context = new ContextImpl(server, handler, this);
@@ -182,7 +182,7 @@ public final class ServerConfigurationNetworkAddon extends AbstractChanneledNetw
 
 	@Override
 	public void sendPacket(Packet<?> packet, PacketCallbacks callback) {
-		handler.send(packet, callback);
+		handler.method_69158(packet, callback);
 	}
 
 	public @Nullable String getClientBrand() {

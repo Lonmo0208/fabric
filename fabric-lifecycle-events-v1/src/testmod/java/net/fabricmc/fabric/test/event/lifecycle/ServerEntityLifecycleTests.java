@@ -68,7 +68,7 @@ public final class ServerEntityLifecycleTests implements ModInitializer {
 			if (this.serverTicks++ % 200 == 0) {
 				int entities = 0;
 
-				for (ServerWorld world : server.getWorlds()) {
+				for (ServerWorld world : server.method_70562().method_68997()) {
 					final int worldEntities = Iterables.size(world.iterateEntities());
 
 					if (PRINT_SERVER_ENTITY_MESSAGES) {

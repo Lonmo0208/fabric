@@ -186,6 +186,6 @@ public class ItemRenderContext extends AbstractRenderContext {
 			return ItemRendererAccessor.fabric_getDynamicDisplayGlintConsumer(vertexConsumers, layer, specialGlintEntry);
 		}
 
-		return ItemRenderer.getItemGlintConsumer(vertexConsumers, layer, true, glint != ItemRenderState.Glint.NONE);
+		return ItemRenderer.getItemGlintConsumer(vertexConsumers, layer, true, glint);
 	}
 }

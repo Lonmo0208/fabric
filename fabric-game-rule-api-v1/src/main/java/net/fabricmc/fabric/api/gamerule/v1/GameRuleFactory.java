@@ -24,6 +24,7 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.class_10961;
 import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules;
@@ -105,7 +106,7 @@ public final class GameRuleFactory {
 	 * @param changedCallback a callback that is invoked when the value of a game rule has changed
 	 * @return an integer rule type
 	 */
-	public static GameRules.Type<GameRules.IntRule> createIntRule(int defaultValue, int minimumValue, BiConsumer<MinecraftServer, GameRules.IntRule> changedCallback) {
+	public static GameRules.Type<GameRules.IntRule> createIntRule(int defaultValue, int minimumValue, BiConsumer<class_10961, GameRules.IntRule> changedCallback) {
 		return createIntRule(defaultValue, minimumValue, Integer.MAX_VALUE, changedCallback);
 	}
 
@@ -129,7 +130,7 @@ public final class GameRuleFactory {
 	 * @param changedCallback a callback that is invoked when the value of a game rule has changed
 	 * @return an integer rule type
 	 */
-	public static GameRules.Type<GameRules.IntRule> createIntRule(int defaultValue, BiConsumer<MinecraftServer, GameRules.IntRule> changedCallback) {
+	public static GameRules.Type<GameRules.IntRule> createIntRule(int defaultValue, BiConsumer<class_10961, GameRules.IntRule> changedCallback) {
 		return createIntRule(defaultValue, Integer.MIN_VALUE, Integer.MAX_VALUE, changedCallback);
 	}
 
@@ -142,7 +143,7 @@ public final class GameRuleFactory {
 	 * @param changedCallback a callback that is invoked when the value of a game rule has changed
 	 * @return an integer rule type
 	 */
-	public static GameRules.Type<GameRules.IntRule> createIntRule(int defaultValue, int minimumValue, int maximumValue, @Nullable BiConsumer<MinecraftServer, GameRules.IntRule> changedCallback) {
+	public static GameRules.Type<GameRules.IntRule> createIntRule(int defaultValue, int minimumValue, int maximumValue, @Nullable BiConsumer<class_10961, GameRules.IntRule> changedCallback) {
 		return new GameRules.Type<>(
 				() -> IntegerArgumentType.integer(minimumValue, maximumValue),
 				type -> new BoundedIntRule(type, defaultValue, minimumValue, maximumValue), // Internally use a bounded int rule
@@ -184,7 +185,7 @@ public final class GameRuleFactory {
 	 * @param changedCallback a callback that is invoked when the value of a game rule has changed
 	 * @return a double rule type
 	 */
-	public static GameRules.Type<DoubleRule> createDoubleRule(double defaultValue, double minimumValue, BiConsumer<MinecraftServer, DoubleRule> changedCallback) {
+	public static GameRules.Type<DoubleRule> createDoubleRule(double defaultValue, double minimumValue, BiConsumer<class_10961, DoubleRule> changedCallback) {
 		return createDoubleRule(defaultValue, minimumValue, Double.MAX_VALUE, changedCallback);
 	}
 
@@ -208,7 +209,7 @@ public final class GameRuleFactory {
 	 * @param changedCallback a callback that is invoked when the value of a game rule has changed
 	 * @return a double rule type
 	 */
-	public static GameRules.Type<DoubleRule> createDoubleRule(double defaultValue, BiConsumer<MinecraftServer, DoubleRule> changedCallback) {
+	public static GameRules.Type<DoubleRule> createDoubleRule(double defaultValue, BiConsumer<class_10961, DoubleRule> changedCallback) {
 		return createDoubleRule(defaultValue, Double.MIN_VALUE, Double.MAX_VALUE, changedCallback);
 	}
 
@@ -221,7 +222,7 @@ public final class GameRuleFactory {
 	 * @param changedCallback a callback that is invoked when the value of a game rule has changed
 	 * @return a double rule type
 	 */
-	public static GameRules.Type<DoubleRule> createDoubleRule(double defaultValue, double minimumValue, double maximumValue, BiConsumer<MinecraftServer, DoubleRule> changedCallback) {
+	public static GameRules.Type<DoubleRule> createDoubleRule(double defaultValue, double minimumValue, double maximumValue, BiConsumer<class_10961, DoubleRule> changedCallback) {
 		return new GameRules.Type<>(
 				() -> DoubleArgumentType.doubleArg(minimumValue, maximumValue),
 				type -> new DoubleRule(type, defaultValue, minimumValue, maximumValue),
@@ -256,7 +257,7 @@ public final class GameRuleFactory {
 	 * @param <E> the type of enum this game rule stores
 	 * @return an enum rule type
 	 */
-	public static <E extends Enum<E>> GameRules.Type<EnumRule<E>> createEnumRule(E defaultValue, BiConsumer<MinecraftServer, EnumRule<E>> changedCallback) {
+	public static <E extends Enum<E>> GameRules.Type<EnumRule<E>> createEnumRule(E defaultValue, BiConsumer<class_10961, EnumRule<E>> changedCallback) {
 		return createEnumRule(defaultValue, defaultValue.getDeclaringClass().getEnumConstants(), changedCallback);
 	}
 
@@ -282,7 +283,7 @@ public final class GameRuleFactory {
 	 * @param <E> the type of enum this game rule stores
 	 * @return an enum rule type
 	 */
-	public static <E extends Enum<E>> GameRules.Type<EnumRule<E>> createEnumRule(E defaultValue, E[] supportedValues, BiConsumer<MinecraftServer, EnumRule<E>> changedCallback) {
+	public static <E extends Enum<E>> GameRules.Type<EnumRule<E>> createEnumRule(E defaultValue, E[] supportedValues, BiConsumer<class_10961, EnumRule<E>> changedCallback) {
 		checkNotNull(defaultValue, "Default rule value cannot be null");
 		checkNotNull(supportedValues, "Supported Values cannot be null");
 

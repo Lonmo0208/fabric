@@ -40,6 +40,7 @@ import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.registry.entry.RegistryEntryInfo;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.util.PlacedFeatureIndexer;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModificationContext;
@@ -160,10 +161,15 @@ public class BiomeModificationImpl {
 
 				if (modificationContext.shouldRebuildFeatures()) {
 					impl.getOrThrow(RegistryKeys.DIMENSION).stream().forEach(dimensionOptions -> {
-						dimensionOptions.chunkGenerator().indexedFeaturesListSupplier = Suppliers.memoize(
+						if (dimensionOptions.chunkGenerator().isEmpty()) {
+							return;
+						}
+
+						ChunkGenerator chunkGenerator = dimensionOptions.chunkGenerator().get();
+						chunkGenerator.indexedFeaturesListSupplier = Suppliers.memoize(
 							() -> PlacedFeatureIndexer.collectIndexedFeatures(
-									List.copyOf(dimensionOptions.chunkGenerator().getBiomeSource().getBiomes()),
-									biomeEntry -> dimensionOptions.chunkGenerator().getGenerationSettings(biomeEntry).getFeatures(),
+									List.copyOf(chunkGenerator.getBiomeSource().getBiomes()),
+									biomeEntry -> chunkGenerator.getGenerationSettings(biomeEntry).getFeatures(),
 									true
 							)
 						);

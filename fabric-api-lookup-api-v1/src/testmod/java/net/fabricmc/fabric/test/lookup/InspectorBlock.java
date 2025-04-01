@@ -58,7 +58,7 @@ public class InspectorBlock extends Block {
 			Inspectable inspectable = FabricEntityApiLookupTest.INSPECTABLE.find(entity, null);
 
 			if (inspectable != null) {
-				for (ServerPlayerEntity player : world.getServer().getPlayerManager().getPlayerList()) {
+				for (ServerPlayerEntity player : world.method_69071().method_68990().getPlayerList()) {
 					player.sendMessage(inspectable.inspect(), true);
 				}
 			}

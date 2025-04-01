@@ -16,6 +16,7 @@
 
 package net.fabricmc.fabric.mixin.networking.accessor;
 
+import com.mojang.authlib.GameProfile;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -30,4 +31,7 @@ public interface ServerCommonNetworkHandlerAccessor {
 
 	@Accessor
 	MinecraftServer getServer();
+
+	@Accessor
+	GameProfile getProfile();
 }

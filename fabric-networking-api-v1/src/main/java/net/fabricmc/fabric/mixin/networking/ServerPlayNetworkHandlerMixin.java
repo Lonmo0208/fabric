@@ -24,11 +24,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.minecraft.class_10961;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
 import net.minecraft.network.state.NetworkState;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ConnectedClientData;
 import net.minecraft.server.network.ServerCommonNetworkHandler;
 import net.minecraft.server.network.ServerConfigurationNetworkHandler;
@@ -45,7 +45,7 @@ abstract class ServerPlayNetworkHandlerMixin extends ServerCommonNetworkHandler 
 	@Unique
 	private ServerPlayNetworkAddon addon;
 
-	ServerPlayNetworkHandlerMixin(MinecraftServer server, ClientConnection connection, ConnectedClientData arg) {
+	ServerPlayNetworkHandlerMixin(class_10961 server, ClientConnection connection, ConnectedClientData arg) {
 		super(server, connection, arg);
 	}
 

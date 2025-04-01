@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.world.biome.BiomeKeys;
@@ -161,20 +162,22 @@ public class TagUtilTest implements ModInitializer {
 		}
 
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-			if (!TagUtil.isIn(server.getRegistryManager(), ConventionalEnchantmentTags.INCREASE_BLOCK_DROPS, server.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).get(Enchantments.FORTUNE))) {
+			DynamicRegistryManager.Immutable registryManager = server.method_70562().method_69003();
+
+			if (!TagUtil.isIn(registryManager, ConventionalEnchantmentTags.INCREASE_BLOCK_DROPS, registryManager.getOrThrow(RegistryKeys.ENCHANTMENT).get(Enchantments.FORTUNE))) {
 				throw new AssertionError("Failed to find fortune in c:increase_block_drops!");
 			}
 
-			if (TagUtil.isIn(ConventionalBiomeTags.IS_OVERWORLD, server.getRegistryManager().getOrThrow(RegistryKeys.BIOME).get(BiomeKeys.BADLANDS))) {
+			if (TagUtil.isIn(ConventionalBiomeTags.IS_OVERWORLD, registryManager.getOrThrow(RegistryKeys.BIOME).get(BiomeKeys.BADLANDS))) {
 				throw new AssertionError("Found a dynamic entry in a static registry?!");
 			}
 
 			// If this fails, the tag is missing a biome or the util is broken
-			if (!TagUtil.isIn(server.getRegistryManager(), ConventionalBiomeTags.IS_OVERWORLD, server.getRegistryManager().getOrThrow(RegistryKeys.BIOME).get(BiomeKeys.BADLANDS))) {
+			if (!TagUtil.isIn(registryManager, ConventionalBiomeTags.IS_OVERWORLD, registryManager.getOrThrow(RegistryKeys.BIOME).get(BiomeKeys.BADLANDS))) {
 				throw new AssertionError("Failed to find an overworld biome (%s) in c:in_overworld!".formatted(BiomeKeys.BADLANDS));
 			}
 
-			if (!TagUtil.isIn(server.getRegistryManager(), ConventionalBlockTags.ORES, Blocks.DIAMOND_ORE)) {
+			if (!TagUtil.isIn(registryManager, ConventionalBlockTags.ORES, Blocks.DIAMOND_ORE)) {
 				throw new AssertionError("Failed to find diamond ore in c:ores!");
 			}
 

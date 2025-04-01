@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import net.minecraft.resource.ResourceFinder;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.WorldGenerationProgressLogger;
 import net.minecraft.test.TestFailureLogger;
 import net.minecraft.test.TestServer;
 import net.minecraft.world.level.storage.LevelStorage;
@@ -57,6 +58,12 @@ public final class FabricGameTestRunner {
 
 		Optional<String> filter = Optional.ofNullable(System.getProperty(GameTestSystemProperties.FILTER));
 		boolean verify = Boolean.getBoolean(GameTestSystemProperties.VERIFY);
-		MinecraftServer.startServer((thread) -> TestServer.create(thread, session, resourcePackManager, filter, verify));
+		MinecraftServer.startServer(
+				resourcePackManager,
+				TestServer.method_70571(resourcePackManager),
+				(session2, resourcePackManager2, saveLoader, nbtCompound) -> saveLoader,
+				WorldGenerationProgressLogger::create,
+				(thread) -> TestServer.create(thread, session, filter, verify)
+		);
 	}
 }

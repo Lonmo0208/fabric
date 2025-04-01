@@ -20,7 +20,6 @@ import java.util.Locale;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.math.BlockPos;
 
@@ -51,8 +50,7 @@ public class EntitySelectorGameTest {
 		);
 
 		context.expectEntitiesAround(EntityType.CREEPER, BlockPos.ORIGIN, 3, 2.0);
-		MinecraftServer server = context.getWorld().getServer();
-		server.getCommandManager().executeWithPrefix(server.getCommandSource(), command);
+		context.getWorld().method_69071().method_68992().executeWithPrefix(context.getWorld().method_69071().method_68953(), command);
 		//context.assertTrue(result == 2, "Expected 2 entities killed, got " + result);
 		context.expectEntitiesAround(EntityType.CREEPER, BlockPos.ORIGIN, 1, 2.0);
 		context.complete();

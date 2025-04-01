@@ -42,7 +42,7 @@ public class ThreadDumpTests implements ModInitializer {
 
 	private int executeDumpCommand(CommandContext<ServerCommandSource> context) {
 		final ServerCommandSource source = context.getSource();
-		CrashReport crashReport = DedicatedServerWatchdog.createCrashReport("Watching Server", context.getSource().getServer().getThread().threadId());
+		CrashReport crashReport = DedicatedServerWatchdog.createCrashReport("Watching Server", context.getSource().method_69818().method_68961().getThread().threadId());
 		LOGGER.info(crashReport.asString(ReportType.MINECRAFT_CRASH_REPORT));
 		source.sendFeedback(() -> Text.literal("Thread Dump printed to console."), false);
 		return 1;

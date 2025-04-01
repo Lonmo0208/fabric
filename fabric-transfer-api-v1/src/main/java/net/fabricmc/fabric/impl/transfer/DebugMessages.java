@@ -39,7 +39,7 @@ public final class DebugMessages {
 		if (inventory == null) {
 			return "~~NULL~~"; // like in crash reports
 		} else if (inventory instanceof PlayerInventory playerInventory) {
-			return forPlayer(playerInventory.player);
+			return forPlayer(playerInventory.method_69259());
 		} else {
 			String result = inventory.toString();
 

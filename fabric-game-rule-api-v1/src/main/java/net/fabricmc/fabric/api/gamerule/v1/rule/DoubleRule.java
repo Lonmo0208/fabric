@@ -20,7 +20,7 @@ import com.mojang.brigadier.context.CommandContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.class_10961;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.world.GameRules;
 
@@ -99,7 +99,7 @@ public final class DoubleRule extends GameRules.Rule<DoubleRule> implements Vali
 	}
 
 	@Override
-	public void setValue(DoubleRule rule, MinecraftServer minecraftServer) {
+	public void setValue(DoubleRule rule, class_10961 minecraftServer) {
 		if (!this.inBounds(rule.value)) {
 			throw new IllegalArgumentException(String.format("Could not set value to %s. Was out of bounds %s - %s", rule.value, this.minimumValue, this.maximumValue));
 		}

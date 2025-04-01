@@ -47,7 +47,7 @@ public final class ServerChunkLifecycleTests implements ModInitializer {
 			final int count = generated.removeInt(world.getRegistryKey().getValue());
 
 			if (count > 0) {
-				LOGGER.info("Loaded {} freshly generated chunks in {} during tick #{}", count, world.getRegistryKey().getValue(), world.getServer().getTicks());
+				LOGGER.info("Loaded {} freshly generated chunks in {} during tick #{}", count, world.getRegistryKey().getValue(), world.method_69071().method_68961().getTicks());
 			}
 		});
 

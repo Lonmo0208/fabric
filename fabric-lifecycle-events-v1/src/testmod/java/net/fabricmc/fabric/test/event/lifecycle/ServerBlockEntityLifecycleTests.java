@@ -64,7 +64,7 @@ public final class ServerBlockEntityLifecycleTests implements ModInitializer {
 					logger.info("[SERVER] Tracked BlockEntities:" + this.serverBlockEntities.size() + " Ticked at: " + minecraftServer.getTicks() + "ticks");
 				}
 
-				for (ServerWorld world : minecraftServer.getWorlds()) {
+				for (ServerWorld world : minecraftServer.method_70562().method_68997()) {
 					int worldEntities = 0;
 
 					for (WorldChunk chunk : ((LoadedChunksCache) world).fabric_getLoadedChunks()) {

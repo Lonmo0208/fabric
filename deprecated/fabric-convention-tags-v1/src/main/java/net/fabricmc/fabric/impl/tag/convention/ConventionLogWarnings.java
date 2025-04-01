@@ -234,7 +234,7 @@ public class ConventionLogWarnings implements ModInitializer {
 		// Log tags that are still using legacy conventions under 'c' namespace
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
 			List<TagKey<?>> legacyTags = new ObjectArrayList<>();
-			DynamicRegistryManager.Immutable dynamicRegistries = server.getRegistryManager();
+			DynamicRegistryManager.Immutable dynamicRegistries = server.method_70562().method_69003();
 
 			// We only care about vanilla registries
 			dynamicRegistries.streamAllRegistries().forEach(registryEntry -> {

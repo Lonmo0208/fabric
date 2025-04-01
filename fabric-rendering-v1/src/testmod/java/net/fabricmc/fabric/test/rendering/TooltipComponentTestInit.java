@@ -78,7 +78,8 @@ public class TooltipComponentTestInit implements ModInitializer {
 				0,
 				0.5F,
 				ItemTags.REPAIRS_LEATHER_ARMOR,
-				EquipmentAssetKeys.IRON
+				EquipmentAssetKeys.IRON,
+				1
 		);
 	}
 }

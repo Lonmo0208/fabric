@@ -23,6 +23,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionOptions;
@@ -80,7 +81,7 @@ public class BiomeSelectionContextImpl implements BiomeSelectionContext {
 			return false;
 		}
 
-		return instance.getValidBiomes().contains(getBiomeRegistryEntry());
+		return instance.method_69829(RegistryEntryList.empty()).contains(getBiomeRegistryEntry());
 	}
 
 	@Override
@@ -97,7 +98,9 @@ public class BiomeSelectionContextImpl implements BiomeSelectionContext {
 			return false;
 		}
 
-		return dimension.chunkGenerator().getBiomeSource().getBiomes().stream().anyMatch(entry -> entry.value() == biome);
+		return dimension.chunkGenerator()
+				.map(generator -> generator.getBiomeSource().getBiomes().stream().anyMatch(entry -> entry.value() == biome))
+				.orElse(false);
 	}
 
 	@Override

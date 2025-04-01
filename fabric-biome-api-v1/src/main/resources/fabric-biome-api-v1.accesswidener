@@ -2,13 +2,10 @@ accessWidener	v1	named
 accessible  class   net/minecraft/world/biome/Biome$Weather
 
 # Top-Level Biome Fields Access
-accessible field net/minecraft/world/biome/Biome weather Lnet/minecraft/world/biome/Biome$Weather;
-mutable field net/minecraft/world/biome/Biome weather Lnet/minecraft/world/biome/Biome$Weather;
+accessible field net/minecraft/world/biome/Biome weather Lnet/minecraft/world/biome/Weather;
+mutable field net/minecraft/world/biome/Biome weather Lnet/minecraft/world/biome/Weather;
 accessible field net/minecraft/world/biome/Biome generationSettings Lnet/minecraft/world/biome/GenerationSettings;
 accessible field net/minecraft/world/biome/Biome spawnSettings Lnet/minecraft/world/biome/SpawnSettings;
-
-# Biome Weather
-accessible method net/minecraft/world/biome/Biome$Weather <init> (ZFLnet/minecraft/world/biome/Biome$TemperatureModifier;F)V
 
 # Biome Effects
 accessible field net/minecraft/world/biome/BiomeEffects fogColor I

@@ -79,7 +79,7 @@ public class ConditionalResourcesTest {
 		// Predicates are internally handled as a kind of loot data,
 		// hence the yarn name "loot condition".
 
-		RegistryEntryLookup.RegistryLookup registries = context.getWorld().getServer().getReloadableRegistries().createRegistryLookup();
+		RegistryEntryLookup.RegistryLookup registries = context.getWorld().method_69071().method_69005().createRegistryLookup();
 
 		if (registries.getOptionalEntry(RegistryKey.of(RegistryKeys.PREDICATE, id("loaded"))).isEmpty()) {
 			throw new AssertionError("loaded predicate should have been loaded.");
@@ -94,7 +94,7 @@ public class ConditionalResourcesTest {
 
 	@GameTest
 	public void conditionalLootTables(TestContext context) {
-		ReloadableRegistries.Lookup registries = context.getWorld().getServer().getReloadableRegistries();
+		ReloadableRegistries.Lookup registries = context.getWorld().method_69071().method_69005();
 
 		if (registries.getLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, id("blocks/loaded"))) == LootTable.EMPTY) {
 			throw new AssertionError("loaded loot table should have been loaded.");
@@ -124,7 +124,7 @@ public class ConditionalResourcesTest {
 
 	@GameTest
 	public void conditionalOverlays(TestContext context) {
-		RegistryEntryLookup.RegistryLookup registries = context.getWorld().getServer().getReloadableRegistries().createRegistryLookup();
+		RegistryEntryLookup.RegistryLookup registries = context.getWorld().method_69071().method_69005().createRegistryLookup();
 
 		if (registries.getOptionalEntry(RegistryKey.of(RegistryKeys.PREDICATE, id("do_overlay"))).isEmpty()) {
 			throw new AssertionError("do_overlay predicate should have been overlayed.");
